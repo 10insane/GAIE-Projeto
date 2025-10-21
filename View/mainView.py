@@ -60,7 +60,9 @@ def main(page: ft.Page):
                 ft.ElevatedButton("Inserir Escolas", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal),
                 ft.ElevatedButton("Inserir Técnico", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal),
                 ft.ElevatedButton("Inserir estado processo", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal),
-                ft.ElevatedButton("Inserir problemáticaSPO", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal)
+                ft.ElevatedButton("Inserir problemáticaSPO", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal),
+                ft.ElevatedButton("ola", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal)
+                
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN
         )
