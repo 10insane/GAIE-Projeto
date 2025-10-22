@@ -18,4 +18,3 @@ def criarUser(nProcesso, nomeTecnicos):
     finally:
         cursor.close()
         conn.close()
-

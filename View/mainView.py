@@ -1,5 +1,5 @@
 import flet as ft
-from Models.UserModel import *
+from Models.TecnicoModel import *
 
 USUARIO_CORRETO = "admin"
 SENHA_CORRETA = "admin123"
