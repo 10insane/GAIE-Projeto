@@ -1,89 +1,105 @@
 import flet as ft
+import flet_lottie as fl
 from Models.TecnicoModel import *
-
-USUARIO_CORRETO = "admin"
-SENHA_CORRETA = "admin123"
-
+ 
+UTILIZADOR_CORRETO = "admin"
+PALAVRA_PASSE_CORRETA = "admin123"
+ 
 def main(page: ft.Page):
-    page.title = "GAIE Login"
+    page.title = "GAIE - Login"
+    page.theme_mode = ft.ThemeMode.DARK
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.horizontal_alignment = ft.MainAxisAlignment.CENTER
-
-    # Campos e mensagem de login
-    username_field = ft.TextField(label="Usuário", prefix_icon=ft.Icons.PERSON)
-    password_field = ft.TextField(label="Senha", password=True, can_reveal_password=True, prefix_icon=ft.Icons.LOCK)
-    login_msg = ft.Text(color=ft.Colors.RED)
-
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.scroll = False
+ 
+    # Lottie animado para o login
+    animacao_lottie = fl.Lottie(
+        src="https://raw.githubusercontent.com/xvrh/lottie-flutter/refs/heads/master/example/assets/Logo/LogoSmall.json",
+        reverse=False,
+        animate=True,
+        width=150,
+        height=150,
+    )
+ 
+    # Campos de login
+    campo_utilizador = ft.TextField(
+        label="Utilizador",
+        prefix_icon=ft.Icons.PERSON,
+        autofocus=True,
+        width=300,
+    )
+    campo_palavra_passe = ft.TextField(
+        label="Palavra-passe",
+        password=True,
+        can_reveal_password=True,
+        prefix_icon=ft.Icons.LOCK,
+        width=300,
+    )
+    mensagem_erro = ft.Text(color=ft.Colors.RED)
+ 
     def abrir_modal(e):
-        nProcesso_field = ft.TextField(label="Número de Processo")
-        nomeTecnico_field = ft.TextField(label="Nome do Técnico")
-        mensagem = ft.Text()
-
-        def salvar_tecnico(ev):
-            if criarUser(nProcesso_field.value, nomeTecnico_field.value):
-                mensagem.value = "Técnico criado com sucesso!"
-            else:
-                mensagem.value = "Erro ao criar o Técnico"
-            modal.content.controls[-1] = mensagem
-            page.update()
-
-        modal = ft.AlertDialog(
-            modal=True,
-            content=ft.Column(
-                [
-                    ft.Text("Novo Técnico", style=ft.TextThemeStyle.HEADLINE_SMALL),
-                    nProcesso_field,
-                    nomeTecnico_field,
-                    ft.ElevatedButton("salvar", on_click=salvar_tecnico),
-                    mensagem
-                ],
-                tight=True
-            ),
-            on_dismiss=lambda e: None
-        )
-
-        page.dialog = modal
-        modal.open = True
-        page.update()
-
+        # Exemplo simples de modal, podes ajustar conforme necessidade
+        pass
+ 
     def carregar_tela_principal():
         page.clean()
-        page.title = "GAIE"
-        page.horizontal_alignment = None
+        page.title = "GAIE - Área Principal"
         page.vertical_alignment = None
-
-        header = ft.Row(
+        page.horizontal_alignment = None
+        page.scroll = True
+ 
+        cabecalho = ft.Row(
             controls=[
                 ft.Text("GAIE", style=ft.TextThemeStyle.HEADLINE_MEDIUM),
                 ft.Container(expand=True),
                 ft.ElevatedButton("Inserir Aluno", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal),
-                ft.ElevatedButton("Inserir Escolas", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal),
-                ft.ElevatedButton("Inserir Técnico", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal),
-                ft.ElevatedButton("Inserir estado processo", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal),
-                ft.ElevatedButton("Inserir problemáticaSPO", icon=ft.Icons.PERSON_ADD, on_click=abrir_modal),
-                
+                ft.ElevatedButton("Inserir Escolas", icon=ft.Icons.SCHOOL, on_click=abrir_modal),
+                ft.ElevatedButton("Inserir Técnico", icon=ft.Icons.ENGINEERING, on_click=abrir_modal),
+                ft.ElevatedButton("Estado do Processo", icon=ft.Icons.ASSIGNMENT_TURNED_IN, on_click=abrir_modal),
+                ft.ElevatedButton("Problemática SPO", icon=ft.Icons.REPORT_PROBLEM, on_click=abrir_modal),
             ],
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
         )
-
-        page.add(header)
-
-    def login(e):
-        if username_field.value == USUARIO_CORRETO and password_field.value == SENHA_CORRETA:
+ 
+        page.add(cabecalho)
+ 
+    def autenticar(e):
+        if campo_utilizador.value == UTILIZADOR_CORRETO and campo_palavra_passe.value == PALAVRA_PASSE_CORRETA:
             carregar_tela_principal()
         else:
-            login_msg.value = "Utilizador ou senha incorretos"
+            mensagem_erro.value = "Utilizador ou palavra-passe incorretos!"
             page.update()
-
-    login_button = ft.ElevatedButton("Entrar", on_click=login)
-
+ 
+    botao_entrar = ft.ElevatedButton("Entrar", icon=ft.Icons.LOGIN, on_click=autenticar)
+ 
     def carregar_login():
         page.clean()
-        page.title = "GAIE Login"
         page.vertical_alignment = ft.MainAxisAlignment.CENTER
-        page.horizontal_alignment = ft.MainAxisAlignment.CENTER
-        page.add(username_field, password_field, login_button, login_msg)
-
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+ 
+        login_card = ft.Card(
+            content=ft.Container(
+                content=ft.Column(
+                    [
+                        animacao_lottie,
+                        ft.Text("Login", style=ft.TextThemeStyle.HEADLINE_SMALL),
+                        campo_utilizador,
+                        campo_palavra_passe,
+                        botao_entrar,
+                        mensagem_erro,
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=15,
+                ),
+                padding=30,
+                width=400,
+            ),
+            elevation=10,
+        )
+ 
+        page.add(login_card)
+ 
     carregar_login()
-
+ 
 ft.app(target=main, view=ft.WEB_BROWSER)
