@@ -1,13 +1,13 @@
 from Models.bd_connection import *
 import mysql.connector
 
-def criarTecnico(nProcesso, nomeTecnicos):
+def criarTecnico(idTecnico, nProcTecnico, nomeTecnicos):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO tecnicos (nProcesso, nomeTecnicos) VALUES (%s, %s)",
-            (nProcesso, nomeTecnicos)
+            "INSERT INTO tecnicos (idTecnico, nProcTecnico ,nomeTecnicos) VALUES (%s, %s, %s)",
+            (idTecnico, nProcTecnico, nomeTecnicos)
         )
         conn.commit()
         return True
@@ -32,13 +32,13 @@ def listarTecnico():
         cursor.close()
         conn.close()
 
-def atualizarTecnico(nProcesso, novoNome):
+def atualizarTecnico(nProcTecnico, novoNome):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "UPDATE tecnicos SET nomeTecnicos = %s WHERE nProcesso = %s",
-            (novoNome, nProcesso)
+            "UPDATE tecnicos SET nomeTecnicos = %s WHERE nProcTecnico = %s",
+            (novoNome, nProcTecnico)
         )
         conn.commit()
         return cursor.rowcount > 0
@@ -49,13 +49,13 @@ def atualizarTecnico(nProcesso, novoNome):
         cursor.close()
         conn.close()
 
-def deletarTecnico(nProcesso):
+def deletarTecnico(nProcTecnico):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "DELETE FROM tecnicos WHERE nProcesso = %s",
-            (nProcesso,)
+            "DELETE FROM tecnicos WHERE nProcTecnico  = %s",
+            (nProcTecnico,)
         )
         conn.commit()
         return cursor.rowcount > 0

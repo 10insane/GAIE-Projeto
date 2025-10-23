@@ -38,7 +38,6 @@ def main(page: ft.Page):
     mensagem_erro = ft.Text(color=ft.Colors.RED)
  
     def abrir_modal(e):
-        # Exemplo simples de modal, podes ajustar conforme necessidade
         pass
  
     def carregar_tela_principal():
