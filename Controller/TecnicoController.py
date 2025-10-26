@@ -1,13 +1,13 @@
 from Models.TecnicoModel import *
 
-def Criar(nProcesso, nomeTecnicos):
-    return criarTecnico(nProcesso, nomeTecnicos)
+def Criar(idTecnico, nProcTecnico, nomeTecnicos):
+    return criarTecnico(idTecnico, nProcTecnico, nomeTecnicos)
 
-def Listar(nProcesso, nomeTecnicos):
-    return listarTecnico(nProcesso, nomeTecnicos)
+def Listar():
+    return listarTecnico()
 
-def atualizar(nProcesso, nomeTecnicos):
-    return atualizarTecnico(nProcesso, nomeTecnicos)
+def atualizar(nProcTecnico, novoNome):
+    return atualizarTecnico(nProcTecnico, novoNome)
 
-def deletar(nProcesso):
-    return deletarTecnico(nProcesso)
+def deletar(nProcTecnico):
+    return deletarTecnico(nProcTecnico)

@@ -5,14 +5,12 @@ def criarAluno(nProcessoAluno, nomeAluno, idEscola, ano, turma):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
-        # Verifica se a escola existe
         cursor.execute("SELECT idEscola FROM escolas WHERE idEscola = %s", (idEscola,))
         escola = cursor.fetchone()
         if not escola:
             print(f"Erro: Escola com id {idEscola} não existe.")
             return False
 
-        # Insere o aluno
         cursor.execute(
             """
             INSERT INTO alunos (nProcessoAluno, NomeAluno, Ano, Turma, idEscola)
@@ -35,7 +33,6 @@ def listarAluno():
     conn = bd_connection()
     cursor = conn.cursor(dictionary=True)
     try:
-        # Traz informações do aluno + nome da escola (JOIN)
         cursor.execute("""
             SELECT a.*, e.NomeEscola
             FROM alunos a

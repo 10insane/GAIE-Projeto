@@ -1,13 +1,13 @@
 from Models.bd_connection import *
 import mysql.connector
 
-def criarEscola(nomeEscola):
+def criarEscola(IdEscola, nomeEscola):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO escolas (NomeEscola) VALUES (%s)",
-            (nomeEscola,)
+            "INSERT INTO escolas (IdEscola, NomeEscola) VALUES (%s)",
+            (IdEscola, nomeEscola)
         )
         conn.commit()
         return True
