@@ -15,7 +15,7 @@ def main(page: ft.Page):
 
     # Lottie animado para o login
     animacao_lottie = fl.Lottie(
-        src="https://raw.githubusercontent.com/xvrh/lottie-flutter/refs/heads/master/example/assets/Logo/LogoSmall.json",
+        src="https://lottie.host/5859fa72-f001-4fa0-9c23-f5df61e4bfe5/MpooU95fLc.json",
         reverse=False,
         animate=True,
         width=150,
