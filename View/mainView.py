@@ -39,112 +39,151 @@ def main(page: ft.Page):
     mensagem_erro = ft.Text(color=ft.Colors.RED)
 
     # ==========================
-    # PÁGINA PRINCIPAL
+    # PÁGINA PRINCIPAL (melhorada)
     # ==========================
     def carregar_tela_principal():
         page.clean()
         page.title = "GAIE - Área Principal"
         page.theme_mode = ft.ThemeMode.LIGHT
+        page.bgcolor = "#F5F6FA"
         page.scroll = True
-        page.bgcolor = ft.Colors.WHITE
-        page.gradient = None
 
-        # ----- DRAWER (menu lateral direito) -----
-        def handle_dismissal(e):
-            print("Drawer fechado!")
-
-        def handle_change(e):
-            print(f"Selecionado: {e.control.selected_index}")
-            page.close(drawer)
-
+        # ----- Drawer -----
         drawer = ft.NavigationDrawer(
-            on_dismiss=handle_dismissal,
-            on_change=handle_change,
             controls=[
                 ft.Container(height=12),
                 ft.NavigationDrawerDestination(
                     label="Inserir Aluno",
                     icon=ft.Icons.PERSON_ADD_OUTLINED,
-                    selected_icon=ft.Icon(ft.Icons.PERSON_ADD),
                 ),
                 ft.NavigationDrawerDestination(
                     label="Inserir Escolas",
                     icon=ft.Icons.SCHOOL_OUTLINED,
-                    selected_icon=ft.Icon(ft.Icons.SCHOOL),
                 ),
                 ft.NavigationDrawerDestination(
                     label="Inserir Técnico",
                     icon=ft.Icons.ENGINEERING_OUTLINED,
-                    selected_icon=ft.Icon(ft.Icons.ENGINEERING),
                 ),
-                ft.Divider(thickness=2),
+                ft.Divider(thickness=1),
                 ft.NavigationDrawerDestination(
                     label="Estado do Processo",
                     icon=ft.Icons.ASSIGNMENT_TURNED_IN_OUTLINED,
-                    selected_icon=ft.Icon(ft.Icons.ASSIGNMENT_TURNED_IN),
                 ),
                 ft.NavigationDrawerDestination(
                     label="Problemática SPO",
                     icon=ft.Icons.REPORT_PROBLEM_OUTLINED,
-                    selected_icon=ft.Icon(ft.Icons.REPORT_PROBLEM),
                 ),
             ],
-            position=ft.NavigationDrawerPosition.END,  # <-- faz abrir do lado direito
+            position=ft.NavigationDrawerPosition.END,
         )
 
         # ----- Cabeçalho -----
-        cabecalho = ft.Row(
-            controls=[
-                ft.Container(
-                    content=ft.Text(
+        cabecalho = ft.Container(
+            bgcolor="#8A2BE2",
+            padding=15,
+            content=ft.Row(
+                [
+                    ft.Text(
                         "GAIE",
-                        style=ft.TextThemeStyle.HEADLINE_MEDIUM,
+                        size=28,
                         weight=ft.FontWeight.BOLD,
-                        color=ft.Colors.BLACK,
+                        color=ft.Colors.WHITE,
                     ),
-                    margin=ft.margin.only(left=10),
-                ),
-                ft.Container(expand=True),
-                # Ícone de menu hamburguer maior
-                ft.IconButton(
-                    icon=ft.Icons.MENU,           # ← 3 barras
-                    icon_color=ft.Colors.BLACK,
-                    icon_size=35,                 # ← tamanho aumentado
-                    tooltip="Abrir menu",
-                    on_click=lambda e: page.open(drawer),
-                ),
-            ],
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    ft.Container(expand=True),
+                    ft.IconButton(
+                        icon=ft.Icons.MENU,
+                        icon_color=ft.Colors.WHITE,
+                        icon_size=30,
+                        tooltip="Abrir menu",
+                        on_click=lambda e: page.open(drawer),
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            ),
         )
 
-        # ----- Conteúdo da página -----
+        # ----- Cartões principais -----
+        def criar_card(titulo, descricao, icone, cor):
+            return ft.Container(
+                bgcolor=cor,
+                width=250,
+                height=160,
+                border_radius=15,
+                padding=20,
+                shadow=ft.BoxShadow(blur_radius=8, color="rgba(0,0,0,0.2)"),
+                content=ft.Column(
+                    [
+                        ft.Icon(icone, size=50, color="white"),
+                        ft.Text(
+                            titulo,
+                            size=18,
+                            weight=ft.FontWeight.BOLD,
+                            color="white",
+                        ),
+                        ft.Text(
+                            descricao,
+                            size=13,
+                            color="white",
+                        ),
+                    ],
+                    spacing=8,
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.START,
+                ),
+            )
+
+        cards = ft.Row(
+            [
+                criar_card("Inserir Aluno", "Adicionar novos alunos ao sistema", ft.Icons.PERSON_ADD, "#6C63FF"),
+                criar_card("Inserir Escolas", "Gerir lista de escolas", ft.Icons.SCHOOL, "#FF6584"),
+                criar_card("Inserir Técnico", "Cadastrar técnicos", ft.Icons.ENGINEERING, "#00C49A"),
+            ],
+            wrap=True,
+            spacing=20,
+            alignment=ft.MainAxisAlignment.CENTER,
+        )
+
+        cards2 = ft.Row(
+            [
+                criar_card("Estado do Processo", "Acompanhar o progresso", ft.Icons.ASSIGNMENT_TURNED_IN, "#0088FE"),
+                criar_card("Problemática SPO", "Ver relatórios e alertas", ft.Icons.REPORT_PROBLEM, "#FFBB28"),
+            ],
+            wrap=True,
+            spacing=20,
+            alignment=ft.MainAxisAlignment.CENTER,
+        )
+
         conteudo = ft.Column(
             [
+                ft.Container(height=20),
                 ft.Text(
-                    "Bem-vindo à área principal do GAIE!",
-                    style=ft.TextThemeStyle.HEADLINE_SMALL,
+                    "Bem-vindo à Área Principal do GAIE!",
+                    size=24,
                     weight=ft.FontWeight.BOLD,
-                    color=ft.Colors.BLACK,
+                    color="#2F2F2F",
                 ),
                 ft.Text(
-                    "Aqui poderás gerir alunos, escolas, técnicos e processos.",
-                    color=ft.Colors.BLACK,
+                    "Selecione uma das opções abaixo para começar:",
+                    size=16,
+                    color="#4F4F4F",
                 ),
+                ft.Container(height=30),
+                cards,
+                ft.Container(height=20),
+                cards2,
             ],
-            spacing=20,
             alignment=ft.MainAxisAlignment.START,
-            horizontal_alignment=ft.CrossAxisAlignment.START,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=10,
         )
 
         page.add(
             ft.Column(
                 [
                     cabecalho,
-                    ft.Divider(),
-                    conteudo,
+                    ft.Container(padding=30, content=conteudo),
                 ],
                 expand=True,
-                spacing=10,
             )
         )
 
@@ -152,14 +191,27 @@ def main(page: ft.Page):
     # LOGIN
     # ==========================
     def autenticar(e):
-        if campo_utilizador.value == UTILIZADOR_CORRETO and campo_palavra_passe.value == PALAVRA_PASSE_CORRETA:
+        if (
+            campo_utilizador.value == UTILIZADOR_CORRETO
+            and campo_palavra_passe.value == PALAVRA_PASSE_CORRETA
+        ):
             carregar_tela_principal()
         else:
             mensagem_erro.value = "Utilizador ou palavra-passe incorretos!"
             page.update()
 
-    botao_entrar = ft.ElevatedButton("Entrar", icon=ft.Icons.LOGIN, on_click=autenticar)
+    botao_entrar = ft.ElevatedButton(
+        "Entrar",
+        icon=ft.Icons.LOGIN,
+        on_click=autenticar,
+        bgcolor="#8A2BE2",
+        color=ft.Colors.WHITE,
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+    )
 
+    # ==========================
+    # LOGIN SCREEN
+    # ==========================
     def carregar_login():
         page.clean()
         page.theme_mode = ft.ThemeMode.DARK
@@ -170,35 +222,42 @@ def main(page: ft.Page):
             gradient=ft.LinearGradient(
                 begin=ft.Alignment(-1, -1),
                 end=ft.Alignment(1, 1),
-                colors=["#FF8C00", "#FF69B4"],
+                colors=["#E90000", "#FAA6FF"],
             ),
             content=ft.Column(
                 [
                     ft.Row(
                         [
-                            ft.Card(
-                                content=ft.Container(
-                                    content=ft.Column(
-                                        [
-                                            animacao_lottie,
-                                            ft.Text(
-                                                "Login",
-                                                style=ft.TextThemeStyle.HEADLINE_SMALL,
-                                                weight=ft.FontWeight.BOLD,
-                                            ),
-                                            campo_utilizador,
-                                            campo_palavra_passe,
-                                            botao_entrar,
-                                            mensagem_erro,
-                                        ],
-                                        alignment=ft.MainAxisAlignment.CENTER,
-                                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                                        spacing=15,
-                                    ),
-                                    padding=30,
-                                    width=400,
+                            ft.Container(
+                                content=ft.Column(
+                                    [
+                                        animacao_lottie,
+                                        ft.Text(
+                                            "Login",
+                                            style=ft.TextThemeStyle.HEADLINE_SMALL,
+                                            weight=ft.FontWeight.BOLD,
+                                            color=ft.Colors.WHITE,
+                                        ),
+                                        campo_utilizador,
+                                        campo_palavra_passe,
+                                        botao_entrar,
+                                        mensagem_erro,
+                                    ],
+                                    alignment=ft.MainAxisAlignment.CENTER,
+                                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                    spacing=15,
                                 ),
-                                elevation=10,
+                                padding=40,
+                                width=400,
+                                border_radius=20,
+                                bgcolor="rgba(0, 0, 0, 0.4)",
+                                border=ft.border.all(2, ft.Colors.WHITE70),
+                                shadow=ft.BoxShadow(
+                                    spread_radius=2,
+                                    blur_radius=8,
+                                    color="rgba(0,0,0,0.5)",
+                                    offset=ft.Offset(2, 2),
+                                ),
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
