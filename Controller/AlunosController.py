@@ -4,10 +4,10 @@ def Criar(nProcessoAluno, nomeAluno, idEscola, ano, turma):
     return criarAluno(nProcessoAluno, nomeAluno, idEscola, ano, turma)
 
 def Listar():
-    return listarAluno()
+    return listarAlunos()
 
 def atualizar(nProcessoAluno, novoNome, novoAno, novaTurma, novoIdEscola):
     return atualizarAluno(nProcessoAluno, novoNome, novoAno, novaTurma, novoIdEscola)
 
 def deletar(nProcessoAluno):
-    return deletarAluno(nProcessoAluno)
+    return eliminarAluno(nProcessoAluno)

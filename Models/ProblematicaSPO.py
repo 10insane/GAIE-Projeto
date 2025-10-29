@@ -2,18 +2,22 @@ from Models.bd_connection import *
 import mysql.connector
 
 
-def criarProblematica(IdProblematicaSPO, Tipo):
+def criarProblematica(idProblematica, tipoProblematica):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO ProblematicasSPO (IdProblematicaSPO, Tipo) VALUES (%s, %s)",
-            (IdProblematicaSPO, Tipo)
+            """
+            INSERT INTO problematicaspo (idProblematica, TipoProblematica)
+            VALUES (%s, %s)
+            """,
+            (idProblematica, tipoProblematica)
         )
         conn.commit()
         return True
-    except mysql.connector.Error as error:
-        print("Erro ao inserir ProblematicasSPO:", error)
+    except mysql.connector.Error as erro:
+        print("Erro ao inserir problemática:", erro)
+        conn.rollback()
         return False
     finally:
         cursor.close()
@@ -24,47 +28,53 @@ def listarProblematicas():
     conn = bd_connection()
     cursor = conn.cursor(dictionary=True)
     try:
-        cursor.execute("SELECT * FROM ProblematicasSPO")
+        cursor.execute("SELECT * FROM problematicaspo")
         problematicas = cursor.fetchall()
         return problematicas
-    except mysql.connector.Error as error:
-        print("Erro ao listar ProblematicasSPO:", error)
+    except mysql.connector.Error as erro:
+        print("Erro ao listar as problemáticas:", erro)
         return []
     finally:
         cursor.close()
         conn.close()
 
 
-def atualizarProblematica(IdProblematicaSPO, novoTipo):
+def atualizarProblematica(idProblematica, novoTipoProblematica):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "UPDATE ProblematicasSPO SET Tipo = %s WHERE IdProblematicaSPO = %s",
-            (novoTipo, IdProblematicaSPO)
+            """
+            UPDATE problematicaspo
+            SET TipoProblematica = %s
+            WHERE idProblematica = %s
+            """,
+            (novoTipoProblematica, idProblematica)
         )
         conn.commit()
         return cursor.rowcount > 0
-    except mysql.connector.Error as error:
-        print("Erro ao atualizar ProblematicasSPO:", error)
+    except mysql.connector.Error as erro:
+        print("Erro ao atualizar a problemática:", erro)
+        conn.rollback()
         return False
     finally:
         cursor.close()
         conn.close()
 
 
-def deletarProblematica(IdProblematicaSPO):
+def eliminarProblematica(idProblematica):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "DELETE FROM ProblematicasSPO WHERE IdProblematicaSPO = %s",
-            (IdProblematicaSPO,)
+            "DELETE FROM problematicaspo WHERE idProblematica = %s",
+            (idProblematica,)
         )
         conn.commit()
         return cursor.rowcount > 0
-    except mysql.connector.Error as error:
-        print("Erro ao deletar ProblematicasSPO:", error)
+    except mysql.connector.Error as erro:
+        print("Erro ao eliminar a problemática:", erro)
+        conn.rollback()
         return False
     finally:
         cursor.close()

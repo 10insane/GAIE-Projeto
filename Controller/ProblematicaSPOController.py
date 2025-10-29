@@ -1,13 +1,13 @@
 from Models.ProblematicaSPO import *
 
-def Criar(IdProblematicaSPO, Tipo):
-    return criarProblematica(IdProblematicaSPO, Tipo)
+def Criar(idProblematica, tipoProblematica):
+    return criarProblematica(idProblematica, tipoProblematica)
 
 def Listar():
     return listarProblematicas()
 
-def atualizar(IdProblematicaSPO, novoTipo):
-    return atualizarProblematica(IdProblematicaSPO, novoTipo)
+def atualizar(idProblematica, novoTipo):
+    return atualizarProblematica(idProblematica, novoTipo)
 
-def deletar(IdProblematicaSPO):
-    return deletarProblematica(IdProblematicaSPO)
+def deletar(idProblematica):
+    return eliminarProblematica(idProblematica)

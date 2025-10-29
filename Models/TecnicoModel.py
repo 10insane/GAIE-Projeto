@@ -1,13 +1,13 @@
 from Models.bd_connection import *
 import mysql.connector
 
-def criarTecnico(idTecnico, nProcTecnico, nomeTecnicos):
+def criarTecnico(nProcTecnico, nomeTecnicos):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO tecnicos (idTecnico, nProcTecnico ,nomeTecnicos) VALUES (%s, %s, %s)",
-            (idTecnico, nProcTecnico, nomeTecnicos)
+            "INSERT INTO tecnicos (nProcTecnico ,nomeTecnicos) VALUES (%s, %s, %s)",
+            (nProcTecnico, nomeTecnicos)
         )
         conn.commit()
         return True
