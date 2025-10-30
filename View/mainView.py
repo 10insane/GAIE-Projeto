@@ -1,9 +1,6 @@
 import flet as ft
 import flet_lottie as fl
-
-UTILIZADOR_CORRETO = "admin"
-PALAVRA_PASSE_CORRETA = "admin123"
-
+from Models.TecnicoModel import listarTecnico, criarTecnico
 
 def main(page: ft.Page):
     page.title = "GAIE - Login"
@@ -13,7 +10,7 @@ def main(page: ft.Page):
     # ==========================
     # CAMPOS LOGIN
     # ==========================
-    animacao_lottie = fl.Lottie(
+    animacaoLottie = fl.Lottie(
         src="https://lottie.host/5859fa72-f001-4fa0-9c23-f5df61e4bfe5/MpooU95fLc.json",
         reverse=False,
         animate=True,
@@ -21,186 +18,118 @@ def main(page: ft.Page):
         height=150,
     )
 
-    campo_utilizador = ft.TextField(
-        label="Utilizador",
-        prefix_icon=ft.Icons.PERSON,
+    campoNumeroProcesso = ft.TextField(
+        label="Nº Processo Técnico",
+        prefix_icon=ft.Icons.BADGE,
         autofocus=True,
         width=300,
     )
 
-    campo_palavra_passe = ft.TextField(
-        label="Palavra-passe",
-        password=True,
-        can_reveal_password=True,
-        prefix_icon=ft.Icons.LOCK,
+    campoNomeTecnico = ft.TextField(
+        label="Nome do Técnico",
+        prefix_icon=ft.Icons.PERSON,
         width=300,
     )
 
-    mensagem_erro = ft.Text(color=ft.Colors.RED)
+    mensagemErro = ft.Text(color=ft.Colors.RED)
 
     # ==========================
-    # PÁGINA PRINCIPAL (melhorada)
+    # TELA PRINCIPAL DO SISTEMA
     # ==========================
-    def carregar_tela_principal():
+    def carregarTelaPrincipal(tecnicoNome):
         page.clean()
         page.title = "GAIE - Área Principal"
         page.theme_mode = ft.ThemeMode.LIGHT
         page.bgcolor = "#F5F6FA"
         page.scroll = True
 
-        # ----- Drawer -----
-        drawer = ft.NavigationDrawer(
-            controls=[
-                ft.Container(height=12),
-                ft.NavigationDrawerDestination(
-                    label="Inserir Aluno",
-                    icon=ft.Icons.PERSON_ADD_OUTLINED,
-                ),
-                ft.NavigationDrawerDestination(
-                    label="Inserir Escolas",
-                    icon=ft.Icons.SCHOOL_OUTLINED,
-                ),
-                ft.NavigationDrawerDestination(
-                    label="Inserir Técnico",
-                    icon=ft.Icons.ENGINEERING_OUTLINED,
-                ),
-                ft.Divider(thickness=1),
-                ft.NavigationDrawerDestination(
-                    label="Estado do Processo",
-                    icon=ft.Icons.ASSIGNMENT_TURNED_IN_OUTLINED,
-                ),
-                ft.NavigationDrawerDestination(
-                    label="Problemática SPO",
-                    icon=ft.Icons.REPORT_PROBLEM_OUTLINED,
-                ),
-            ],
-            position=ft.NavigationDrawerPosition.END,
-        )
+        # Conteúdo simplificado
+        page.add(ft.Text(f"Bem-vindo {tecnicoNome} à área principal!", size=24))
+        page.update()
 
-        # ----- Cabeçalho -----
-        cabecalho = ft.Container(
-            bgcolor="#8A2BE2",
-            padding=15,
-            content=ft.Row(
-                [
-                    ft.Text(
-                        "GAIE",
-                        size=28,
-                        weight=ft.FontWeight.BOLD,
-                        color=ft.Colors.WHITE,
-                    ),
-                    ft.Container(expand=True),
-                    ft.IconButton(
-                        icon=ft.Icons.MENU,
-                        icon_color=ft.Colors.WHITE,
-                        icon_size=30,
-                        tooltip="Abrir menu",
-                        on_click=lambda e: page.open(drawer),
-                    ),
-                ],
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-            ),
-        )
+    # ==========================
+    # TELA DE CRIAÇÃO DE TÉCNICO
+    # ==========================
+    def carregarTelaCriarTecnico(pref_nProc="", pref_nome=""):
+        page.clean()
+        page.title = "GAIE - Criar Técnico"
 
-        # ----- Cartões principais -----
-        def criar_card(titulo, descricao, icone, cor):
-            return ft.Container(
-                bgcolor=cor,
-                width=250,
-                height=160,
-                border_radius=15,
-                padding=20,
-                shadow=ft.BoxShadow(blur_radius=8, color="rgba(0,0,0,0.2)"),
-                content=ft.Column(
-                    [
-                        ft.Icon(icone, size=50, color="white"),
-                        ft.Text(
-                            titulo,
-                            size=18,
-                            weight=ft.FontWeight.BOLD,
-                            color="white",
-                        ),
-                        ft.Text(
-                            descricao,
-                            size=13,
-                            color="white",
-                        ),
-                    ],
-                    spacing=8,
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    horizontal_alignment=ft.CrossAxisAlignment.START,
-                ),
-            )
+        campoNovoNumero = ft.TextField(label="Nº Processo Técnico", value=pref_nProc)
+        campoNovoNome = ft.TextField(label="Nome do Técnico", value=pref_nome)
+        mensagemSnack = ft.Text(color=ft.Colors.RED)
 
-        cards = ft.Row(
-            [
-                criar_card("Inserir Aluno", "Adicionar novos alunos ao sistema", ft.Icons.PERSON_ADD, "#6C63FF"),
-                criar_card("Inserir Escolas", "Gerir lista de escolas", ft.Icons.SCHOOL, "#FF6584"),
-                criar_card("Inserir Técnico", "Cadastrar técnicos", ft.Icons.ENGINEERING, "#00C49A"),
-            ],
-            wrap=True,
-            spacing=20,
-            alignment=ft.MainAxisAlignment.CENTER,
-        )
+        def salvarTecnico(e):
+            nProc = campoNovoNumero.value.strip()
+            nome = campoNovoNome.value.strip()
 
-        cards2 = ft.Row(
-            [
-                criar_card("Estado do Processo", "Acompanhar o progresso", ft.Icons.ASSIGNMENT_TURNED_IN, "#0088FE"),
-                criar_card("Problemática SPO", "Ver relatórios e alertas", ft.Icons.REPORT_PROBLEM, "#FFBB28"),
-            ],
-            wrap=True,
-            spacing=20,
-            alignment=ft.MainAxisAlignment.CENTER,
-        )
+            if not nProc or not nome:
+                page.snack_bar = ft.SnackBar(ft.Text("Preencha todos os campos!"))
+                page.snack_bar.open = True
+                page.update()
+                return
 
-        conteudo = ft.Column(
-            [
-                ft.Container(height=20),
-                ft.Text(
-                    "Bem-vindo à Área Principal do GAIE!",
-                    size=24,
-                    weight=ft.FontWeight.BOLD,
-                    color="#2F2F2F",
-                ),
-                ft.Text(
-                    "Selecione uma das opções abaixo para começar:",
-                    size=16,
-                    color="#4F4F4F",
-                ),
-                ft.Container(height=30),
-                cards,
-                ft.Container(height=20),
-                cards2,
-            ],
-            alignment=ft.MainAxisAlignment.START,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=10,
-        )
+            if criarTecnico(nProc, nome):
+                page.snack_bar = ft.SnackBar(ft.Text("✅ Técnico criado com sucesso!"))
+                page.snack_bar.open = True
+                carregarLogin()  # Volta para a tela de login
+                page.update()
+            else:
+                page.snack_bar = ft.SnackBar(ft.Text("❌ Erro ao criar técnico!"))
+                page.snack_bar.open = True
+                page.update()
 
+        # Layout da tela
         page.add(
             ft.Column(
                 [
-                    cabecalho,
-                    ft.Container(padding=30, content=conteudo),
+                    ft.Text("Criar Novo Técnico", size=24, weight=ft.FontWeight.BOLD),
+                    campoNovoNumero,
+                    campoNovoNome,
+                    ft.Row(
+                        [
+                            ft.ElevatedButton("Salvar", on_click=salvarTecnico, icon=ft.Icons.SAVE),
+                            ft.TextButton("Cancelar", on_click=lambda e: carregarLogin()),
+                        ],
+                        spacing=10,
+                    ),
                 ],
+                alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=20,
                 expand=True,
             )
         )
+        page.update()
 
     # ==========================
-    # LOGIN
+    # AUTENTICAÇÃO
     # ==========================
     def autenticar(e):
-        if (
-            campo_utilizador.value == UTILIZADOR_CORRETO
-            and campo_palavra_passe.value == PALAVRA_PASSE_CORRETA
-        ):
-            carregar_tela_principal()
+        nProc = campoNumeroProcesso.value.strip()
+        nome = campoNomeTecnico.value.strip()
+
+        if not nProc or not nome:
+            mensagemErro.value = "Preencha ambos os campos!"
+            page.update()
+            return
+
+        tecnicos = listarTecnico()
+        tecnicoExiste = any(
+            str(t["nProcTecnico"]) == nProc and t["nomeTecnicos"].lower() == nome.lower()
+            for t in tecnicos
+        )
+
+        if tecnicoExiste:
+            carregarTelaPrincipal(nome)
         else:
-            mensagem_erro.value = "Utilizador ou palavra-passe incorretos!"
+            mensagemErro.value = "Técnico não encontrado! Deseja criar um novo?"
+            botaoCriar.visible = True
             page.update()
 
-    botao_entrar = ft.ElevatedButton(
+    # ==========================
+    # BOTÕES
+    # ==========================
+    botaoEntrar = ft.ElevatedButton(
         "Entrar",
         icon=ft.Icons.LOGIN,
         on_click=autenticar,
@@ -209,15 +138,35 @@ def main(page: ft.Page):
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
     )
 
+    botaoCriar = ft.ElevatedButton(
+        "Criar Técnico",
+        icon=ft.Icons.PERSON_ADD,
+        bgcolor="#00C49A",
+        color=ft.Colors.WHITE,
+        visible=False,
+        on_click=lambda e: carregarTelaCriarTecnico(
+            pref_nProc=campoNumeroProcesso.value,
+            pref_nome=campoNomeTecnico.value,
+        ),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10)),
+    )
+
+    botoesLogin = ft.Row(
+        [botaoEntrar, botaoCriar],
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=10
+    )
+
     # ==========================
     # LOGIN SCREEN
     # ==========================
-    def carregar_login():
+    def carregarLogin():
         page.clean()
         page.theme_mode = ft.ThemeMode.DARK
         page.bgcolor = None
+        botaoCriar.visible = False
 
-        fundo_com_gradiente = ft.Container(
+        fundoComGradiente = ft.Container(
             expand=True,
             gradient=ft.LinearGradient(
                 begin=ft.Alignment(-1, -1),
@@ -231,17 +180,17 @@ def main(page: ft.Page):
                             ft.Container(
                                 content=ft.Column(
                                     [
-                                        animacao_lottie,
+                                        animacaoLottie,
                                         ft.Text(
-                                            "Login",
+                                            "Login do Técnico",
                                             style=ft.TextThemeStyle.HEADLINE_SMALL,
                                             weight=ft.FontWeight.BOLD,
                                             color=ft.Colors.WHITE,
                                         ),
-                                        campo_utilizador,
-                                        campo_palavra_passe,
-                                        botao_entrar,
-                                        mensagem_erro,
+                                        campoNumeroProcesso,
+                                        campoNomeTecnico,
+                                        botoesLogin,
+                                        mensagemErro,
                                     ],
                                     alignment=ft.MainAxisAlignment.CENTER,
                                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -250,7 +199,7 @@ def main(page: ft.Page):
                                 padding=40,
                                 width=400,
                                 border_radius=20,
-                                bgcolor="rgba(0, 0, 0, 0.4)",
+                                bgcolor="rgba(0, 0, 0, 0.8)",
                                 border=ft.border.all(2, ft.Colors.WHITE70),
                                 shadow=ft.BoxShadow(
                                     spread_radius=2,
@@ -269,9 +218,9 @@ def main(page: ft.Page):
             ),
         )
 
-        page.add(fundo_com_gradiente)
+        page.add(fundoComGradiente)
+        page.update()
 
-    carregar_login()
-
+    carregarLogin()
 
 ft.app(target=main, view=ft.WEB_BROWSER)

@@ -6,7 +6,7 @@ def criarTecnico(nProcTecnico, nomeTecnicos):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO tecnicos (nProcTecnico ,nomeTecnicos) VALUES (%s, %s, %s)",
+            "INSERT INTO tecnicos (nProcTecnico ,nomeTecnicos) VALUES (%s, %s)",
             (nProcTecnico, nomeTecnicos)
         )
         conn.commit()
