@@ -5,7 +5,7 @@ from View.CriarTecnicoView import CreateTecnico
 
 
 def main(page: ft.Page):
-    page.title = "GAIE"
+    page.title = "GAIE - Psicologia"
     page.theme_mode = ft.ThemeMode.DARK
     page.session.clear()
 

@@ -1,12 +1,9 @@
 import flet as ft
 import flet_lottie as fl
-import threading
-import time
-import math
 from Models.TecnicoModel import listarTecnico
 
-
 def LoginView(page: ft.Page):
+    # Animação Lottie de Login
     animacaoLottie = fl.Lottie(
         src="https://lottie.host/5859fa72-f001-4fa0-9c23-f5df61e4bfe5/MpooU95fLc.json",
         animate=True,
@@ -14,12 +11,39 @@ def LoginView(page: ft.Page):
         height=150,
     )
 
-    campoNumeroProcesso = ft.TextField(label="Nº Processo Técnico", prefix_icon=ft.Icons.BADGE, width=300)
-    campoNomeTecnico = ft.TextField(label="Nome do Técnico", prefix_icon=ft.Icons.PERSON, width=300)
-    mensagemErro = ft.Text(color=ft.Colors.RED)
-    botaoCriar = ft.ElevatedButton("Criar Técnico", visible=False, on_click=lambda e: page.go("/criar-tecnico"))
+    # Campos de entrada para número do processo e nome do técnico
+    campoNumeroProcesso = ft.TextField(
+        label="Nº Processo Técnico", 
+        prefix_icon=ft.Icons.BADGE, 
+        width=350, 
+        autofocus=True,
+        border_color="#4CAF50",  # Verde para o campo
+        focused_border_color="#1E40AF",  # Azul no foco
+        hint_text="Digite o número do processo"
+    )
+    campoNomeTecnico = ft.TextField(
+        label="Nome do Técnico", 
+        prefix_icon=ft.Icons.PERSON, 
+        width=350, 
+        border_color="#4CAF50", 
+        focused_border_color="#1E40AF",  # Azul no foco
+        hint_text="Digite o nome do técnico"
+    )
 
-    # ======= Função de autenticação =======
+    # Mensagem de erro
+    mensagemErro = ft.Text(color=ft.Colors.RED, size=16)
+
+    # Botão para criar técnico (inicialmente invisível)
+    botaoCriar = ft.ElevatedButton(
+        "Criar Técnico", 
+        visible=False, 
+        on_click=lambda e: page.go("/criar-tecnico"),
+        bgcolor="#4CAF50",  # Verde claro
+        color=ft.Colors.WHITE,
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=30))  # Bordas arredondadas
+    )
+
+    # Função de autenticação
     def autenticar(e):
         nProc = campoNumeroProcesso.value.strip()
         nome = campoNomeTecnico.value.strip()
@@ -44,90 +68,73 @@ def LoginView(page: ft.Page):
             botaoCriar.visible = True
             page.update()
 
-    botaoEntrar = ft.ElevatedButton("Entrar", on_click=autenticar, bgcolor="#8A2BE2", color=ft.Colors.WHITE)
-    botoesLogin = ft.Row([botaoEntrar, botaoCriar], alignment=ft.MainAxisAlignment.CENTER)
+    # Botão de login
+    botaoEntrar = ft.ElevatedButton(
+        "Entrar", 
+        on_click=autenticar, 
+        bgcolor="#1E40AF",  # Azul escuro
+        color=ft.Colors.WHITE,
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=30))  # Bordas arredondadas
+    )
 
-    # ======= Fundo com gradiente animado =======
+    # Organizar os botões de login
+    botoesLogin = ft.Row(
+        [botaoEntrar, botaoCriar], 
+        alignment=ft.MainAxisAlignment.CENTER, 
+        spacing=20
+    )
+
+    caixaLogin = ft.Container(
+        width=450,
+        height=500,
+        padding=50,
+        bgcolor=ft.Colors.WHITE  # Usando a constante de cor branca do Flet
+,  # Fundo branco sólido
+        border_radius=25,  # Bordas arredondadas
+        content=ft.Column(
+            [
+                animacaoLottie,
+                ft.Text("Login", size=26, weight=ft.FontWeight.BOLD, color="#000103"),
+                campoNumeroProcesso,
+                campoNomeTecnico,
+                botoesLogin,
+                mensagemErro,
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=25,
+        ),
+    )
+
+    # Imagem do lado direito (a animação está em uma posição mais visível)
+    imagemPsico = fl.Lottie(
+        src="https://lottie.host/3ca3724a-1dd4-41d0-8783-b409dabecb3d/TMc5F1aZeS.json",
+        animate=True,
+        width=600,  # Aumentando a largura da animação
+        height=450,
+    )
+
+    # Layout principal com duas colunas (caixa de login e animação do lado direito)
+    layoutPrincipal = ft.Row(
+        [
+            ft.Container(content=caixaLogin, expand=1, alignment=ft.alignment.center),
+            ft.Container(content=imagemPsico, expand=1, alignment=ft.alignment.center),
+        ],
+        alignment=ft.MainAxisAlignment.CENTER,
+        expand=True,
+        spacing=20,  # Diminuí o espaçamento para dar mais espaço para a imagem
+    )
+
+    # Fundo com gradiente moderno (fundo azul suave)
     fundoComGradiente = ft.Container(
         expand=True,
         gradient=ft.LinearGradient(
             begin=ft.Alignment(-1, -1),
             end=ft.Alignment(1, 1),
-            colors=["#47C3FD", "#45FFCA", "#950ECE"],
+            colors=["#3B82F6", "#60A5FA", "#93C5FD"],  # Gradiente de azuis
         ),
-        content=ft.Column(
-            [
-                ft.Row(
-                    [
-                        ft.Container(
-                            content=ft.Column(
-                                [
-                                    animacaoLottie,
-                                    ft.Text(
-                                        "Login do Técnico",
-                                        style=ft.TextThemeStyle.HEADLINE_SMALL,
-                                        weight=ft.FontWeight.BOLD,
-                                        color=ft.Colors.WHITE,
-                                    ),
-                                    campoNumeroProcesso,
-                                    campoNomeTecnico,
-                                    botoesLogin,
-                                    mensagemErro,
-                                ],
-                                alignment=ft.MainAxisAlignment.CENTER,
-                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                                spacing=15,
-                            ),
-                            padding=40,
-                            width=400,
-                            border_radius=20,
-                            bgcolor="rgba(0, 0, 0, 0.8)",
-                            border=ft.border.all(2, ft.Colors.WHITE70),
-                            shadow=ft.BoxShadow(
-                                spread_radius=2,
-                                blur_radius=8,
-                                color="rgba(0,0,0,0.5)",
-                                offset=ft.Offset(2, 2),
-                            ),
-                        )
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                )
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            expand=True,
-        ),
+        content=layoutPrincipal,
     )
 
-    # ======= Animação do gradiente com thread =======
-    def animar_gradiente():
-        t = 0
-        while True:
-            t += 0.03
-            r1 = int(128 + 127 * math.sin(t))
-            g1 = int(128 + 127 * math.sin(t + 2))
-            b1 = int(128 + 127 * math.sin(t + 4))
-
-            r2 = int(128 + 127 * math.sin(t + 1))
-            g2 = int(128 + 127 * math.sin(t + 3))
-            b2 = int(128 + 127 * math.sin(t + 5))
-
-            color1 = f"#{r1:02x}{g1:02x}{b1:02x}"
-            color2 = f"#{r2:02x}{g2:02x}{b2:02x}"
-
-            fundoComGradiente.gradient = ft.LinearGradient(
-                begin=ft.Alignment(-1, -1),
-                end=ft.Alignment(1, 1),
-                colors=[color1, color2],
-            )
-            fundoComGradiente.update()
-            time.sleep(0.05)
-
-    # Inicia thread de animação
-    threading.Thread(target=animar_gradiente, daemon=True).start()
-
-    return ft.View(
-        route="/login",
-        controls=[fundoComGradiente],
-    )
+    # Retorna a view com fundo gradiente e os controles
+    return ft.View(route="/login", controls=[fundoComGradiente])
