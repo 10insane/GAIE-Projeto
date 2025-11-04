@@ -1,7 +1,7 @@
 from Models.TecnicoModel import *
 
-def Criar( nProcTecnico, nomeTecnicos):
-    return criarTecnico(nProcTecnico, nomeTecnicos)
+def Criar( nProcTecnico, nomeTecnico):
+    return criarTecnico(nProcTecnico, nomeTecnico)
 
 def Listar():
     return listarTecnico()

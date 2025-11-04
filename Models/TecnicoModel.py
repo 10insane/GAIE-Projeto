@@ -1,13 +1,13 @@
 from Models.bd_connection import *
 import mysql.connector
 
-def criarTecnico(nProcTecnico, nomeTecnicos):
+def criarTecnico(nProcTecnico, nomeTecnico):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "INSERT INTO tecnicos (nProcTecnico ,nomeTecnicos) VALUES (%s, %s)",
-            (nProcTecnico, nomeTecnicos)
+            "INSERT INTO tecnicos (nProcTecnico ,nomeTecnico) VALUES (%s, %s)",
+            (nProcTecnico, nomeTecnico)
         )
         conn.commit()
         return True
@@ -37,7 +37,7 @@ def atualizarTecnico(nProcTecnico, novoNome):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "UPDATE tecnicos SET nomeTecnicos = %s WHERE nProcTecnico = %s",
+            "UPDATE tecnicos SET nomeTecnico = %s WHERE nProcTecnico = %s",
             (novoNome, nProcTecnico)
         )
         conn.commit()
