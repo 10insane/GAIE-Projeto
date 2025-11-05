@@ -1,59 +1,30 @@
 import flet as ft
 import flet_lottie as fl
 from Models.TecnicoModel import listarTecnico
+from datetime import datetime
 
 def LoginView(page: ft.Page):
-    # Animação Lottie de Login
-    animacaoLottie = fl.Lottie(
-        src="https://lottie.host/5859fa72-f001-4fa0-9c23-f5df61e4bfe5/MpooU95fLc.json",
-        animate=True,
-        width=150,
-        height=150,
-    )
+    page.title = "Login Técnico"
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    # Campos de entrada para número do processo e nome do técnico
-    campoNumeroProcesso = ft.TextField(
-        label="Nº Processo Técnico", 
-        prefix_icon=ft.Icons.BADGE, 
-        width=350, 
-        autofocus=True,
-        border_color="#4CAF50",  # Verde para o campo
-        focused_border_color="#1E40AF",  # Azul no foco
-        hint_text="Digite o número do processo"
-    )
-    campoNomeTecnico = ft.TextField(
-        label="Nome do Técnico", 
-        prefix_icon=ft.Icons.PERSON, 
-        width=350, 
-        border_color="#4CAF50", 
-        focused_border_color="#1E40AF",  # Azul no foco
-        hint_text="Digite o nome do técnico"
-    )
-
-    # Mensagem de erro
-    mensagemErro = ft.Text(color=ft.Colors.RED, size=16)
-
-    # Botão para criar técnico (inicialmente invisível)
-    botaoCriar = ft.ElevatedButton(
-        "Criar Técnico", 
-        visible=False, 
-        on_click=lambda e: page.go("/criar-tecnico"),
-        bgcolor="#4CAF50",  # Verde claro
-        color=ft.Colors.WHITE,
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=30))  # Bordas arredondadas
-    )
-
-    # Função de autenticação
     def autenticar(e):
         nProc = campoNumeroProcesso.value.strip()
         nome = campoNomeTecnico.value.strip()
 
         if not nProc or not nome:
             mensagemErro.value = "Preencha ambos os campos!"
+            botaoCriar.visible = False
             page.update()
             return
 
-        tecnicos = listarTecnico()
+        try:
+            tecnicos = listarTecnico()
+        except Exception as ex:
+            mensagemErro.value = f"Erro ao listar técnicos: {ex}"
+            page.update()
+            return
+
         tecnicoExiste = any(
             str(t.get("nProcTecnico", "")).strip() == str(nProc).strip()
             and t.get("NomeTecnico", "").strip().lower() == nome.strip().lower()
@@ -68,33 +39,111 @@ def LoginView(page: ft.Page):
             botaoCriar.visible = True
             page.update()
 
-    # Botão de login
-    botaoEntrar = ft.ElevatedButton(
-        "Entrar", 
-        on_click=autenticar, 
-        bgcolor="#1E40AF",  # Azul escuro
-        color=ft.Colors.WHITE,
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=30))  # Bordas arredondadas
+    animacaoLottie = fl.Lottie(
+        src="https://lottie.host/5859fa72-f001-4fa0-9c23-f5df61e4bfe5/MpooU95fLc.json",
+        animate=True,
+        width=150,
+        height=150,
     )
 
-    # Organizar os botões de login
+    campoNumeroProcesso = ft.TextField(
+        label="Nº Processo Técnico",
+        prefix_icon=ft.Icons.BADGE,
+        width=350,
+        autofocus=True,
+        border_color="#000200",
+        focused_border_color="#1E40AF",
+        hint_text="Digite o número do processo",
+        text_style=ft.TextStyle(
+            font_family="sans-serif",
+            weight=ft.FontWeight.BOLD,
+            size=14,
+            letter_spacing=0.5,
+            color="#000000",
+        ),
+        border_radius=25,
+    )
+
+    campoNomeTecnico = ft.TextField(
+        label="Nome do Técnico",
+        prefix_icon=ft.Icons.PERSON,
+        width=350,
+        border_color="#000200",
+        focused_border_color="#1E40AF",
+        hint_text="Digite o nome do técnico",
+        text_style=ft.TextStyle(
+            font_family="sans-serif",
+            weight=ft.FontWeight.BOLD,
+            size=14,
+            letter_spacing=0.5,
+            color="#000000",
+        ),
+        border_radius=25,
+    )
+
+    mensagemErro = ft.Text(color=ft.Colors.RED, size=16)
+
+    botaoEntrar = ft.ElevatedButton(
+        "Entrar",
+        on_click=autenticar, 
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=25),
+            bgcolor="#1E40AF",
+            color="#FFFFFF",
+            text_style=ft.TextStyle(
+                font_family="sans-serif",
+                weight=ft.FontWeight.BOLD,
+                size=16,
+                letter_spacing=1.0,
+            ),
+            elevation=8,
+            overlay_color="#2563EB",
+        ),
+        width=150,
+        height=55,
+    )
+
+    botaoCriar = ft.ElevatedButton(
+        "Criar Técnico",
+        visible=False,
+        on_click=lambda e: page.go("/criar-tecnico"),
+        width=150,
+        height=55, 
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=25),
+            bgcolor="#2563EB",
+            color=ft.Colors.WHITE,
+            text_style=ft.TextStyle(
+                font_family="sans-serif",
+                weight=ft.FontWeight.BOLD,
+                size=16,
+                letter_spacing=1.0,
+            ),
+        ),
+    )
+
     botoesLogin = ft.Row(
-        [botaoEntrar, botaoCriar], 
-        alignment=ft.MainAxisAlignment.CENTER, 
-        spacing=20
+        [botaoEntrar, botaoCriar],
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=20,
     )
 
     caixaLogin = ft.Container(
-        width=450,
-        height=500,
-        padding=50,
-        bgcolor=ft.Colors.WHITE  # Usando a constante de cor branca do Flet
-,  # Fundo branco sólido
-        border_radius=25,  # Bordas arredondadas
+        width=380,
+        height=550,
+        padding=40,
+        bgcolor="#FFFFFF",
+        border_radius=25,
+        border=ft.border.all(2, "#1E40AF"),
+        shadow=ft.BoxShadow(
+            blur_radius=25,
+            color=ft.Colors.with_opacity(0.25, "#1E40AF"),
+            spread_radius=1,
+        ),
         content=ft.Column(
             [
                 animacaoLottie,
-                ft.Text("Login", size=26, weight=ft.FontWeight.BOLD, color="#000103"),
+                ft.Text("Login", size=28, weight=ft.FontWeight.BOLD, color="#1E40AF"),
                 campoNumeroProcesso,
                 campoNomeTecnico,
                 botoesLogin,
@@ -102,19 +151,17 @@ def LoginView(page: ft.Page):
             ],
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=25,
+            spacing=20,
         ),
     )
 
-    # Imagem do lado direito (a animação está em uma posição mais visível)
     imagemPsico = fl.Lottie(
         src="https://lottie.host/3ca3724a-1dd4-41d0-8783-b409dabecb3d/TMc5F1aZeS.json",
         animate=True,
-        width=600,  # Aumentando a largura da animação
-        height=450,
+        width=750,
+        height=600,
     )
 
-    # Layout principal com duas colunas (caixa de login e animação do lado direito)
     layoutPrincipal = ft.Row(
         [
             ft.Container(content=caixaLogin, expand=1, alignment=ft.alignment.center),
@@ -122,19 +169,65 @@ def LoginView(page: ft.Page):
         ],
         alignment=ft.MainAxisAlignment.CENTER,
         expand=True,
-        spacing=20,  # Diminuí o espaçamento para dar mais espaço para a imagem
+        spacing=40,
     )
 
-    # Fundo com gradiente moderno (fundo azul suave)
     fundoComGradiente = ft.Container(
         expand=True,
         gradient=ft.LinearGradient(
             begin=ft.Alignment(-1, -1),
             end=ft.Alignment(1, 1),
-            colors=["#3B82F6", "#60A5FA", "#93C5FD"],  # Gradiente de azuis
+            colors=["#3B82F6", "#60A5FA", "#93C5FD"],
         ),
         content=layoutPrincipal,
     )
 
-    # Retorna a view com fundo gradiente e os controles
-    return ft.View(route="/login", controls=[fundoComGradiente])
+    def criar_rodape():
+        ano_atual = datetime.now().year
+        return ft.Container(
+            padding=ft.padding.symmetric(vertical=10, horizontal=40),
+            bgcolor=ft.Colors.BLACK,
+            content=ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.Row(
+                                [
+                                    ft.Text("Sobre", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                                    ft.Text("Contato", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                                    ft.Text("Privacidade", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                                    ft.Text("Termos de Uso", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                                ],
+                                spacing=20
+                            ),
+                           ft.Container(expand=1),
+                            ft.Text("Suporte: suporte@minhaempresa.com", color=ft.Colors.WHITE)
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                    ),
+                    ft.Divider(color=ft.Colors.GREY, thickness=0.5, height=5),
+                    ft.Row(
+                        [
+                            ft.Text(f"© {ano_atual} Minha Empresa", color=ft.Colors.WHITE),
+                            ft.Container(expand=1),
+                            ft.Text("Versão 1.0.0", color=ft.Colors.WHITE, size=12),
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                    ),
+                ],
+                spacing=5
+            )
+        )
+
+    rodape = criar_rodape()
+
+    layout_completo = ft.Column(
+        [
+            fundoComGradiente,
+            rodape
+        ],
+        spacing=0,
+        expand=True
+    )
+
+    return ft.View(route="/login", controls=[layout_completo])
