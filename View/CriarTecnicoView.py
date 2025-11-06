@@ -3,6 +3,13 @@ from Models.TecnicoModel import criarTecnico
 
 def CreateTecnico(page: ft.Page):
     # Campos de entrada com estilo idêntico ao login
+    def limitar_numero_processo(e):
+     valor = ''.join(filter(str.isdigit, e.control.value))  # mantém apenas dígitos
+     if len(valor) > 10:  # agora o limite é 10
+        valor = valor[:10]  # corta o excesso
+     e.control.value = valor
+     page.update()
+    
     campoNovoNumero = ft.TextField(
         label="Nº Processo Técnico",
         prefix_icon=ft.Icons.BADGE,
@@ -19,6 +26,7 @@ def CreateTecnico(page: ft.Page):
             color="#000000",
         ),
         border_radius=25,
+        on_change=limitar_numero_processo,
     )
 
     campoNovoNome = ft.TextField(

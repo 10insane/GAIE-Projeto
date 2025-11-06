@@ -7,7 +7,14 @@ def LoginView(page: ft.Page):
     page.title = "Login Técnico"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
-
+    
+    def limitar_numero_processo(e):
+     valor = ''.join(filter(str.isdigit, e.control.value)) 
+     if len(valor) > 10:  
+        valor = valor[:10]  
+     e.control.value = valor
+     page.update()
+    
     def autenticar(e):
         nProc = campoNumeroProcesso.value.strip()
         nome = campoNomeTecnico.value.strip()
@@ -62,6 +69,7 @@ def LoginView(page: ft.Page):
             color="#000000",
         ),
         border_radius=25,
+        on_change=limitar_numero_processo,
     )
 
     campoNomeTecnico = ft.TextField(
@@ -183,7 +191,7 @@ def LoginView(page: ft.Page):
     )
 
     def criar_rodape():
-        ano_atual = datetime.now().year
+        anoAtual = datetime.now().year
         return ft.Container(
             padding=ft.padding.symmetric(vertical=10, horizontal=40),
             bgcolor=ft.Colors.BLACK,
@@ -201,14 +209,14 @@ def LoginView(page: ft.Page):
                                 spacing=20
                             ),
                            ft.Container(expand=1),
-                            ft.Text("Suporte: suporte@minhaempresa.com", color=ft.Colors.WHITE)
+                            ft.Text("Suporte: suporte@TGPSISolutions.com", color=ft.Colors.WHITE)
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                     ),
                     ft.Divider(color=ft.Colors.GREY, thickness=0.5, height=5),
                     ft.Row(
                         [
-                            ft.Text(f"© {ano_atual} Minha Empresa", color=ft.Colors.WHITE),
+                            ft.Text(f"© {anoAtual} TGPSI Solutions", color=ft.Colors.WHITE),
                             ft.Container(expand=1),
                             ft.Text("Versão 1.0.0", color=ft.Colors.WHITE, size=12),
                         ],
