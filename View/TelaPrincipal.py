@@ -2,12 +2,15 @@ import flet as ft
 from Models.AlunosModel import listarAlunos
 from Models.EscolasModel import listarEscolas
 from View.CriarAluno import PaginaCriarAluno
-
+from Models.TecnicoModel import listarTecnico
 
 def PaginaPrincipal(page: ft.Page):
     tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
     alunos = listarAlunos()
     escolas = listarEscolas()
+    tecnicos = listarTecnico()
+    
+    
 
     # === CORES ===
     cor_primaria = "#1E40AF"
@@ -75,8 +78,8 @@ def PaginaPrincipal(page: ft.Page):
                                     ft.PopupMenuItem(
                                         content=ft.Row(
                                             [
-                                                ft.Icon(ft.Icons.PERSON_ROUNDED, size=20, color=cor_texto_medio),
-                                                ft.Text("Meu Perfil", size=14, color=cor_texto_escuro),
+                                                ft.Icon(ft.Icons.PERSON_ROUNDED, size=20, color=ft.Colors.WHITE),
+                                                ft.Text("Meu Perfil", size=14, color=ft.Colors.WHITE),
                                             ],
                                             spacing=12,
                                         ),
@@ -85,8 +88,8 @@ def PaginaPrincipal(page: ft.Page):
                                     ft.PopupMenuItem(
                                         content=ft.Row(
                                             [
-                                                ft.Icon(ft.Icons.SETTINGS_ROUNDED, size=20, color=cor_texto_medio),
-                                                ft.Text("Configurações", size=14, color=cor_texto_escuro),
+                                                ft.Icon(ft.Icons.SETTINGS_ROUNDED, size=20, color=ft.Colors.WHITE),
+                                                ft.Text("Configurações", size=14,color=ft.Colors.WHITE),
                                             ],
                                             spacing=12,
                                         ),
@@ -175,7 +178,7 @@ def PaginaPrincipal(page: ft.Page):
                 criar_botao_menu("Alunos", ft.Icons.PEOPLE_ROUNDED, "/alunos", acao=lambda e: trocar_vista("alunos")),
                 criar_botao_menu("Escolas", ft.Icons.SCHOOL_ROUNDED, "/escolas", acao=lambda e: trocar_vista("escolas")),
                 criar_botao_menu("Registos", ft.Icons.ASSIGNMENT_ROUNDED, "/registos"),
-                criar_botao_menu("Técnicos", ft.Icons.PERSON_ROUNDED, "/tecnicos"),
+                criar_botao_menu("Técnicos", ft.Icons.PERSON_ROUNDED, "/tecnicos", acao=lambda e: trocar_vista("tecnicos")),
                 ft.Container(expand=True),
                 ft.Divider(height=1, color=cor_borda),
                 ft.Container(height=10),
@@ -192,16 +195,7 @@ def PaginaPrincipal(page: ft.Page):
     # === FUNÇÃO DE TROCA DE VISTA ===
     conteudo_principal = ft.Container(expand=True, bgcolor=cor_fundo, padding=30, content=None)
 
-    def trocar_vista(vista):
-        if vista == "dashboard":
-            conteudo_principal.content = dashboard_view
-        elif vista == "alunos":
-            conteudo_principal.content = alunos_view
-        elif vista == "escolas":
-            conteudo_principal.content = escolas_view
-        page.update()
-
-    # === CARDS GRANDES DO DASHBOARD ===
+    # === DASHBOARD VIEW ===
     def criar_card_grande(titulo, valor, icone, cor, subtitulo):
         return ft.Container(
             content=ft.Column(
@@ -229,7 +223,6 @@ def PaginaPrincipal(page: ft.Page):
             expand=True,
         )
 
-    # === CARDS DE ESTADO ===
     def criar_card_estado(titulo, valor, icone, cor):
         return ft.Container(
             content=ft.Column(
@@ -262,7 +255,6 @@ def PaginaPrincipal(page: ft.Page):
             expand=True,
         )
 
-    # === DASHBOARD VIEW ===
     dashboard_view = ft.Column(
         [
             ft.Row(
@@ -512,10 +504,74 @@ def PaginaPrincipal(page: ft.Page):
             expand=True,
         )
 
+    # === TECNICOS VIEW ===
+    def criar_card_tecnico(tecnico):
+        return ft.Container(
+            content=ft.Row(
+                [
+                    ft.Container(
+                        content=ft.Icon(ft.Icons.PERSON, color=cor_primaria, size=32),
+                        bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
+                        padding=12,
+                        border_radius=12,
+                    ),
+                    ft.Column(
+                        [
+                            ft.Text(tecnico.get("NomeTecnico", ""), size=16, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                            ft.Text(tecnico.get("Funcao", ""), size=13, color=cor_texto_medio),
+                        ],
+                        spacing=4,
+                        expand=True,
+                    ),
+                    ft.Row([], spacing=5),
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            ),
+            bgcolor=cor_card,
+            padding=20,
+            border_radius=12,
+            border=ft.border.all(1, cor_borda),
+            shadow=ft.BoxShadow(
+                spread_radius=0, blur_radius=10, color=ft.Colors.with_opacity(0.05, ft.Colors.BLACK)
+            ),
+        )
+
+    tecnicos_view = ft.Column(
+        [
+            ft.Row(
+                [
+                    ft.Column(
+                        [
+                            ft.Text("Lista de Técnicos", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                            ft.Text(f"Total: {len(tecnicos)} técnicos registrados", size=14, color=cor_texto_claro),
+                        ],
+                        spacing=5,
+                    ),
+                    ft.Container(expand=True),
+                ],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            ),
+            ft.Container(height=20),
+            ft.Column([criar_card_tecnico(t) for t in tecnicos], spacing=15, scroll=ft.ScrollMode.AUTO),
+        ],
+        spacing=10,
+        expand=True,
+    )
+
+    # === FUNÇÃO DE TROCA DE VISTA ===
+    def trocar_vista(vista):
+        if vista == "dashboard":
+            conteudo_principal.content = dashboard_view
+        elif vista == "alunos":
+            conteudo_principal.content = alunos_view
+        elif vista == "escolas":
+            conteudo_principal.content = escolas_view
+        elif vista == "tecnicos":
+            conteudo_principal.content = tecnicos_view
+        page.update()
+
     # === LAYOUT PRINCIPAL ===
     layout = ft.Row([menu_lateral, conteudo_principal], spacing=20, expand=True)
-
-    # Inicia no dashboard
     conteudo_principal.content = dashboard_view
 
     return ft.View(
