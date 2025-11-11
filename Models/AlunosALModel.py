@@ -53,7 +53,7 @@ def listarAlunosAL():
                    e.NomeEscola, al.AnoLetivo
             FROM alunosal al
             JOIN alunos a ON al.nProcessoAluno = a.nProcessoAluno
-            JOIN escolas e ON a.idEscola = e.idEscola
+            JOIN escolas e ON a.IdEscola = e.IdEscola
             ORDER BY al.AnoLetivo DESC, a.NomeAluno
         """)
         alunos_al = cursor.fetchall()

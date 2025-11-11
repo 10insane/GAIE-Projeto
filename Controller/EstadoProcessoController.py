@@ -1,4 +1,4 @@
-from Models.EstadoProcessos import *
+from Models.EstadoProcessos import listarEstados, criarEstado, atualizarEstado, eliminarEstado
 
 def Criar(idEstado, Estado):
     return criarEstado(idEstado, Estado)
@@ -6,8 +6,8 @@ def Criar(idEstado, Estado):
 def Listar():
     return listarEstados()
 
-def atualizar(idEstado, novoEstadoProcesso):
+def Atualizar(idEstado, novoEstadoProcesso):
     return atualizarEstado(idEstado, novoEstadoProcesso)
 
-def deletar(idEstado):
+def Deletar(idEstado):
     return eliminarEstado(idEstado)

@@ -1,16 +1,15 @@
 import flet as ft
 from Models.AlunosModel import listarAlunos
-from Models.EscolasModel import listarEscolas
-from View.CriarAluno import PaginaCriarAluno
+from Models.EscolasModel import listarEscolas, deletarEscola
 from Models.TecnicoModel import listarTecnico
+from Models.RegistoModel import listarRegistos
 
 def PaginaPrincipal(page: ft.Page):
     tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
     alunos = listarAlunos()
     escolas = listarEscolas()
     tecnicos = listarTecnico()
-    
-    
+    registos = listarRegistos()
 
     # === CORES ===
     cor_primaria = "#1E40AF"
@@ -177,7 +176,7 @@ def PaginaPrincipal(page: ft.Page):
                 criar_botao_menu("Dashboard", ft.Icons.DASHBOARD_ROUNDED, "/pagina-principal", acao=lambda e: trocar_vista("dashboard")),
                 criar_botao_menu("Alunos", ft.Icons.PEOPLE_ROUNDED, "/alunos", acao=lambda e: trocar_vista("alunos")),
                 criar_botao_menu("Escolas", ft.Icons.SCHOOL_ROUNDED, "/escolas", acao=lambda e: trocar_vista("escolas")),
-                criar_botao_menu("Registos", ft.Icons.ASSIGNMENT_ROUNDED, "/registos"),
+                criar_botao_menu("Registos", ft.Icons.ASSIGNMENT_ROUNDED, "/registos", acao=lambda e: trocar_vista("registos")),
                 criar_botao_menu("Técnicos", ft.Icons.PERSON_ROUNDED, "/tecnicos", acao=lambda e: trocar_vista("tecnicos")),
                 ft.Container(expand=True),
                 ft.Divider(height=1, color=cor_borda),
@@ -260,7 +259,7 @@ def PaginaPrincipal(page: ft.Page):
             ft.Row(
                 [
                     criar_card_grande("Total de Alunos", len(alunos), ft.Icons.PEOPLE_ALT_ROUNDED, cor_primaria, "Registados no sistema"),
-                    criar_card_grande("Total de Processos", len(alunos), ft.Icons.ASSIGNMENT_ROUNDED, "#8B5CF6", "Todos os registos"),
+                    criar_card_grande("Total de Processos", len(registos), ft.Icons.ASSIGNMENT_ROUNDED, "#8B5CF6", "Todos os registos"),
                     criar_card_grande("Total de Escolas", len(escolas), ft.Icons.SCHOOL_ROUNDED, "#10B981", "Escolas registadas"),
                 ],
                 spacing=28,
@@ -273,22 +272,22 @@ def PaginaPrincipal(page: ft.Page):
                 [
                     ft.Row(
                         [
-                            criar_card_estado("A aguardar", len([a for a in alunos if a.get("estado") == "A aguardar"]), ft.Icons.PENDING_ACTIONS, "#F59E0B"),
-                            criar_card_estado("Em Avaliação", len([a for a in alunos if a.get("estado") == "Em Avaliação"]), ft.Icons.ASSESSMENT, "#3B82F6"),
+                            criar_card_estado("A aguardar", len([r for r in registos if r.get("estado") == "A aguardar"]), ft.Icons.PENDING_ACTIONS, "#F59E0B"),
+                            criar_card_estado("Em Avaliação", len([r for r in registos if r.get("estado") == "Em Avaliação"]), ft.Icons.ASSESSMENT, "#3B82F6"),
                         ],
                         spacing=20,
                     ),
                     ft.Row(
                         [
-                            criar_card_estado("Em intervenção", len([a for a in alunos if a.get("estado") == "Em intervenção"]), ft.Icons.PSYCHOLOGY, "#8B5CF6"),
-                            criar_card_estado("Pendente", len([a for a in alunos if a.get("estado") == "Pendente"]), ft.Icons.SCHEDULE, "#EAB308"),
+                            criar_card_estado("Em intervenção", len([r for r in registos if r.get("estado") == "Em intervenção"]), ft.Icons.PSYCHOLOGY, "#8B5CF6"),
+                            criar_card_estado("Pendente", len([r for r in registos if r.get("estado") == "Pendente"]), ft.Icons.SCHEDULE, "#EAB308"),
                         ],
                         spacing=20,
                     ),
                     ft.Row(
                         [
-                            criar_card_estado("Arquivado", len([a for a in alunos if a.get("estado") == "Arquivado"]), ft.Icons.ARCHIVE, "#6B7280"),
-                            criar_card_estado("Em vigilância", len([a for a in alunos if a.get("estado") == "Em vigilância"]), ft.Icons.VISIBILITY, "#10B981"),
+                            criar_card_estado("Arquivado", len([r for r in registos if r.get("estado") == "Arquivado"]), ft.Icons.ARCHIVE, "#6B7280"),
+                            criar_card_estado("Em vigilância", len([r for r in registos if r.get("estado") == "Em vigilância"]), ft.Icons.VISIBILITY, "#10B981"),
                         ],
                         spacing=20,
                     ),
@@ -334,16 +333,16 @@ def PaginaPrincipal(page: ft.Page):
                     ft.Row(
                         [
                             ft.IconButton(
-                                icon=ft.Icons.VISIBILITY,
-                                icon_color=cor_primaria,
-                                tooltip="Ver detalhes",
-                                on_click=lambda e, a=aluno: page.go(f"/aluno/{a.get('nProcessoAluno')}"),
-                            ),
-                            ft.IconButton(
                                 icon=ft.Icons.EDIT,
                                 icon_color="#F59E0B",
-                                tooltip="Editar",
+                                tooltip="Editar aluno",
                                 on_click=lambda e, a=aluno: page.go(f"/editar-aluno/{a.get('nProcessoAluno')}"),
+                            ),
+                            ft.IconButton(
+                                icon=ft.Icons.DELETE,
+                                icon_color="#DC2626",
+                                tooltip="Excluir aluno",
+                                on_click=lambda e, a=aluno: excluir_aluno_modal(a),
                             ),
                         ],
                         spacing=5,
@@ -360,39 +359,86 @@ def PaginaPrincipal(page: ft.Page):
             ),
         )
 
-    alunos_view = ft.Column(
-        [
-            ft.Row(
-                [
-                    ft.Column(
-                        [
-                            ft.Text("Lista de Alunos", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                            ft.Text(f"Total: {len(alunos)} alunos registados", size=14, color=cor_texto_claro),
-                        ],
-                        spacing=5,
-                    ),
-                    ft.Container(expand=True),
-                    ft.ElevatedButton(
-                        content=ft.Row(
-                            [
-                                ft.Icon(ft.Icons.ADD, size=20),
-                                ft.Text("Novo Aluno", size=15, weight=ft.FontWeight.W_600),
-                            ],
-                            spacing=8,
-                        ),
-                        bgcolor=cor_primaria,
-                        color=ft.Colors.WHITE,
-                        on_click=lambda e: page.go("/CriarAluno"),
-                    ),
-                ],
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-            ),
-            ft.Container(height=20),
-            ft.Column([criar_card_aluno(a) for a in alunos], spacing=15, scroll=ft.ScrollMode.AUTO),
-        ],
-        spacing=10,
-        expand=True,
+    def excluir_aluno_modal(aluno):
+        page.dialog = ft.AlertDialog(
+            title=ft.Text("Confirmar Exclusão"),
+            content=ft.Text(f"Deseja realmente excluir o aluno {aluno.get('NomeAluno')}?"),
+            actions=[
+                ft.TextButton("Cancelar", on_click=lambda e: page.dialog.close()),
+                ft.ElevatedButton("Excluir", bgcolor="#DC2626", color=ft.Colors.WHITE, on_click=lambda e: page.dialog.close()),
+            ],
+        )
+        page.dialog.open = True
+        page.update()
+
+    search_alunos = ft.TextField(
+        label="Pesquisar alunos (nome, escola, ano, turma)",
+        prefix_icon=ft.Icons.SEARCH,
+        width=400,
+        on_change=lambda e: update_alunos_view(e.control.value),
     )
+
+    def get_alunos_view(filtered_alunos):
+        if filtered_alunos:
+            return ft.Column(
+                [
+                    ft.Row(
+                        [
+                            ft.Column(
+                                [
+                                    ft.Text("Lista de Alunos", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                                    ft.Text(f"Total: {len(filtered_alunos)} alunos encontrados", size=14, color=cor_texto_claro),
+                                ],
+                                spacing=5,
+                            ),
+                            ft.Container(expand=True),
+                            ft.ElevatedButton(
+                                content=ft.Row(
+                                    [
+                                        ft.Icon(ft.Icons.ADD, size=20),
+                                        ft.Text("Novo Aluno", size=15, weight=ft.FontWeight.W_600),
+                                    ],
+                                    spacing=8,
+                                ),
+                                bgcolor=cor_primaria,
+                                color=ft.Colors.WHITE,
+                                on_click=lambda e: page.go("/CriarAluno"),
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    ),
+                    ft.Container(height=10),
+                    search_alunos,
+                    ft.Container(height=20),
+                    ft.Column([criar_card_aluno(a) for a in filtered_alunos], spacing=15, scroll=ft.ScrollMode.AUTO),
+                ],
+                spacing=10,
+                expand=True,
+            )
+        else:
+            return ft.Container(
+                content=ft.Column(
+                    [
+                        ft.Icon(ft.Icons.PEOPLE_OUTLINED, size=120, color=cor_texto_claro),
+                        ft.Text("Nenhum aluno encontrado", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                        ft.Text("Tente ajustar os termos de pesquisa", size=15, color=cor_texto_claro),
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    spacing=15,
+                ),
+                alignment=ft.alignment.center,
+                expand=True,
+            )
+
+    def update_alunos_view(query):
+        if query.strip():
+            filtered = [a for a in alunos if any(query.lower() in str(a.get(key, "")).lower() for key in ["NomeAluno", "NomeEscola", "Ano", "Turma"])]
+        else:
+            filtered = alunos
+        conteudo_principal.content = get_alunos_view(filtered)
+        page.update()
+
+    alunos_view = get_alunos_view(alunos)
 
     # === ESCOLAS VIEW ===
     def criar_card_escola(escola):
@@ -425,7 +471,7 @@ def PaginaPrincipal(page: ft.Page):
                                 icon=ft.Icons.DELETE,
                                 icon_color="#DC2626",
                                 tooltip="Excluir",
-                                on_click=lambda e, esc=escola: page.go(f"/excluir-escola/{esc.get('IdEscola')}"),
+                                on_click=lambda e, esc=escola: excluir_escola(esc),
                             ),
                         ],
                         spacing=5,
@@ -442,7 +488,25 @@ def PaginaPrincipal(page: ft.Page):
             ),
         )
 
-    if escolas and len(escolas) > 0:
+    def excluir_escola(escola):
+        sucesso = deletarEscola(escola.get("IdEscola"))
+        if sucesso:
+            page.snack_bar = ft.SnackBar(
+                ft.Text(f"Escola {escola.get('NomeEscola')} removida com sucesso!"),
+                bgcolor="#16A34A",
+                duration=3000,
+            )
+            trocar_vista("escolas")
+        else:
+            page.snack_bar = ft.SnackBar(
+                ft.Text("Erro ao tentar remover a escola."),
+                bgcolor="#DC2626",
+                duration=3000,
+            )
+        page.snack_bar.open = True
+        page.update()
+
+    if escolas:
         escolas_view = ft.Column(
             [
                 ft.Row(
@@ -459,7 +523,7 @@ def PaginaPrincipal(page: ft.Page):
                             content=ft.Row(
                                 [
                                     ft.Icon(ft.Icons.ADD, size=20),
-                                    ft.Text("Nova Escola", size=15, weight=ft.FontWeight.W_600),
+                                    ft.Text("Adicionar Escola", size=15, weight=ft.FontWeight.W_600),
                                 ],
                                 spacing=8,
                             ),
@@ -477,30 +541,36 @@ def PaginaPrincipal(page: ft.Page):
             expand=True,
         )
     else:
-        escolas_view = ft.Container(
-            content=ft.Column(
-                [
-                    ft.Icon(ft.Icons.SCHOOL_OUTLINED, size=120, color=cor_texto_claro),
-                    ft.Text("Nenhuma escola registada", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                    ft.Text("Comece por adicionar a primeira escola ao sistema", size=15, color=cor_texto_claro),
-                    ft.Container(height=20),
-                    ft.ElevatedButton(
-                        content=ft.Row(
-                            [
-                                ft.Icon(ft.Icons.ADD_CIRCLE, size=24),
-                                ft.Text("Criar Primeira Escola", size=16, weight=ft.FontWeight.BOLD),
-                            ],
-                            spacing=10,
-                        ),
-                        bgcolor=cor_primaria,
-                        color=ft.Colors.WHITE,
-                        on_click=lambda e: page.go("/criar-escola"),
+        escolas_view = ft.Column(
+            [
+                ft.Container(
+                    content=ft.Column(
+                        [
+                            ft.Icon(ft.Icons.SCHOOL_OUTLINED, size=120, color=cor_texto_claro),
+                            ft.Text("Nenhuma escola registada", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                            ft.Text("A lista de escolas está vazia", size=15, color=cor_texto_claro),
+                            ft.Container(height=20),
+                            ft.ElevatedButton(
+                                content=ft.Row(
+                                    [
+                                        ft.Icon(ft.Icons.ADD_CIRCLE, size=24),
+                                        ft.Text("Adicionar Primeira Escola", size=16, weight=ft.FontWeight.BOLD),
+                                    ],
+                                    spacing=10,
+                                ),
+                                bgcolor=cor_primaria,
+                                color=ft.Colors.WHITE,
+                                on_click=lambda e: page.go("/criar-escola"),
+                            ),
+                        ],
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=15,
                     ),
-                ],
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=15,
-            ),
-            alignment=ft.alignment.center,
+                    alignment=ft.alignment.center,
+                    expand=True,
+                ),
+            ],
+            spacing=10,
             expand=True,
         )
 
@@ -536,29 +606,164 @@ def PaginaPrincipal(page: ft.Page):
             ),
         )
 
-    tecnicos_view = ft.Column(
-        [
-            ft.Row(
+    if tecnicos:
+        tecnicos_view = ft.Column(
+            [
+                ft.Row(
+                    [
+                        ft.Column(
+                            [
+                                ft.Text("Lista de Técnicos", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                                ft.Text(f"Total: {len(tecnicos)} técnicos registados", size=14, color=cor_texto_claro),
+                            ],
+                            spacing=5,
+                        ),
+                        ft.Container(expand=True),
+                    ],
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                ),
+                ft.Container(height=20),
+                ft.Column([criar_card_tecnico(t) for t in tecnicos], spacing=15, scroll=ft.ScrollMode.AUTO),
+            ],
+            spacing=10,
+            expand=True,
+        )
+    else:
+        tecnicos_view = ft.Container(
+            content=ft.Column(
                 [
+                    ft.Icon(ft.Icons.ENGINEERING_OUTLINED, size=120, color=cor_texto_claro),
+                    ft.Text("Nenhum técnico registado", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                    ft.Text("A lista de técnicos está vazia no momento", size=15, color=cor_texto_claro),
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=15,
+            ),
+            alignment=ft.alignment.center,
+            expand=True,
+        )
+
+    # === REGISTOS VIEW ===
+    def criar_card_registo(registo):
+        return ft.Container(
+            content=ft.Row(
+                [
+                    ft.Container(
+                        content=ft.Icon(ft.Icons.ASSIGNMENT, color=cor_primaria, size=32),
+                        bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
+                        padding=12,
+                        border_radius=12,
+                    ),
                     ft.Column(
                         [
-                            ft.Text("Lista de Técnicos", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                            ft.Text(f"Total: {len(tecnicos)} técnicos registrados", size=14, color=cor_texto_claro),
+                            ft.Text(f"Registo #{registo.get('idRegisto', 'N/A')}", size=16, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                            ft.Row(
+                                [
+                                    ft.Icon(ft.Icons.PERSON, size=14, color=cor_texto_claro),
+                                    ft.Text(f"Aluno: {registo.get('NomeAluno', 'N/A')}", size=13, color=cor_texto_medio),
+                                    ft.Container(width=10),
+                                    ft.Icon(ft.Icons.FLAG, size=14, color=cor_texto_claro),
+                                    ft.Text(f"Estado: {registo.get('estado', 'N/A')}", size=13, color=cor_texto_medio),
+                                ],
+                                spacing=5,
+                            ),
+                            ft.Text(f"Data: {registo.get('DataArquivo', 'N/A')} | Técnico: {registo.get('NomeTecnico', 'N/A')}", size=12, color=cor_texto_claro),
+                        ],
+                        spacing=5,
+                        expand=True,
+                    ),
+                    ft.Row(
+                        [
+                            ft.IconButton(
+                                icon=ft.Icons.VISIBILITY,
+                                icon_color=cor_primaria,
+                                tooltip="Ver detalhes",
+                                on_click=lambda e, r=registo: page.go(f"/registo/{r.get('idRegisto')}"),
+                            ),
+                            ft.IconButton(
+                                icon=ft.Icons.EDIT,
+                                icon_color="#F59E0B",
+                                tooltip="Editar",
+                                on_click=lambda e, r=registo: page.go(f"/editar-registo/{r.get('idRegisto')}"),
+                            ),
                         ],
                         spacing=5,
                     ),
-                    ft.Container(expand=True),
                 ],
                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             ),
-            ft.Container(height=20),
-            ft.Column([criar_card_tecnico(t) for t in tecnicos], spacing=15, scroll=ft.ScrollMode.AUTO),
-        ],
-        spacing=10,
-        expand=True,
-    )
+            bgcolor=cor_card,
+            padding=20,
+            border_radius=12,
+            border=ft.border.all(1, cor_borda),
+            shadow=ft.BoxShadow(
+                spread_radius=0, blur_radius=10, color=ft.Colors.with_opacity(0.05, ft.Colors.BLACK)
+            ),
+        )
 
-    # === FUNÇÃO DE TROCA DE VISTA ===
+    if registos:
+        registos_view = ft.Column(
+            [
+                ft.Row(
+                    [
+                        ft.Column(
+                            [
+                                ft.Text("Lista de Registos", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                                ft.Text(f"Total: {len(registos)} registos", size=14, color=cor_texto_claro),
+                            ],
+                            spacing=5,
+                        ),
+                        ft.Container(expand=True),
+                        ft.ElevatedButton(
+                            content=ft.Row(
+                                [
+                                    ft.Icon(ft.Icons.ADD, size=20),
+                                    ft.Text("Novo Registo", size=15, weight=ft.FontWeight.W_600),
+                                ],
+                                spacing=8,
+                            ),
+                            bgcolor=cor_primaria,
+                            color=ft.Colors.WHITE,
+                            on_click=lambda e: page.go("/criar-registo"),
+                        ),
+                    ],
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                ),
+                ft.Container(height=20),
+                ft.Column([criar_card_registo(r) for r in registos], spacing=15, scroll=ft.ScrollMode.AUTO),
+            ],
+            spacing=10,
+            expand=True,
+        )
+    else:
+        registos_view = ft.Container(
+            content=ft.Column(
+                [
+                    ft.Icon(ft.Icons.ASSIGNMENT_OUTLINED, size=120, color=cor_texto_claro),
+                    ft.Text("Nenhum registo criado", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                    ft.Text("Comece por adicionar o primeiro registo ao sistema", size=15, color=cor_texto_claro),
+                    ft.Container(height=20),
+                    ft.ElevatedButton(
+                        content=ft.Row(
+                            [
+                                ft.Icon(ft.Icons.ADD_CIRCLE, size=24),
+                                ft.Text("Criar Primeiro Registo", size=16, weight=ft.FontWeight.BOLD),
+                            ],
+                            spacing=10,
+                        ),
+                        bgcolor=cor_primaria,
+                        color=ft.Colors.WHITE,
+                        on_click=lambda e: page.go("/criar-registo"),
+                    ),
+                ],
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=15,
+            ),
+            alignment=ft.alignment.center,
+            expand=True,
+        )
+
+    # === TROCA DE VISTAS ===
     def trocar_vista(vista):
         if vista == "dashboard":
             conteudo_principal.content = dashboard_view
@@ -566,6 +771,8 @@ def PaginaPrincipal(page: ft.Page):
             conteudo_principal.content = alunos_view
         elif vista == "escolas":
             conteudo_principal.content = escolas_view
+        elif vista == "registos":
+            conteudo_principal.content = registos_view
         elif vista == "tecnicos":
             conteudo_principal.content = tecnicos_view
         page.update()

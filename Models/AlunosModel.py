@@ -1,22 +1,22 @@
 from Models.bd_connection import *
 import mysql.connector
 
-def criarAluno(nProcessoAluno, nomeAluno,ano, turma, idEscola):
+def criarAluno(nProcessoAluno, nomeAluno,ano, turma, IdEscola):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT idEscola FROM escolas WHERE idEscola = %s", (idEscola,))
+        cursor.execute("SELECT IdEscola FROM escolas WHERE IdEscola = %s", (IdEscola,))
         escola = cursor.fetchone()
         if not escola:
-            print(f"Erro: A escola com o ID {idEscola} não existe.")
+            print(f"Erro: A escola com o ID {IdEscola} não existe.")
             return False
 
         cursor.execute(
             """
-            INSERT INTO alunos (nProcessoAluno, NomeAluno, Ano, Turma, idEscola)
+            INSERT INTO alunos (nProcessoAluno, NomeAluno, Ano, Turma, IdEscola)
             VALUES (%s, %s, %s, %s, %s)
             """,
-            (nProcessoAluno, nomeAluno, ano, turma, idEscola)
+            (nProcessoAluno, nomeAluno, ano, turma, IdEscola)
         )
         conn.commit()
         return True
@@ -36,7 +36,7 @@ def listarAlunos():
         cursor.execute("""
             SELECT a.*, e.NomeEscola
             FROM alunos a
-            JOIN escolas e ON a.idEscola = e.idEscola
+            JOIN escolas e ON a.IdEscola = e.IdEscola
         """)
         alunos = cursor.fetchall()
         return alunos
@@ -53,7 +53,7 @@ def atualizarAluno(nProcessoAluno, novoNome, novoAno, novaTurma, novoIdEscola):
     cursor = conn.cursor()
     try:
         if novoIdEscola:
-            cursor.execute("SELECT idEscola FROM escolas WHERE idEscola = %s", (novoIdEscola,))
+            cursor.execute("SELECT IdEscola FROM escolas WHERE IdEscola = %s", (novoIdEscola,))
             escola = cursor.fetchone()
             if not escola:
                 print(f"Erro: A escola com o ID {novoIdEscola} não existe.")
@@ -62,7 +62,7 @@ def atualizarAluno(nProcessoAluno, novoNome, novoAno, novaTurma, novoIdEscola):
         cursor.execute(
             """
             UPDATE alunos
-            SET NomeAluno = %s, Ano = %s, Turma = %s, idEscola = %s
+            SET NomeAluno = %s, Ano = %s, Turma = %s, IdEscola = %s
             WHERE nProcessoAluno = %s
             """,
             (novoNome, novoAno, novaTurma, novoIdEscola, nProcessoAluno)

@@ -1,7 +1,7 @@
 from Models.AlunosModel import *
 
-def Criar(nProcessoAluno, nomeAluno, idEscola, ano, turma):
-    return criarAluno(nProcessoAluno, nomeAluno, idEscola, ano, turma)
+def Criar(nProcessoAluno, nomeAluno, IdEscola, ano, turma):
+    return criarAluno(nProcessoAluno, nomeAluno, IdEscola, ano, turma)
 
 def Listar():
     return listarAlunos()

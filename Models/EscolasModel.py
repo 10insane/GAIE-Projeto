@@ -34,13 +34,13 @@ def listarEscolas():
         conn.close()
 
 
-def atualizarEscola(idEscola, novoNome):
+def atualizarEscola(IdEscola, novoNome):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "UPDATE escolas SET NomeEscola = %s WHERE idEscola = %s",
-            (novoNome, idEscola)
+            "UPDATE escolas SET NomeEscola = %s WHERE IdEscola = %s",
+            (novoNome, IdEscola)
         )
         conn.commit()
         return cursor.rowcount > 0
@@ -52,13 +52,13 @@ def atualizarEscola(idEscola, novoNome):
         conn.close()
 
 
-def deletarEscola(idEscola):
+def deletarEscola(IdEscola):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "DELETE FROM escolas WHERE idEscola = %s",
-            (idEscola,)
+            "DELETE FROM escolas WHERE IdEscola = %s",
+            (IdEscola,)
         )
         conn.commit()
         return cursor.rowcount > 0

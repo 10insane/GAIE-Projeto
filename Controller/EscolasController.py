@@ -6,8 +6,8 @@ def Criar(IdEscola, nomeEscola):
 def Listar():
     return listarEscolas()
 
-def atualizar(idEscola, novoNome):
-    return atualizarEscola(idEscola, novoNome)
+def atualizar(IdEscola, novoNome):
+    return atualizarEscola(IdEscola, novoNome)
 
-def deletar(idEscola):
-    return deletarEscola(idEscola)
+def deletar(IdEscola):
+    return deletarEscola(IdEscola)

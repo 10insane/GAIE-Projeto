@@ -1,39 +1,31 @@
 from Models.bd_connection import *
 import mysql.connector
 
-
-def criarEstado(idEstado, estado):
+def listarEstados():
     conn = bd_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
     try:
-        cursor.execute(
-            """
-            INSERT INTO EstadosProcesso (idEstado, Estado)
-            VALUES (%s, %s)
-            """,
-            (idEstado, estado)
-        )
-        conn.commit()
-        return True
+        cursor.execute("SELECT idEstado, Estado FROM estadosprocesso")
+        return cursor.fetchall()
     except mysql.connector.Error as erro:
-        print("Erro ao inserir o estado:", erro)
-        conn.rollback()
-        return False
+        print("Erro ao listar estados:", erro)
+        return []
     finally:
         cursor.close()
         conn.close()
 
 
-def listarEstados():
+def criarEstado(idEstado, Estado):
     conn = bd_connection()
-    cursor = conn.cursor(dictionary=True)
+    cursor = conn.cursor()
     try:
-        cursor.execute("SELECT * FROM EstadosProcesso")
-        estados = cursor.fetchall()
-        return estados
+        cursor.execute("INSERT INTO estadosprocesso (idEstado, Estado) VALUES (%s, %s)", (idEstado, Estado))
+        conn.commit()
+        return True
     except mysql.connector.Error as erro:
-        print("Erro ao listar os estados:", erro)
-        return []
+        print("Erro ao criar estado:", erro)
+        conn.rollback()
+        return False
     finally:
         cursor.close()
         conn.close()
@@ -43,18 +35,11 @@ def atualizarEstado(idEstado, novoEstado):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute(
-            """
-            UPDATE EstadosProcesso
-            SET Estado = %s
-            WHERE idEstado = %s
-            """,
-            (novoEstado, idEstado)
-        )
+        cursor.execute("UPDATE estadosprocesso SET Estado = %s WHERE idEstado = %s", (novoEstado, idEstado))
         conn.commit()
         return cursor.rowcount > 0
     except mysql.connector.Error as erro:
-        print("Erro ao atualizar o estado:", erro)
+        print("Erro ao atualizar estado:", erro)
         conn.rollback()
         return False
     finally:
@@ -66,14 +51,11 @@ def eliminarEstado(idEstado):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
-        cursor.execute(
-            "DELETE FROM EstadosProcesso WHERE idEstado = %s",
-            (idEstado,)
-        )
+        cursor.execute("DELETE FROM estadosprocesso WHERE idEstado = %s", (idEstado,))
         conn.commit()
         return cursor.rowcount > 0
     except mysql.connector.Error as erro:
-        print("Erro ao eliminar o estado:", erro)
+        print("Erro ao eliminar estado:", erro)
         conn.rollback()
         return False
     finally:

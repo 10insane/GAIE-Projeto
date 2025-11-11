@@ -84,7 +84,7 @@ def PaginaCriarAluno(page: ft.Page):
         focused_border_color=cor_primaria,
         prefix_icon=ft.Icons.LOCATION_CITY,
         options=[
-            ft.dropdown.Option(key=str(escola.get("idEscola")), text=escola.get("NomeEscola", "")) 
+            ft.dropdown.Option(key=str(escola.get("IdEscola")), text=escola.get("NomeEscola", "")) 
             for escola in escolas
         ] if escolas else [ft.dropdown.Option("0", "Nenhuma escola disponível")],
         text_size=15,
@@ -148,7 +148,7 @@ def PaginaCriarAluno(page: ft.Page):
                 nomeAluno=txt_nome.value.strip(),
                 ano=txt_ano.value,
                 turma=txt_turma.value.strip().upper(),
-                idEscola=int(dropdown_escola.value)
+                IdEscola=int(dropdown_escola.value)
             )
             
             if sucesso:
