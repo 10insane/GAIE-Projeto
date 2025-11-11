@@ -14,7 +14,7 @@ def criarAluno(nProcessoAluno, nomeAluno,ano, turma, idEscola):
         cursor.execute(
             """
             INSERT INTO alunos (nProcessoAluno, NomeAluno, Ano, Turma, idEscola)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s)
             """,
             (nProcessoAluno, nomeAluno, ano, turma, idEscola)
         )

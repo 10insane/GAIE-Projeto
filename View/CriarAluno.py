@@ -1,9 +1,16 @@
 import flet as ft
 from Models.AlunosModel import criarAluno
-from Models.EscolasModel import listarEscolas  # Assumindo que existe esta função
+from Models.EscolasModel import listarEscolas  
 
 def PaginaCriarAluno(page: ft.Page):
     tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
+    
+    def LimitarNumero(e):
+     valor = ''.join(filter(str.isdigit, e.control.value))  
+     if len(valor) > 10:  
+        valor = valor[:10]  
+     e.control.value = valor
+     page.update()
     
     # === CORES ===
     cor_primaria = "#1E40AF"
@@ -24,6 +31,9 @@ def PaginaCriarAluno(page: ft.Page):
         focused_border_color=cor_primaria,
         prefix_icon=ft.Icons.NUMBERS,
         text_size=15,
+        color="#000000",
+        autofocus=True,
+        on_change=LimitarNumero,
     )
     
     txt_nome = ft.TextField(
@@ -33,6 +43,7 @@ def PaginaCriarAluno(page: ft.Page):
         focused_border_color=cor_primaria,
         prefix_icon=ft.Icons.PERSON,
         text_size=15,
+        color="#000000",
     )
     
     txt_ano = ft.Dropdown(
@@ -45,6 +56,7 @@ def PaginaCriarAluno(page: ft.Page):
             ft.dropdown.Option(str(i)) for i in range(1, 13)
         ],
         text_size=15,
+        color="#000000",
     )
     
     txt_turma = ft.TextField(
@@ -52,15 +64,16 @@ def PaginaCriarAluno(page: ft.Page):
         hint_text="Ex: A, B, C...",
         border_color=cor_borda,
         focused_border_color=cor_primaria,
-        prefix_icon=ft.Icons.CLASS,
+        prefix_icon=ft.Icons.MEETING_ROOM,
         text_size=15,
         max_length=3,
+        color="#000000",
     )
     
     # Carregar escolas
     escolas = []
     try:
-        escolas = listarEscolas()  # Assumindo que esta função existe
+        escolas = listarEscolas()  
     except:
         escolas = []
     
@@ -75,6 +88,7 @@ def PaginaCriarAluno(page: ft.Page):
             for escola in escolas
         ] if escolas else [ft.dropdown.Option("0", "Nenhuma escola disponível")],
         text_size=15,
+        color="#000000",
     )
     
     # Mensagem de feedback
@@ -156,8 +170,8 @@ def PaginaCriarAluno(page: ft.Page):
                 
                 # Redirecionar após 1.5 segundos
                 import time
-                time.sleep(1.5)
-                page.go("/alunos")
+                time.sleep(1.5),
+                page.go("/pagina-principal"),
             else:
                 raise Exception("Erro ao criar aluno")
                 
@@ -200,11 +214,11 @@ def PaginaCriarAluno(page: ft.Page):
         content=ft.Row(
             [
                 ft.Icon(ft.Icons.CANCEL, size=20, color=cor_texto_medio),
-                ft.Text("Cancelar", size=15, weight=ft.FontWeight.W_600, color=cor_texto_medio),
+                ft.Text("Voltar", size=15, weight=ft.FontWeight.W_600, color=cor_texto_medio),
             ],
             spacing=8,
         ),
-        on_click=lambda e: page.go("/alunos"),
+        on_click=lambda e: page.go("/pagina-principal"),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=12),
             padding=ft.padding.symmetric(horizontal=28, vertical=18),
@@ -223,7 +237,7 @@ def PaginaCriarAluno(page: ft.Page):
                             icon=ft.Icons.ARROW_BACK,
                             icon_color=cor_primaria,
                             icon_size=28,
-                            on_click=lambda e: page.go("/alunos"),
+                            on_click=lambda e: page.go("/pagina-principal"),
                             tooltip="Voltar",
                         ),
                         ft.Column(
@@ -289,7 +303,7 @@ def PaginaCriarAluno(page: ft.Page):
     )
     
     return ft.View(
-        route="/criar-aluno",
+        route="/CriarAluno",
         controls=[conteudo_principal],
         bgcolor=cor_fundo,
     )

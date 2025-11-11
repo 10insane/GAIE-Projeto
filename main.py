@@ -2,7 +2,8 @@ import flet as ft
 from View.Login import LoginView
 from View.TelaPrincipal import PaginaPrincipal
 from View.CriarTecnicoView import CreateTecnico
-
+from View.CriarAluno import PaginaCriarAluno
+from View.CriarEscolaView import CriarEscola
 
 def main(page: ft.Page):
     page.title = "GAIE - Psicologia"
@@ -21,6 +22,10 @@ def main(page: ft.Page):
             view = PaginaPrincipal(page)
         elif route == "/criar-tecnico":
             view = CreateTecnico(page)
+        elif route == "/CriarAluno": 
+            view = PaginaCriarAluno(page) 
+        elif route == "/criar-escola": 
+            view = CriarEscola(page)       
         else:
             view = LoginView(page)  
 
