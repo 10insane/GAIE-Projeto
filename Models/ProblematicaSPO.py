@@ -2,26 +2,35 @@ from Models.bd_connection import *
 import mysql.connector
 
 
-def criarProblematica(idProblematica, tipoProblematica):
+from Models.bd_connection import *
+import mysql.connector
+
+def criarProblematica(tipoProblematica):
+    """
+    Cria uma nova problemática e retorna o ID gerado.
+    """
     conn = bd_connection()
+    if not conn:
+        return None
+
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """
-            INSERT INTO problematicaspo (idProblematica, TipoProblematica)
-            VALUES (%s, %s)
-            """,
-            (idProblematica, tipoProblematica)
+            "INSERT INTO problematicaspo (TipoProblematica) VALUES (%s)",
+            (tipoProblematica,)
         )
         conn.commit()
-        return True
+        # Pegar o ID auto increment
+        return cursor.lastrowid
     except mysql.connector.Error as erro:
         print("Erro ao inserir problemática:", erro)
         conn.rollback()
-        return False
+        return None
     finally:
         cursor.close()
         conn.close()
+
+
 
 
 def listarProblematicas():

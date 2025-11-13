@@ -1,34 +1,46 @@
 from Models.bd_connection import *
+from Models.ProblematicaSPO import criarProblematica
+from datetime import date
 import mysql.connector
 
-def criarRegisto(nProcessoAluno, idEstado, DataArquivo, descricao, nProcTecnico=None):
+from Models.bd_connection import *
+from Models.ProblematicaSPO import criarProblematica
+from datetime import date
+import mysql.connector
+
+def criarRegisto(nProcessoAluno, idEstado, DataArquivo, Observacoes, tipoProblematica, nProcTecnico=None):
+    """
+    Cria um registo no Registos e uma problemática nova se fornecida.
+    """
+    # 1️⃣ Criar problemática e pegar o ID
+    idProblematica = criarProblematica(tipoProblematica)
+    if not idProblematica:
+        print("Erro ao criar problemática.")
+        return False
+
+    # 2️⃣ Preparar datas
+    dataEntradaSPO = date.today()
+    dataInicio = None
+
+    # 3️⃣ Inserir registo
     conn = bd_connection()
+    if not conn:
+        return False
+
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT nProcessoAluno FROM alunos WHERE nProcessoAluno = %s", (nProcessoAluno,))
-        if not cursor.fetchone():
-            print(f"Erro: O aluno com o processo {nProcessoAluno} não existe.")
-            return False
-
-        if nProcTecnico:
-            cursor.execute("SELECT nProcTecnico FROM tecnicos WHERE nProcTecnico = %s", (nProcTecnico,))
-            if not cursor.fetchone():
-                print(f"Erro: O técnico com o processo {nProcTecnico} não existe.")
-                return False
-
-        cursor.execute("SELECT idEstado FROM estadosprocesso WHERE idEstado = %s", (idEstado,))
-        if not cursor.fetchone():
-            print(f"Erro: O estado com ID {idEstado} não existe.")
-            return False
-
         cursor.execute(
-            "INSERT INTO registos (nProcessoAluno, idEstado, DataArquivo, descricao, nProcTecnico) VALUES (%s, %s, %s, %s, %s)",
-            (nProcessoAluno, idEstado, DataArquivo, descricao, nProcTecnico)
+            """
+            INSERT INTO Registos 
+            (nPIA, nProcessoAluno, nProcTecnico, idEstado, idProblematica, DataEntradaSPO, DataInicio, DataArquivo, Observacoes)
+            VALUES (UUID(), %s, %s, %s, %s, %s, %s, %s, %s)
+            """,
+            (nProcessoAluno, nProcTecnico, idEstado, idProblematica, dataEntradaSPO, dataInicio, DataArquivo, Observacoes)
         )
         conn.commit()
         return True
     except mysql.connector.Error as erro:
-        print("Erro ao inserir o registo:", erro)
+        print("Erro ao criar registo:", erro)
         conn.rollback()
         return False
     finally:
@@ -36,8 +48,12 @@ def criarRegisto(nProcessoAluno, idEstado, DataArquivo, descricao, nProcTecnico=
         conn.close()
 
 
+
 def listarRegistos():
     conn = bd_connection()
+    if not conn:
+        return []
+
     cursor = conn.cursor(dictionary=True)
     try:
         cursor.execute("""
@@ -56,19 +72,16 @@ def listarRegistos():
         conn.close()
 
 
-def atualizarRegisto(idRegisto, novoIdEstado, novaData, novaDescricao, novoNProcTecnico=None):
+def atualizarRegisto(idRegisto, novoIdEstado, novaData, novaObservacoes, novoNProcTecnico=None):
     conn = bd_connection()
+    if not conn:
+        return False
+
     cursor = conn.cursor()
     try:
-        if novoNProcTecnico:
-            cursor.execute("SELECT nProcTecnico FROM tecnicos WHERE nProcTecnico = %s", (novoNProcTecnico,))
-            if not cursor.fetchone():
-                print(f"Erro: O técnico com o processo {novoNProcTecnico} não existe.")
-                return False
-
         cursor.execute(
-            "UPDATE registos SET idEstado=%s, DataArquivo=%s, descricao=%s, nProcTecnico=%s WHERE idRegisto=%s",
-            (novoIdEstado, novaData, novaDescricao, novoNProcTecnico, idRegisto)
+            "UPDATE registos SET idEstado=%s, DataArquivo=%s, Observacoes=%s, nProcTecnico=%s WHERE nPIA=%s",
+            (novoIdEstado, novaData, novaObservacoes, novoNProcTecnico, idRegisto)
         )
         conn.commit()
         return cursor.rowcount > 0
@@ -83,9 +96,12 @@ def atualizarRegisto(idRegisto, novoIdEstado, novaData, novaDescricao, novoNProc
 
 def eliminarRegisto(idRegisto):
     conn = bd_connection()
+    if not conn:
+        return False
+
     cursor = conn.cursor()
     try:
-        cursor.execute("DELETE FROM registos WHERE idRegisto = %s", (idRegisto,))
+        cursor.execute("DELETE FROM registos WHERE nPIA = %s", (idRegisto,))
         conn.commit()
         return cursor.rowcount > 0
     except mysql.connector.Error as erro:

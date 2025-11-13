@@ -84,14 +84,15 @@ def PaginaCriarAluno(page: ft.Page):
         focused_border_color=cor_primaria,
         prefix_icon=ft.Icons.LOCATION_CITY,
         options=[
-            ft.dropdown.Option(key=str(escola.get("IdEscola")), text=escola.get("NomeEscola", "")) 
+            ft.dropdown.Option(key=str(escola.get("idEscola")), text=escola.get("NomeEscola", "")) 
             for escola in escolas
         ] if escolas else [ft.dropdown.Option("0", "Nenhuma escola disponível")],
         text_size=15,
         color="#000000",
     )
     
-    # Mensagem de feedback
+    dropdown_escola.value = str(escolas[0]["idEscola"]) if escolas else "0"
+    
     mensagem_feedback = ft.Container(visible=False)
     
     # === FUNÇÃO PARA SALVAR ===
@@ -115,6 +116,7 @@ def PaginaCriarAluno(page: ft.Page):
             erros.append("Escola é obrigatória")
         
         if erros:
+            print(ex)
             mensagem_feedback.content = ft.Container(
                 content=ft.Column(
                     [
