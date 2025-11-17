@@ -10,6 +10,8 @@ def PaginaPrincipal(page: ft.Page):
     escolas = listarEscolas()
     tecnicos = listarTecnico()
     registos = listarRegistos()
+    print("REGISTOS:", registos)
+    
 
     # === CORES ===
     cor_primaria = "#1E40AF"
@@ -270,27 +272,45 @@ def PaginaPrincipal(page: ft.Page):
             ft.Container(height=18),
             ft.Column(
                 [
-                    ft.Row(
-                        [
-                            criar_card_estado("A aguardar", len([r for r in registos if r.get("estado") == "A aguardar"]), ft.Icons.PENDING_ACTIONS, "#F59E0B"),
-                            criar_card_estado("Em Avaliação", len([r for r in registos if r.get("estado") == "Em Avaliação"]), ft.Icons.ASSESSMENT, "#3B82F6"),
-                        ],
-                        spacing=20,
-                    ),
-                    ft.Row(
-                        [
-                            criar_card_estado("Em intervenção", len([r for r in registos if r.get("estado") == "Em intervenção"]), ft.Icons.PSYCHOLOGY, "#8B5CF6"),
-                            criar_card_estado("Pendente", len([r for r in registos if r.get("estado") == "Pendente"]), ft.Icons.SCHEDULE, "#EAB308"),
-                        ],
-                        spacing=20,
-                    ),
-                    ft.Row(
-                        [
-                            criar_card_estado("Arquivado", len([r for r in registos if r.get("estado") == "Arquivado"]), ft.Icons.ARCHIVE, "#6B7280"),
-                            criar_card_estado("Em vigilância", len([r for r in registos if r.get("estado") == "Em vigilância"]), ft.Icons.VISIBILITY, "#10B981"),
-                        ],
-                        spacing=20,
-                    ),
+                ft.Row(
+    [
+        criar_card_estado("A Aguardar", 
+                          len([r for r in registos if r.get("idEstado") == 1]), 
+                          ft.Icons.PENDING_ACTIONS, "#F59E0B"),
+
+        criar_card_estado("Em Avaliação", 
+                          len([r for r in registos if r.get("idEstado") == 2]), 
+                          ft.Icons.ASSESSMENT, "#3B82F6"),
+    ],
+    spacing=20,
+),
+
+ft.Row(
+    [
+        criar_card_estado("Em Intervenção", 
+                          len([r for r in registos if r.get("idEstado") == 3]), 
+                          ft.Icons.PSYCHOLOGY, "#8B5CF6"),
+
+        criar_card_estado("Pendente", 
+                          len([r for r in registos if r.get("idEstado") == 4]), 
+                          ft.Icons.SCHEDULE, "#EAB308"),
+    ],
+    spacing=20,
+),
+
+ft.Row(
+    [
+        criar_card_estado("Arquivado", 
+                          len([r for r in registos if r.get("idEstado") == 5]), 
+                          ft.Icons.ARCHIVE, "#6B7280"),
+
+        criar_card_estado("Em Vigilância", 
+                          len([r for r in registos if r.get("idEstado") == 6]), 
+                          ft.Icons.VISIBILITY, "#10B981"),
+    ],
+    spacing=20,
+),
+
                 ],
                 spacing=20,
             ),
@@ -656,18 +676,19 @@ def PaginaPrincipal(page: ft.Page):
                     ),
                     ft.Column(
                         [
-                            ft.Text(f"Registo #{registo.get('idRegisto', 'N/A')}", size=16, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                            ft.Text(f"Registo #{registo.get('nPIA', 'N/A')}", size=16, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
                             ft.Row(
                                 [
                                     ft.Icon(ft.Icons.PERSON, size=14, color=cor_texto_claro),
                                     ft.Text(f"Aluno: {registo.get('NomeAluno', 'N/A')}", size=13, color=cor_texto_medio),
                                     ft.Container(width=10),
                                     ft.Icon(ft.Icons.FLAG, size=14, color=cor_texto_claro),
-                                    ft.Text(f"Estado: {registo.get('estado', 'N/A')}", size=13, color=cor_texto_medio),
+                                    ft.Text(f"Estado: {registo.get('Estado', 'N/A')}", size=13, color=cor_texto_medio),
+
                                 ],
                                 spacing=5,
                             ),
-                            ft.Text(f"Data: {registo.get('DataArquivo', 'N/A')} | Técnico: {registo.get('NomeTecnico', 'N/A')}", size=12, color=cor_texto_claro),
+                            ft.Text(f"Data: {registo.get('DataEntradaSPO', 'N/A')} | Técnico: {registo.get('NomeTecnico', 'N/A')}", size=12, color=cor_texto_claro),
                         ],
                         spacing=5,
                         expand=True,
