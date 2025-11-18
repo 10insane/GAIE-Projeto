@@ -5,7 +5,6 @@ from Models.EscolasModel import listarEscolas
 def PaginaEditarAluno(page: ft.Page):
     tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
     
-    # === OBTER ALUNO PARA EDITAR ===
     nProcessoAluno = page.session.get("aluno_editar_id")
     if not nProcessoAluno:
         page.go("/pagina-principal")

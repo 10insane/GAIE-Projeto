@@ -72,21 +72,20 @@ def listarRegistos():
         conn.close()
 
 
-def atualizarRegisto(idRegisto, novoIdEstado, novaData, novaObservacoes, novoNProcTecnico=None):
+def atualizarRegisto(idRegisto, idEstado, DataArquivo, Observacoes):
     conn = bd_connection()
     if not conn:
         return False
-
     cursor = conn.cursor()
     try:
         cursor.execute(
-            "UPDATE registos SET idEstado=%s, DataArquivo=%s, Observacoes=%s, nProcTecnico=%s WHERE nPIA=%s",
-            (novoIdEstado, novaData, novaObservacoes, novoNProcTecnico, idRegisto)
+            "UPDATE registos SET idEstado=%s, DataArquivo=%s, Observacoes=%s WHERE nPIA=%s",
+            (idEstado, DataArquivo, Observacoes, idRegisto)
         )
         conn.commit()
-        return cursor.rowcount > 0
-    except mysql.connector.Error as erro:
-        print("Erro ao atualizar o registo:", erro)
+        return True
+    except Exception as e:
+        print("Erro ao atualizar:", e)
         conn.rollback()
         return False
     finally:
@@ -111,3 +110,24 @@ def eliminarRegisto(idRegisto):
     finally:
         cursor.close()
         conn.close()
+        
+def buscarRegistoPorId(idRegisto):
+    conn = bd_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+     SELECT r.*, p.tipoProblematica, a.NomeAluno, t.NomeTecnico, e.Estado
+     FROM registos r
+     LEFT JOIN problematicaSPO p ON r.idProblematica = p.idProblematica
+     JOIN alunos a ON r.nProcessoAluno = a.nProcessoAluno
+     LEFT JOIN tecnicos t ON r.nProcTecnico = t.nProcTecnico
+     LEFT JOIN estadosprocesso e ON r.idEstado = e.idEstado
+     WHERE r.nPIA = %s
+     """, (idRegisto,))
+
+    
+    registo = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return registo
+

@@ -489,7 +489,11 @@ ft.Row(
                                 icon=ft.Icons.EDIT,
                                 icon_color="#F59E0B",
                                 tooltip="Editar",
-                                on_click=lambda e, esc=escola: page.go(f"/editar-escola/{esc.get('IdEscola')}"),
+                                on_click=lambda e, a=escola: (
+                                 page.session.set("escola_editar_id", a["idEscola"]),
+                                 page.go("/EditarEscola")
+                               )
+                               ,
                             ),
                             ft.IconButton(
                                 icon=ft.Icons.DELETE,
@@ -709,7 +713,11 @@ ft.Row(
                                 icon=ft.Icons.EDIT,
                                 icon_color="#F59E0B",
                                 tooltip="Editar",
-                                on_click=lambda e, r=registo: page.go(f"/editar-registo/{r.get('idRegisto')}"),
+                                on_click=lambda e, a=registo: (
+                                 page.session.set("registo_editar_id", a["nPIA"]),
+                                 page.go("/EditarRegisto")
+                               )
+                               ,
                             ),
                         ],
                         spacing=5,
