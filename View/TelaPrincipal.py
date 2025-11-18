@@ -356,7 +356,11 @@ ft.Row(
                                 icon=ft.Icons.EDIT,
                                 icon_color="#F59E0B",
                                 tooltip="Editar aluno",
-                                on_click=lambda e, a=aluno: page.go(f"/editar-aluno/{a.get('nProcessoAluno')}"),
+                                on_click=lambda e, a=aluno: (
+                                 page.session.set("aluno_editar_id", a["nProcessoAluno"]),
+                                 page.go("/EditarAluno")
+                               )
+                               ,
                             ),
                             ft.IconButton(
                                 icon=ft.Icons.DELETE,

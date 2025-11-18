@@ -92,3 +92,22 @@ def eliminarAluno(nProcessoAluno):
     finally:
         cursor.close()
         conn.close()
+        
+def buscarAlunoPorProcesso(nProcessoAluno):
+    conn = bd_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("""
+            SELECT a.*, e.NomeEscola
+            FROM alunos a
+            JOIN escolas e ON a.IdEscola = e.IdEscola
+            WHERE a.nProcessoAluno = %s
+        """, (nProcessoAluno,))
+        aluno = cursor.fetchone()
+        return aluno
+    except mysql.connector.Error as erro:
+        print("Erro ao buscar o aluno:", erro)
+        return None
+    finally:
+        cursor.close()
+        conn.close()

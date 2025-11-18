@@ -5,6 +5,7 @@ from View.CriarTecnicoView import CreateTecnico
 from View.CriarAluno import PaginaCriarAluno
 from View.CriarEscolaView import CriarEscola
 from View.CriarRegisto import PaginaCriarRegisto
+from View.EditarAluno import PaginaEditarAluno
 
 def main(page: ft.Page):
     page.title = "GAIE - Psicologia"
@@ -28,7 +29,9 @@ def main(page: ft.Page):
         elif route == "/criar-escola": 
             view = CriarEscola(page)  
         elif route=="/criar-registo":
-            view=PaginaCriarRegisto(page)
+            view= PaginaCriarRegisto(page)
+        elif route=="/EditarAluno":
+            view= PaginaEditarAluno(page)
         else:
             view = LoginView(page)  
 
