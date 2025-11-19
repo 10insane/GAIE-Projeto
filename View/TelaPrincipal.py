@@ -183,7 +183,7 @@ def PaginaPrincipal(page: ft.Page):
                 ft.Container(expand=True),
                 ft.Divider(height=1, color=cor_borda),
                 ft.Container(height=10),
-                criar_botao_menu("Configurações", ft.Icons.SETTINGS_ROUNDED, "/configuracoes", acao=lambda e: page.go("/configuracoes")),
+                criar_botao_menu("Configurações", ft.Icons.SETTINGS_ROUNDED, "/configuracoes", acao=lambda e: page.go("/Config")),
                 ft.Container(
                     content=ft.Text("v1.0.0", size=11, color=cor_texto_claro, text_align=ft.TextAlign.CENTER),
                     padding=ft.padding.only(top=15),
@@ -713,7 +713,7 @@ ft.Row(
                                 icon=ft.Icons.EDIT,
                                 icon_color="#F59E0B",
                                 tooltip="Editar",
-                                on_click=lambda e, a=registo: (
+                                on_click=lambda e, a=registo: (                                          
                                  page.session.set("registo_editar_id", a["nPIA"]),
                                  page.go("/EditarRegisto")
                                )

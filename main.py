@@ -1,13 +1,14 @@
 import flet as ft
-from View.Login import LoginView
+from View.Login.Login import LoginView
 from View.TelaPrincipal import PaginaPrincipal
-from View.CriarTecnicoView import CreateTecnico
-from View.CriarAluno import PaginaCriarAluno
-from View.CriarEscolaView import CriarEscola
-from View.CriarRegisto import PaginaCriarRegisto
-from View.EditarAluno import PaginaEditarAluno
-from View.EditarEscola import PaginaEditarEscola
-from View.EditarRegisto import PaginaEditarRegisto
+from View.Tecnico.CriarTecnicoView import CreateTecnico
+from View.Alunos.CriarAluno import PaginaCriarAluno
+from View.Escola.CriarEscolaView import CriarEscola
+from View.Registo.CriarRegisto import PaginaCriarRegisto
+from View.Alunos.EditarAluno import PaginaEditarAluno
+from View.Escola.EditarEscola import PaginaEditarEscola
+from View.Registo.EditarRegisto import PaginaEditarRegisto
+from View.Config.Config import PainelAdmin
 
 
 
@@ -40,6 +41,8 @@ def main(page: ft.Page):
             view= PaginaEditarEscola(page)
         elif route=="/EditarRegisto":
             view= PaginaEditarRegisto(page)
+        elif route=="/Config":
+            view= PainelAdmin(page)
         else:
             view = LoginView(page)  
 

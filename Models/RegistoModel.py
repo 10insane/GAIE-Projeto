@@ -72,18 +72,35 @@ def listarRegistos():
         conn.close()
 
 
-def atualizarRegisto(idRegisto, idEstado, DataArquivo, Observacoes):
+def atualizarRegisto(idRegisto, nProcessoAluno, idEstado, DataArquivo, Observacoes, nProcTecnico, idProblematica):
     conn = bd_connection()
     if not conn:
         return False
+
     cursor = conn.cursor()
     try:
-        cursor.execute(
-            "UPDATE registos SET idEstado=%s, DataArquivo=%s, Observacoes=%s WHERE nPIA=%s",
-            (idEstado, DataArquivo, Observacoes, idRegisto)
-        )
+        cursor.execute("""
+            UPDATE registos 
+            SET nProcessoAluno=%s,
+                nProcTecnico=%s,
+                idEstado=%s,
+                idProblematica=%s,
+                DataArquivo=%s,
+                Observacoes=%s
+            WHERE nPIA=%s
+        """, (
+            nProcessoAluno,
+            nProcTecnico,
+            idEstado,
+            idProblematica,
+            DataArquivo,
+            Observacoes,
+            idRegisto
+        ))
+
         conn.commit()
         return True
+
     except Exception as e:
         print("Erro ao atualizar:", e)
         conn.rollback()
@@ -91,6 +108,7 @@ def atualizarRegisto(idRegisto, idEstado, DataArquivo, Observacoes):
     finally:
         cursor.close()
         conn.close()
+
 
 
 def eliminarRegisto(idRegisto):
