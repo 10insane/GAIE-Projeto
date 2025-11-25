@@ -389,7 +389,7 @@ def PaginaPrincipal(page: ft.Page):
                                 content=ft.Row(
                                     [
                                         ft.Icon(ft.Icons.ADD, size=20),
-                                        ft.Text("Novo Aluno", size=15, weight=ft.FontWeight.W_600),
+                                        ft.Text("Adicionar Aluno", size=15, weight=ft.FontWeight.W_600),
                                     ],
                                     spacing=8,
                                 ),
@@ -642,9 +642,11 @@ def PaginaPrincipal(page: ft.Page):
                         bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
                         padding=12,
                         border_radius=12,
+                    
                     ),
                     ft.Column(
-                        [
+                        [   
+                
                             ft.Text(f"Registo #{registo.get('nPIA', 'N/A')}", size=16, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
                             ft.Row(
                                 [
@@ -700,10 +702,48 @@ def PaginaPrincipal(page: ft.Page):
         )
 
     registos_view = (
-        ft.Column(
-            [criar_card_registo(r) for r in registos],
-            spacing=15,
-            scroll=ft.ScrollMode.AUTO,
+               ft.Column(
+            [
+                ft.Row(
+                    [
+                        ft.Column(
+                            [
+                                ft.Text("Lista de Registo", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                                ft.Text(f"Total: {len(registos)} Registo encontrados", size=14, color=cor_texto_claro),
+                            ],
+                            spacing=5,
+                        ),
+                        ft.Container(expand=True),
+                        ft.ElevatedButton(
+                            width=240,
+                            content=ft.Row(
+                                [
+                                    ft.Icon(ft.Icons.ADD, size=20, color=ft.Colors.WHITE),
+                                    ft.Text("Adicionar Processo", size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                                ],
+                                spacing=8,
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                            style=ft.ButtonStyle(
+                                shape=ft.RoundedRectangleBorder(radius=60),
+                                padding=ft.padding.symmetric(horizontal=28, vertical=16),
+                                bgcolor=cor_primaria,
+                                elevation=3,
+                            ),
+                            on_click=lambda e: page.go("/criar-registo"),
+                        ),
+                    ],
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                ),
+                ft.Container(height=20),
+                ft.Column(
+                    [criar_card_registo(r) for r in registos],
+                    spacing=15,
+                    scroll=ft.ScrollMode.AUTO,
+                ),
+            ],
+            spacing=10,
+            expand=True,
         )
         if registos
         else ft.Container(
@@ -717,7 +757,7 @@ def PaginaPrincipal(page: ft.Page):
                         content=ft.Row(
                             [
                                 ft.Icon(ft.Icons.ADD, size=20, color=ft.Colors.WHITE),
-                                ft.Text("Adicionar Primeiro Aluno", size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                                ft.Text("Adicionar Primeiro Registo", size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
                             ],
                             spacing=8,
                             alignment=ft.MainAxisAlignment.CENTER,

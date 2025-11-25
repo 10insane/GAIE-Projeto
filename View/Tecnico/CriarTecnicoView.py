@@ -1,6 +1,6 @@
 import flet as ft
 from Models.TecnicoModel import criarTecnico
- 
+
 def CreateTecnico(page: ft.Page):
     # === CORES (Mesmas da tela principal) ===
     cor_primaria = "#1E40AF"
@@ -10,7 +10,7 @@ def CreateTecnico(page: ft.Page):
     cor_texto_medio = "#334155"
     cor_texto_claro = "#64748B"
     cor_borda = "#E2E8F0"
-   
+
     # === FUNÇÃO DE VALIDAÇÃO ===
     def LimitarNumero(e):
         valor = ''.join(filter(str.isdigit, e.control.value))
@@ -18,7 +18,7 @@ def CreateTecnico(page: ft.Page):
             valor = valor[:10]
         e.control.value = valor
         page.update()
-   
+
     # === CAMPOS DO FORMULÁRIO ===
     campoNovoNumero = ft.TextField(
         label="Nº Processo Técnico",
@@ -36,7 +36,7 @@ def CreateTecnico(page: ft.Page):
         content_padding=ft.padding.symmetric(horizontal=20, vertical=16),
         on_change=LimitarNumero,
     )
- 
+
     campoNovoNome = ft.TextField(
         label="Nome Completo do Técnico",
         hint_text="Ex: João Silva Costa",
@@ -51,13 +51,31 @@ def CreateTecnico(page: ft.Page):
         text_size=15,
         content_padding=ft.padding.symmetric(horizontal=20, vertical=16),
     )
- 
+
+    campoNovaSenha = ft.TextField(
+        label="Password",
+        hint_text="Digite uma password segura",
+        prefix_icon=ft.Icons.LOCK_ROUNDED,
+        width=500,
+        border_radius=12,
+        filled=True,
+        bgcolor=cor_card,
+        border_color=cor_borda,
+        focused_border_color=cor_primaria,
+        color=cor_texto_escuro,
+        text_size=15,
+        content_padding=ft.padding.symmetric(horizontal=20, vertical=16),
+        password=True,  # oculta os caracteres
+        can_reveal_password=True,  # permite mostrar/esconder senha
+    )
+
     # === FUNÇÃO SALVAR TÉCNICO ===
     def salvarTecnico(e):
         nProc = campoNovoNumero.value.strip()
         nome = campoNovoNome.value.strip()
- 
-        if not nProc or not nome:
+        senha = campoNovaSenha.value.strip()
+
+        if not nProc or not nome or not senha:
             page.snack_bar = ft.SnackBar(
                 content=ft.Row(
                     [
@@ -71,8 +89,8 @@ def CreateTecnico(page: ft.Page):
             page.snack_bar.open = True
             page.update()
             return
- 
-        if criarTecnico(nProc, nome):
+
+        if criarTecnico(nProc, nome, senha):
             page.snack_bar = ft.SnackBar(
                 content=ft.Row(
                     [
@@ -85,7 +103,7 @@ def CreateTecnico(page: ft.Page):
             )
             page.snack_bar.open = True
             page.update()
-            page.go("/login")
+            page.go("/Config")
         else:
             page.snack_bar = ft.SnackBar(
                 content=ft.Row(
@@ -99,7 +117,7 @@ def CreateTecnico(page: ft.Page):
             )
             page.snack_bar.open = True
             page.update()
- 
+
     # === BOTÕES DE AÇÃO ===
     botaoSalvar = ft.ElevatedButton(
         content=ft.Row(
@@ -120,7 +138,7 @@ def CreateTecnico(page: ft.Page):
             elevation=3,
         ),
     )
- 
+
     botaoCancelar = ft.OutlinedButton(
         content=ft.Row(
             [
@@ -138,14 +156,14 @@ def CreateTecnico(page: ft.Page):
             side=ft.BorderSide(2, cor_borda),
         ),
     )
- 
+
     # === LINHA DE BOTÕES ===
     botoesAcao = ft.Row(
         [botaoSalvar, botaoCancelar],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=16,
     )
- 
+
     # === CARD PRINCIPAL ===
     cardPrincipal = ft.Container(
         content=ft.Column(
@@ -165,7 +183,7 @@ def CreateTecnico(page: ft.Page):
                     ),
                     padding=ft.padding.only(bottom=10),
                 ),
-               
+
                 # Título
                 ft.Text(
                     "Criar Novo Técnico",
@@ -174,7 +192,7 @@ def CreateTecnico(page: ft.Page):
                     color=cor_texto_escuro,
                     text_align=ft.TextAlign.CENTER,
                 ),
-               
+
                 # Subtítulo
                 ft.Text(
                     "Preencha os dados abaixo para registar um novo técnico no sistema",
@@ -182,18 +200,19 @@ def CreateTecnico(page: ft.Page):
                     color=cor_texto_claro,
                     text_align=ft.TextAlign.CENTER,
                 ),
-               
+
                 ft.Container(height=20),
-               
+
                 # Campos do formulário
                 campoNovoNumero,
                 campoNovoNome,
-               
+                campoNovaSenha,
+
                 ft.Container(height=10),
-               
+
                 # Botões
                 botoesAcao,
-               
+
                 # Informação adicional
                 ft.Container(
                     content=ft.Row(
@@ -226,7 +245,7 @@ def CreateTecnico(page: ft.Page):
         ),
         border=ft.border.all(1, cor_borda),
     )
- 
+
     # === LOGO/MARCA NO TOPO ===
     logoTopo = ft.Container(
         content=ft.Row(
@@ -250,7 +269,7 @@ def CreateTecnico(page: ft.Page):
         ),
         padding=ft.padding.only(bottom=40),
     )
- 
+
     # === LAYOUT COMPLETO ===
     layoutCompleto = ft.Container(
         content=ft.Column(
@@ -270,7 +289,7 @@ def CreateTecnico(page: ft.Page):
         expand=True,
         padding=40,
     )
- 
+
     return ft.View(
         route="/criar-tecnico",
         controls=[layoutCompleto],
