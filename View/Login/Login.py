@@ -21,7 +21,6 @@ def LoginView(page: ft.Page):
 
         if not nProc or not nome:
             mensagemErro.value = "Preencha ambos os campos!"
-            botaoCriar.visible = False
             page.update()
             return
 
@@ -43,7 +42,6 @@ def LoginView(page: ft.Page):
             page.go("/pagina-principal")
         else:
             mensagemErro.value = "Técnico não encontrado! Deseja criar um novo?"
-            botaoCriar.visible = True
             page.update()
 
     animacaoLottie = fl.Lottie(
@@ -111,27 +109,8 @@ def LoginView(page: ft.Page):
         height=55,
     )
 
-    botaoCriar = ft.ElevatedButton(
-        "Criar Técnico",
-        visible=False,
-        on_click=lambda e: page.go("/criar-tecnico"),
-        width=150,
-        height=55, 
-        style=ft.ButtonStyle(
-            shape=ft.RoundedRectangleBorder(radius=25),
-            bgcolor="#2563EB",
-            color=ft.Colors.WHITE,
-            text_style=ft.TextStyle(
-                font_family="sans-serif",
-                weight=ft.FontWeight.BOLD,
-                size=16,
-                letter_spacing=1.0,
-            ),
-        ),
-    )
-
     botoesLogin = ft.Row(
-        [botaoEntrar, botaoCriar],
+        [botaoEntrar],
         alignment=ft.MainAxisAlignment.CENTER,
         spacing=20,
     )

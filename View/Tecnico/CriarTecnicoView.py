@@ -125,12 +125,12 @@ def CreateTecnico(page: ft.Page):
         content=ft.Row(
             [
                 ft.Icon(ft.Icons.ARROW_BACK_ROUNDED, size=20, color=cor_texto_medio),
-                ft.Text("Voltar ao Login", size=15, weight=ft.FontWeight.W_600, color=cor_texto_medio),
+                ft.Text("Voltar a Configurações", size=15, weight=ft.FontWeight.W_600, color=cor_texto_medio),
             ],
             spacing=10,
             alignment=ft.MainAxisAlignment.CENTER,
         ),
-        on_click=lambda e: page.go("/login"),
+        on_click=lambda e: page.go("/Config"),
         width=240,
         height=52,
         style=ft.ButtonStyle(
