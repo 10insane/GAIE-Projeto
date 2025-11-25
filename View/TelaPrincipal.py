@@ -1,7 +1,7 @@
 import flet as ft
 
-from Models.AlunosModel import listarAlunos, eliminarAluno
-from Models.EscolasModel import listarEscolas, deletarEscola
+from Models.AlunosModel import listarAlunos
+from Models.EscolasModel import listarEscolas
 from Models.TecnicoModel import listarTecnico
 from Models.RegistoModel import listarRegistos
 
@@ -15,49 +15,55 @@ def PaginaPrincipal(page: ft.Page):
     tecnicos = listarTecnico()
     registos = listarRegistos()
 
-    # === CORES ===
-    cor_primaria = "#1E40AF"
-    cor_fundo = "#F8FAFC"
-    cor_card = "#FFFFFF"
-    cor_texto_escuro = "#0F172A"
-    cor_texto_medio = "#334155"
-    cor_texto_claro = "#64748B"
-    cor_borda = "#E2E8F0"
+    # === CORES (tema escuro/roxo parecido com o Login) ===
+    cor_primaria = "#8B5CF6"      # Roxo vibrante
+    cor_secundaria = "#A78BFA"    # Roxo claro
+    cor_roxo_escuro = "#6D28D9"
+    cor_fundo = "#0F0F0F"         # Fundo escuro
+    cor_card = "#121212"          # Card escuro
+    cor_texto_claro = "#E5E7EB"
+    cor_texto_medio = "#9CA3AF"
+    cor_texto_escuro = "#D1D5DB"
+    cor_borda = "#242424"
 
     # =======================================
     # CABEÇALHO
     # =======================================
     cabecalho = ft.Container(
-        padding=ft.padding.symmetric(horizontal=30, vertical=18),
-        bgcolor=cor_primaria,
+        padding=ft.padding.symmetric(horizontal=28, vertical=16),
+        gradient=ft.LinearGradient(
+            begin=ft.Alignment(-1, -1),
+            end=ft.Alignment(1, 1),
+            colors=[cor_roxo_escuro, cor_primaria],
+        ),
         shadow=ft.BoxShadow(
-            blur_radius=14,
-            color=ft.Colors.with_opacity(0.15, ft.Colors.BLACK),
-            offset=ft.Offset(0, 4),
+            blur_radius=18,
+            color=ft.Colors.with_opacity(0.18, ft.Colors.BLACK),
+            offset=ft.Offset(0, 6),
         ),
         content=ft.Row(
             [
                 ft.Row(
                     [
                         ft.Container(
-                            content=ft.Icon(ft.Icons.SCHOOL_ROUNDED, color=ft.Colors.WHITE, size=32),
-                            bgcolor=ft.Colors.with_opacity(0.2, ft.Colors.WHITE),
+                            content=ft.Icon(ft.Icons.SCHOOL_ROUNDED, color=ft.Colors.WHITE, size=30),
+                            bgcolor=ft.Colors.with_opacity(0.18, ft.Colors.WHITE),
                             padding=10,
-                            border_radius=12,
+                            border_radius=10,
                         ),
                         ft.Column(
                             [
-                                ft.Text("GAIE", size=28, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                                ft.Text("GAIE", size=22, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
                                 ft.Text(
                                     "Gestão Integrada de Alunos e Educação",
                                     size=12,
                                     color=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
                                 ),
                             ],
-                            spacing=0,
+                            spacing=2,
                         ),
                     ],
-                    spacing=15,
+                    spacing=12,
                 ),
                 ft.Container(expand=True),
                 ft.Container(
@@ -69,7 +75,7 @@ def PaginaPrincipal(page: ft.Page):
                                     ft.Text(
                                         "Técnico Responsável",
                                         size=11,
-                                        color=ft.Colors.with_opacity(0.8, ft.Colors.WHITE),
+                                        color=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
                                     ),
                                 ],
                                 spacing=0,
@@ -104,8 +110,8 @@ def PaginaPrincipal(page: ft.Page):
                                     ft.PopupMenuItem(
                                         content=ft.Row(
                                             [
-                                                ft.Icon(ft.Icons.LOGOUT_ROUNDED, size=20, color="#DC2626"),
-                                                ft.Text("Terminar Sessão", size=14, color="#DC2626", weight=ft.FontWeight.W_600),
+                                                ft.Icon(ft.Icons.LOGOUT_ROUNDED, size=20, color="#FF6B6B"),
+                                                ft.Text("Terminar Sessão", size=14, color="#FF6B6B", weight=ft.FontWeight.W_600),
                                             ],
                                             spacing=12,
                                         ),
@@ -116,9 +122,9 @@ def PaginaPrincipal(page: ft.Page):
                         ],
                         spacing=12,
                     ),
-                    padding=ft.padding.symmetric(horizontal=16, vertical=8),
-                    border_radius=30,
-                    bgcolor=ft.Colors.with_opacity(0.15, ft.Colors.WHITE),
+                    padding=ft.padding.symmetric(horizontal=12, vertical=6),
+                    border_radius=20,
+                    bgcolor=ft.Colors.with_opacity(0.08, ft.Colors.WHITE),
                 ),
             ]
         ),
@@ -131,17 +137,17 @@ def PaginaPrincipal(page: ft.Page):
         return ft.Container(
             content=ft.Row(
                 [
-                    ft.Icon(icone, color=ft.Colors.WHITE if ativo else cor_primaria, size=22),
+                    ft.Icon(icone, color=ft.Colors.WHITE if ativo else cor_primaria, size=20),
                     ft.Text(
                         texto,
-                        size=15,
+                        size=14,
                         weight=ft.FontWeight.BOLD if ativo else ft.FontWeight.W_500,
-                        color=ft.Colors.WHITE if ativo else cor_texto_escuro,
+                        color=ft.Colors.WHITE if ativo else cor_texto_claro,
                     ),
                 ],
-                spacing=14,
+                spacing=12,
             ),
-            padding=16,
+            padding=ft.padding.symmetric(horizontal=14, vertical=12),
             border_radius=12,
             ink=True,
             on_click=acao,
@@ -153,8 +159,9 @@ def PaginaPrincipal(page: ft.Page):
         bgcolor=cor_card,
         padding=24,
         border_radius=16,
+        border=ft.border.all(1, cor_borda),
         shadow=ft.BoxShadow(
-            spread_radius=0, blur_radius=20, color=ft.Colors.with_opacity(0.09, ft.Colors.BLACK)
+            spread_radius=0, blur_radius=20, color=ft.Colors.with_opacity(0.06, ft.Colors.BLACK)
         ),
         content=ft.Column(
             [
@@ -162,20 +169,20 @@ def PaginaPrincipal(page: ft.Page):
                     content=ft.Column(
                         [
                             ft.Container(
-                                content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE_ROUNDED, color=cor_primaria, size=48),
-                                bgcolor=ft.Colors.with_opacity(0.09, cor_primaria),
-                                padding=14,
-                                border_radius=16,
+                                content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE_ROUNDED, color=cor_primaria, size=40),
+                                bgcolor=ft.Colors.with_opacity(0.08, cor_primaria),
+                                padding=12,
+                                border_radius=12,
                             ),
-                            ft.Text("Menu Principal", size=20, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                            ft.Text("Menu Principal", size=18, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
                         ],
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        spacing=12,
+                        spacing=8,
                     ),
-                    padding=ft.padding.only(bottom=20),
+                    padding=ft.padding.only(bottom=18),
                 ),
                 ft.Divider(height=1, color=cor_borda),
-                ft.Container(height=15),
+                ft.Container(height=12),
 
                 criar_botao_menu("Dashboard", ft.Icons.DASHBOARD_ROUNDED, acao=lambda e: trocar_vista("dashboard")),
                 criar_botao_menu("Alunos", ft.Icons.PEOPLE_ROUNDED, acao=lambda e: trocar_vista("alunos")),
@@ -190,22 +197,42 @@ def PaginaPrincipal(page: ft.Page):
                 criar_botao_menu("Configurações", ft.Icons.SETTINGS_ROUNDED, acao=lambda e: page.go("/Config")),
 
                 ft.Container(
-                    content=ft.Text("v1.0.0", size=11, color=cor_texto_claro, text_align=ft.TextAlign.CENTER),
-                    padding=ft.padding.only(top=15),
+                    content=ft.Text("v1.0.0", size=11, color=cor_texto_medio, text_align=ft.TextAlign.CENTER),
+                    padding=ft.padding.only(top=12),
                 ),
             ],
-            spacing=6,
+            spacing=8,
         ),
     )
 
     # =======================================
     # ÁREA PRINCIPAL
     # =======================================
-    conteudo_principal = ft.Container(expand=True, bgcolor=cor_fundo, padding=30, content=None)
+    conteudo_principal = ft.Container(expand=True, bgcolor=cor_fundo, padding=28, content=None)
 
     # =======================================
-    # FUNÇÕES / VIEWS (DASHBOARD, ALUNOS, ESCOLAS, REGISTOS, TÉCNICOS)
+    # FUNÇÕES / VIEWS
     # =======================================
+
+    def estilo_botao_acao(texto, icone, onclick):
+        return ft.ElevatedButton(
+            width=240,
+            content=ft.Row(
+                [
+                    ft.Icon(icone, size=20, color=ft.Colors.WHITE),
+                    ft.Text(texto, size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+                ],
+                spacing=10,
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=60),
+                padding=ft.padding.symmetric(horizontal=22, vertical=12),
+                bgcolor=cor_primaria,
+                elevation=3,
+            ),
+            on_click=onclick,
+        )
 
     # ==================================================
     # CARDS DO DASHBOARD
@@ -215,23 +242,23 @@ def PaginaPrincipal(page: ft.Page):
             content=ft.Column(
                 [
                     ft.Container(
-                        content=ft.Icon(icone, color=cor, size=48),
-                        bgcolor=ft.Colors.with_opacity(0.1, cor),
-                        border_radius=20,
-                        padding=20,
+                        content=ft.Icon(icone, color=cor, size=40),
+                        bgcolor=ft.Colors.with_opacity(0.08, cor),
+                        border_radius=14,
+                        padding=14,
                     ),
-                    ft.Text(str(valor), size=64, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                    ft.Text(titulo, size=20, weight=ft.FontWeight.W_600, color=cor_texto_medio),
-                    ft.Text(subtitulo, size=14, color=cor_texto_claro),
+                    ft.Text(str(valor), size=44, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                    ft.Text(titulo, size=16, weight=ft.FontWeight.W_600, color=cor_texto_medio),
+                    ft.Text(subtitulo, size=12, color=cor_texto_medio),
                 ],
-                spacing=12,
+                spacing=10,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             ),
             bgcolor=cor_card,
-            padding=40,
-            border_radius=20,
+            padding=24,
+            border_radius=14,
             shadow=ft.BoxShadow(
-                spread_radius=0, blur_radius=25, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)
+                spread_radius=0, blur_radius=18, color=ft.Colors.with_opacity(0.06, ft.Colors.BLACK)
             ),
             border=ft.border.all(1, cor_borda),
             expand=True,
@@ -242,23 +269,23 @@ def PaginaPrincipal(page: ft.Page):
             content=ft.Column(
                 [
                     ft.Container(
-                        content=ft.Icon(icone, color=cor, size=32),
-                        bgcolor=ft.Colors.with_opacity(0.1, cor),
-                        border_radius=14,
-                        padding=16,
+                        content=ft.Icon(icone, color=cor, size=28),
+                        bgcolor=ft.Colors.with_opacity(0.08, cor),
+                        border_radius=12,
+                        padding=12,
                     ),
-                    ft.Text(str(valor), size=40, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                    ft.Text(titulo, size=15, color=cor_texto_medio, weight=ft.FontWeight.W_500),
+                    ft.Text(str(valor), size=28, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                    ft.Text(titulo, size=13, color=cor_texto_medio, weight=ft.FontWeight.W_500),
                 ],
-                spacing=12,
+                spacing=8,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             ),
             bgcolor=cor_card,
-            padding=28,
-            border_radius=16,
+            padding=18,
+            border_radius=12,
             border=ft.border.all(1, cor_borda),
             shadow=ft.BoxShadow(
-                spread_radius=0, blur_radius=15, color=ft.Colors.with_opacity(0.07, ft.Colors.BLACK)
+                spread_radius=0, blur_radius=12, color=ft.Colors.with_opacity(0.05, ft.Colors.BLACK)
             ),
             expand=True,
         )
@@ -271,17 +298,17 @@ def PaginaPrincipal(page: ft.Page):
             ft.Row(
                 [
                     criar_card_grande("Total de Alunos", len(alunos), ft.Icons.PEOPLE_ALT_ROUNDED, cor_primaria, "Registados no sistema"),
-                    criar_card_grande("Total de Processos", len(registos), ft.Icons.ASSIGNMENT_ROUNDED, "#8B5CF6", "Todos os registos"),
+                    criar_card_grande("Total de Registos", len(registos), ft.Icons.ASSIGNMENT_ROUNDED, cor_secundaria, "Todos os registos"),
                     criar_card_grande("Total de Escolas", len(escolas), ft.Icons.SCHOOL_ROUNDED, "#10B981", "Escolas registadas"),
                 ],
-                spacing=28,
+                spacing=20,
             ),
 
-            ft.Container(height=30),
-
-            ft.Text("Estados dos Processos", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-            ft.Text("Distribuição dos processos por estado atual", size=14, color=cor_texto_claro),
             ft.Container(height=18),
+
+            ft.Text("Estados dos Processos", size=20, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+            ft.Text("Distribuição dos processos por estado atual", size=12, color=cor_texto_medio),
+            ft.Container(height=14),
 
             ft.Column(
                 [
@@ -290,15 +317,15 @@ def PaginaPrincipal(page: ft.Page):
                             criar_card_estado("A Aguardar", len([r for r in registos if r.get("idEstado") == 1]), ft.Icons.PENDING_ACTIONS, "#F59E0B"),
                             criar_card_estado("Em Avaliação", len([r for r in registos if r.get("idEstado") == 2]), ft.Icons.ASSESSMENT, "#3B82F6"),
                         ],
-                        spacing=20,
+                        spacing=16,
                     ),
 
                     ft.Row(
                         [
-                            criar_card_estado("Em Intervenção", len([r for r in registos if r.get("idEstado") == 3]), ft.Icons.PSYCHOLOGY, "#8B5CF6"),
+                            criar_card_estado("Em Intervenção", len([r for r in registos if r.get("idEstado") == 3]), ft.Icons.PSYCHOLOGY, cor_primaria),
                             criar_card_estado("Pendente", len([r for r in registos if r.get("idEstado") == 4]), ft.Icons.SCHEDULE, "#EAB308"),
                         ],
-                        spacing=20,
+                        spacing=16,
                     ),
 
                     ft.Row(
@@ -306,13 +333,14 @@ def PaginaPrincipal(page: ft.Page):
                             criar_card_estado("Arquivado", len([r for r in registos if r.get("idEstado") == 5]), ft.Icons.ARCHIVE, "#6B7280"),
                             criar_card_estado("Em Vigilância", len([r for r in registos if r.get("idEstado") == 6]), ft.Icons.VISIBILITY, "#10B981"),
                         ],
-                        spacing=20,
+                        spacing=16,
                     ),
                 ],
-                spacing=20,
+                spacing=12,
             ),
         ],
         scroll=ft.ScrollMode.AUTO,
+        spacing=10,
     )
 
     # ==================================================
@@ -323,26 +351,26 @@ def PaginaPrincipal(page: ft.Page):
             content=ft.Row(
                 [
                     ft.Container(
-                        content=ft.Icon(ft.Icons.PERSON, color=cor_primaria, size=32),
-                        bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
-                        padding=12,
-                        border_radius=12,
+                        content=ft.Icon(ft.Icons.PERSON, color=cor_primaria, size=28),
+                        bgcolor=ft.Colors.with_opacity(0.08, cor_primaria),
+                        padding=10,
+                        border_radius=10,
                     ),
                     ft.Column(
                         [
-                            ft.Text(aluno.get("NomeAluno", ""), size=16, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                            ft.Text(aluno.get("NomeAluno", ""), size=15, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
                             ft.Row(
                                 [
-                                    ft.Icon(ft.Icons.SCHOOL, size=14, color=cor_texto_claro),
-                                    ft.Text(f"{aluno.get('NomeEscola', 'N/A')}", size=13, color=cor_texto_medio),
+                                    ft.Icon(ft.Icons.SCHOOL, size=14, color=cor_texto_medio),
+                                    ft.Text(f"{aluno.get('NomeEscola', 'N/A')}", size=12, color=cor_texto_medio),
                                     ft.Container(width=10),
-                                    ft.Icon(ft.Icons.MEETING_ROOM, size=14, color=cor_texto_claro),
-                                    ft.Text(f"{aluno.get('Ano', 'N/A')}º - Turma {aluno.get('Turma', 'N/A')}", size=13, color=cor_texto_medio),
+                                    ft.Icon(ft.Icons.MEETING_ROOM, size=14, color=cor_texto_medio),
+                                    ft.Text(f"{aluno.get('Ano', 'N/A')}º - Turma {aluno.get('Turma', 'N/A')}", size=12, color=cor_texto_medio),
                                 ],
-                                spacing=5,
+                                spacing=6,
                             ),
                         ],
-                        spacing=5,
+                        spacing=6,
                         expand=True,
                     ),
                     ft.Row(
@@ -357,17 +385,17 @@ def PaginaPrincipal(page: ft.Page):
                                 ),
                             ),
                         ],
-                        spacing=5,
+                        spacing=6,
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             ),
             bgcolor=cor_card,
-            padding=20,
+            padding=16,
             border_radius=12,
             border=ft.border.all(1, cor_borda),
             shadow=ft.BoxShadow(
-                spread_radius=0, blur_radius=10, color=ft.Colors.with_opacity(0.05, ft.Colors.BLACK)
+                spread_radius=0, blur_radius=10, color=ft.Colors.with_opacity(0.04, ft.Colors.BLACK)
             ),
         )
 
@@ -379,33 +407,21 @@ def PaginaPrincipal(page: ft.Page):
                         [
                             ft.Column(
                                 [
-                                    ft.Text("Lista de Alunos", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                                    ft.Text(f"Total: {len(filtered_alunos)} alunos encontrados", size=14, color=cor_texto_claro),
+                                    ft.Text("Lista de Alunos", size=22, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                                    ft.Text(f"Total: {len(filtered_alunos)} alunos encontrados", size=12, color=cor_texto_medio),
                                 ],
-                                spacing=5,
+                                spacing=4,
                             ),
                             ft.Container(expand=True),
-                            ft.ElevatedButton(
-                                content=ft.Row(
-                                    [
-                                        ft.Icon(ft.Icons.ADD, size=20),
-                                        ft.Text("Adicionar Aluno", size=15, weight=ft.FontWeight.W_600),
-                                    ],
-                                    spacing=8,
-                                ),
-                                bgcolor=cor_primaria,
-                                color=ft.Colors.WHITE,
-                                on_click=lambda e: page.go("/CriarAluno"),
-                            ),
+                            # Botão padronizado igual aos outros
+                            estilo_botao_acao("Adicionar Aluno", ft.Icons.ADD_CIRCLE, lambda e: page.go("/CriarAluno")),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     ),
-                    ft.Container(height=20),
+                    ft.Container(height=16),
                     ft.Column(
-                        [
-                            criar_card_aluno(a) for a in filtered_alunos
-                        ],
-                        spacing=15,
+                        [criar_card_aluno(a) for a in filtered_alunos],
+                        spacing=12,
                         scroll=ft.ScrollMode.AUTO,
                     ),
                 ],
@@ -417,31 +433,14 @@ def PaginaPrincipal(page: ft.Page):
         return ft.Container(
             content=ft.Column(
                 [
-                    ft.Icon(ft.Icons.PEOPLE_OUTLINED, size=120, color=cor_texto_claro),
-                    ft.Text("Nenhum aluno encontrado", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                    ft.Text("Comece por adicionar o primeiro registo ao sistema", size=15, color=cor_texto_claro),
-
-                    ft.ElevatedButton(
-                        width=240,
-                        content=ft.Row(
-                            [
-                                ft.Icon(ft.Icons.ADD, size=20, color=ft.Colors.WHITE),
-                                ft.Text("Adicionar Primeiro Aluno", size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
-                            ],
-                            spacing=8,
-                            alignment=ft.MainAxisAlignment.CENTER,
-                        ),
-                        style=ft.ButtonStyle(
-                            shape=ft.RoundedRectangleBorder(radius=60),
-                            padding=ft.padding.symmetric(horizontal=28, vertical=16),
-                            bgcolor=cor_primaria,
-                            elevation=3,
-                        ),
-                        on_click=lambda e: page.go("/CriarAluno"),
-                    ),
+                    ft.Icon(ft.Icons.PEOPLE_OUTLINED, size=100, color=cor_texto_medio),
+                    ft.Text("Nenhum aluno encontrado", size=20, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                    ft.Text("Comece por adicionar o primeiro registo ao sistema", size=13, color=cor_texto_medio),
+                    ft.Container(height=12),
+                    estilo_botao_acao("Adicionar Primeiro Aluno", ft.Icons.ADD_CIRCLE, lambda e: page.go("/CriarAluno")),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=15,
+                spacing=12,
             ),
             alignment=ft.alignment.center,
             expand=True,
@@ -455,15 +454,15 @@ def PaginaPrincipal(page: ft.Page):
             content=ft.Row(
                 [
                     ft.Container(
-                        content=ft.Icon(ft.Icons.SCHOOL, color=cor_primaria, size=32),
-                        bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
-                        padding=12,
-                        border_radius=12,
+                        content=ft.Icon(ft.Icons.SCHOOL, color=cor_primaria, size=28),
+                        bgcolor=ft.Colors.with_opacity(0.08, cor_primaria),
+                        padding=10,
+                        border_radius=10,
                     ),
                     ft.Column(
                         [
-                            ft.Text(escola.get("NomeEscola", ""), size=16, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                            ft.Text(f"ID: {escola.get('idEscola', 'N/A')}", size=13, color=cor_texto_medio),
+                            ft.Text(escola.get("NomeEscola", ""), size=15, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                            ft.Text(f"ID: {escola.get('idEscola', 'N/A')}", size=12, color=cor_texto_medio),
                         ],
                         spacing=4,
                         expand=True,
@@ -481,13 +480,13 @@ def PaginaPrincipal(page: ft.Page):
                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             ),
             bgcolor=cor_card,
-            padding=20,
+            padding=14,
             border_radius=12,
             border=ft.border.all(1, cor_borda),
             shadow=ft.BoxShadow(
                 spread_radius=0,
                 blur_radius=10,
-                color=ft.Colors.with_opacity(0.05, ft.Colors.BLACK),
+                color=ft.Colors.with_opacity(0.04, ft.Colors.BLACK),
             ),
         )
 
@@ -499,39 +498,20 @@ def PaginaPrincipal(page: ft.Page):
                         [
                             ft.Column(
                                 [
-                                    ft.Text("Lista de Escolas", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                                    ft.Text(f"Total: {len(escolas)} escolas registadas", size=14, color=cor_texto_claro),
+                                    ft.Text("Lista de Escolas", size=22, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                                    ft.Text(f"Total: {len(escolas)} escolas registadas", size=12, color=cor_texto_medio),
                                 ],
-                                spacing=5,
+                                spacing=4,
                             ),
                             ft.Container(expand=True),
-                            ft.ElevatedButton(
-                                width=240,
-                                content=ft.Row(
-                                    [
-                                        ft.Icon(ft.Icons.ADD, size=20, color=ft.Colors.WHITE),
-                                        ft.Text("Adicionar Escola", size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
-                                    ],
-                                    spacing=8,
-                                    alignment=ft.MainAxisAlignment.CENTER,
-                                ),
-                                style=ft.ButtonStyle(
-                                    shape=ft.RoundedRectangleBorder(radius=60),
-                                    padding=ft.padding.symmetric(horizontal=28, vertical=16),
-                                    bgcolor=cor_primaria,
-                                    elevation=3,
-                                ),
-                                on_click=lambda e: page.go("/criar-escola"),
-                            ),
+                            estilo_botao_acao("Adicionar Escola", ft.Icons.ADD_CIRCLE, lambda e: page.go("/criar-escola")),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                     ),
-                    ft.Container(height=20),
+                    ft.Container(height=16),
                     ft.Column(
-                        [
-                            criar_card_escola(e) for e in escolas
-                        ],
-                        spacing=15,
+                        [criar_card_escola(e) for e in escolas],
+                        spacing=12,
                         scroll=ft.ScrollMode.AUTO,
                     ),
                 ],
@@ -544,25 +524,14 @@ def PaginaPrincipal(page: ft.Page):
                 ft.Container(
                     content=ft.Column(
                         [
-                            ft.Icon(ft.Icons.SCHOOL_OUTLINED, size=120, color=cor_texto_claro),
-                            ft.Text("Nenhuma escola registada", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                            ft.Text("A lista de escolas está vazia", size=15, color=cor_texto_claro),
-                            ft.Container(height=20),
-                            ft.ElevatedButton(
-                                content=ft.Row(
-                                    [
-                                        ft.Icon(ft.Icons.ADD_CIRCLE, size=24),
-                                        ft.Text("Adicionar Primeira Escola", size=16, weight=ft.FontWeight.BOLD),
-                                    ],
-                                    spacing=10,
-                                ),
-                                bgcolor=cor_primaria,
-                                color=ft.Colors.WHITE,
-                                on_click=lambda e: page.go("/criar-escola"),
-                            ),
+                            ft.Icon(ft.Icons.SCHOOL_OUTLINED, size=100, color=cor_texto_medio),
+                            ft.Text("Nenhuma escola registada", size=20, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                            ft.Text("A lista de escolas está vazia", size=13, color=cor_texto_medio),
+                            ft.Container(height=12),
+                            estilo_botao_acao("Adicionar Primeira Escola", ft.Icons.ADD_CIRCLE, lambda e: page.go("/criar-escola")),
                         ],
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        spacing=15,
+                        spacing=12,
                     ),
                     alignment=ft.alignment.center,
                     expand=True,
@@ -580,15 +549,16 @@ def PaginaPrincipal(page: ft.Page):
             content=ft.Row(
                 [
                     ft.Container(
-                        content=ft.Icon(ft.Icons.PERSON, color=cor_primaria, size=32),
-                        bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
-                        padding=12,
-                        border_radius=12,
+                        content=ft.Icon(ft.Icons.PERSON, color=cor_primaria, size=28),
+                        bgcolor=ft.Colors.with_opacity(0.08, cor_primaria),
+                        padding=10,
+                        border_radius=10,
                     ),
                     ft.Column(
                         [
-                            ft.Text(tecnico.get("NomeTecnico", ""), size=16, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                            ft.Text(tecnico.get("Funcao", ""), size=13, color=cor_texto_medio),
+                            # chave ajustada para manter compatibilidade
+                            ft.Text(tecnico.get("NomeTecnico", tecnico.get("nomeTecnico", "")), size=15, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                            ft.Text(tecnico.get("Funcao", ""), size=12, color=cor_texto_medio),
                         ],
                         spacing=4,
                         expand=True,
@@ -598,32 +568,32 @@ def PaginaPrincipal(page: ft.Page):
                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             ),
             bgcolor=cor_card,
-            padding=20,
+            padding=14,
             border_radius=12,
             border=ft.border.all(1, cor_borda),
             shadow=ft.BoxShadow(
                 spread_radius=0,
                 blur_radius=10,
-                color=ft.Colors.with_opacity(0.05, ft.Colors.BLACK),
+                color=ft.Colors.with_opacity(0.04, ft.Colors.BLACK),
             ),
         )
 
     tecnicos_view = (
         ft.Column(
             [criar_card_tecnico(t) for t in tecnicos],
-            spacing=15,
+            spacing=12,
             scroll=ft.ScrollMode.AUTO,
         )
         if tecnicos
         else ft.Container(
             content=ft.Column(
                 [
-                    ft.Icon(ft.Icons.ENGINEERING_OUTLINED, size=120, color=cor_texto_claro),
-                    ft.Text("Nenhum técnico registado", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                    ft.Text("A lista de técnicos está vazia", size=15, color=cor_texto_claro),
+                    ft.Icon(ft.Icons.ENGINEERING_OUTLINED, size=100, color=cor_texto_medio),
+                    ft.Text("Nenhum técnico registado", size=20, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                    ft.Text("A lista de técnicos está vazia", size=13, color=cor_texto_medio),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=15,
+                spacing=12,
             ),
             alignment=ft.alignment.center,
             expand=True,
@@ -638,33 +608,31 @@ def PaginaPrincipal(page: ft.Page):
             content=ft.Row(
                 [
                     ft.Container(
-                        content=ft.Icon(ft.Icons.ASSIGNMENT, color=cor_primaria, size=32),
-                        bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
-                        padding=12,
-                        border_radius=12,
-                    
+                        content=ft.Icon(ft.Icons.ASSIGNMENT, color=cor_primaria, size=28),
+                        bgcolor=ft.Colors.with_opacity(0.08, cor_primaria),
+                        padding=10,
+                        border_radius=10,
                     ),
                     ft.Column(
-                        [   
-                
-                            ft.Text(f"Registo #{registo.get('nPIA', 'N/A')}", size=16, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                        [
+                            ft.Text(f"Registo #{registo.get('nPIA', 'N/A')}", size=15, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
                             ft.Row(
                                 [
-                                    ft.Icon(ft.Icons.PERSON, size=14, color=cor_texto_claro),
-                                    ft.Text(f"Aluno: {registo.get('NomeAluno', 'N/A')}", size=13, color=cor_texto_medio),
+                                    ft.Icon(ft.Icons.PERSON, size=14, color=cor_texto_medio),
+                                    ft.Text(f"Aluno: {registo.get('NomeAluno', 'N/A')}", size=12, color=cor_texto_medio),
                                     ft.Container(width=10),
-                                    ft.Icon(ft.Icons.FLAG, size=14, color=cor_texto_claro),
-                                    ft.Text(f"Estado: {registo.get('Estado', 'N/A')}", size=13, color=cor_texto_medio),
+                                    ft.Icon(ft.Icons.FLAG, size=14, color=cor_texto_medio),
+                                    ft.Text(f"Estado: {registo.get('Estado', 'N/A')}", size=12, color=cor_texto_medio),
                                 ],
-                                spacing=5,
+                                spacing=6,
                             ),
                             ft.Text(
                                 f"Data: {registo.get('DataEntradaSPO', 'N/A')} | Técnico: {registo.get('NomeTecnico', 'N/A')}",
-                                size=12,
-                                color=cor_texto_claro,
+                                size=11,
+                                color=cor_texto_medio,
                             ),
                         ],
-                        spacing=5,
+                        spacing=6,
                         expand=True,
                     ),
                     ft.Row(
@@ -685,60 +653,43 @@ def PaginaPrincipal(page: ft.Page):
                                 ),
                             ),
                         ],
-                        spacing=5,
+                        spacing=6,
                     ),
                 ],
                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             ),
             bgcolor=cor_card,
-            padding=20,
+            padding=14,
             border_radius=12,
             border=ft.border.all(1, cor_borda),
             shadow=ft.BoxShadow(
                 spread_radius=0,
                 blur_radius=10,
-                color=ft.Colors.with_opacity(0.05, ft.Colors.BLACK),
+                color=ft.Colors.with_opacity(0.04, ft.Colors.BLACK),
             ),
         )
 
     registos_view = (
-               ft.Column(
+        ft.Column(
             [
                 ft.Row(
                     [
                         ft.Column(
                             [
-                                ft.Text("Lista de Registo", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                                ft.Text(f"Total: {len(registos)} Registo encontrados", size=14, color=cor_texto_claro),
+                                ft.Text("Lista de Registo", size=22, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                                ft.Text(f"Total: {len(registos)} Registo encontrados", size=12, color=cor_texto_medio),
                             ],
-                            spacing=5,
+                            spacing=4,
                         ),
                         ft.Container(expand=True),
-                        ft.ElevatedButton(
-                            width=240,
-                            content=ft.Row(
-                                [
-                                    ft.Icon(ft.Icons.ADD, size=20, color=ft.Colors.WHITE),
-                                    ft.Text("Adicionar Processo", size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
-                                ],
-                                spacing=8,
-                                alignment=ft.MainAxisAlignment.CENTER,
-                            ),
-                            style=ft.ButtonStyle(
-                                shape=ft.RoundedRectangleBorder(radius=60),
-                                padding=ft.padding.symmetric(horizontal=28, vertical=16),
-                                bgcolor=cor_primaria,
-                                elevation=3,
-                            ),
-                            on_click=lambda e: page.go("/criar-registo"),
-                        ),
+                        estilo_botao_acao("Adicionar Registo", ft.Icons.ADD_CIRCLE, lambda e: page.go("/criar-registo")),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                 ),
-                ft.Container(height=20),
+                ft.Container(height=16),
                 ft.Column(
                     [criar_card_registo(r) for r in registos],
-                    spacing=15,
+                    spacing=12,
                     scroll=ft.ScrollMode.AUTO,
                 ),
             ],
@@ -749,30 +700,14 @@ def PaginaPrincipal(page: ft.Page):
         else ft.Container(
             content=ft.Column(
                 [
-                    ft.Icon(ft.Icons.ASSIGNMENT_OUTLINED, size=120, color=cor_texto_claro),
-                    ft.Text("Nenhum registo criado", size=24, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                    ft.Text("Comece por adicionar o primeiro registo", size=15, color=cor_texto_claro),
-                    ft.ElevatedButton(
-                        width=240,
-                        content=ft.Row(
-                            [
-                                ft.Icon(ft.Icons.ADD, size=20, color=ft.Colors.WHITE),
-                                ft.Text("Adicionar Primeiro Registo", size=14, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
-                            ],
-                            spacing=8,
-                            alignment=ft.MainAxisAlignment.CENTER,
-                        ),
-                        style=ft.ButtonStyle(
-                            shape=ft.RoundedRectangleBorder(radius=60),
-                            padding=ft.padding.symmetric(horizontal=28, vertical=16),
-                            bgcolor=cor_primaria,
-                            elevation=3,
-                        ),
-                        on_click=lambda e: page.go("/criar-registo"),
-                    ),
+                    ft.Icon(ft.Icons.ASSIGNMENT_OUTLINED, size=100, color=cor_texto_medio),
+                    ft.Text("Nenhum registo criado", size=20, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                    ft.Text("Comece por adicionar o primeiro registo", size=13, color=cor_texto_medio),
+                    ft.Container(height=12),
+                    estilo_botao_acao("Adicionar Primeiro Registo", ft.Icons.ADD, lambda e: page.go("/criar-registo")),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=15,
+                spacing=12,
             ),
             alignment=ft.alignment.center,
             expand=True,
