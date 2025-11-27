@@ -1,129 +1,106 @@
 import flet as ft
 from Models.AlunosModel import *
-from Models.EscolasModel import listarEscolas  
+from Models.EscolasModel import listarEscolas
+from View.PaginaPrincipal.estilos import *
+from View.PaginaPrincipal.util_buttons import estilo_botao_acao
 
 def PaginaEditarAluno(page: ft.Page):
-    tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
-    
+
     nProcessoAluno = page.session.get("aluno_editar_id")
     if not nProcessoAluno:
         page.go("/pagina-principal")
         return
-    
+
     aluno = buscarAlunoPorProcesso(nProcessoAluno)
     if not aluno:
         page.go("/pagina-principal")
         return
-    
-    # === CORES ===
-    cor_primaria = "#1E40AF"
-    cor_fundo = "#F8FAFC"
-    cor_card = "#FFFFFF"
-    cor_texto_escuro = "#0F172A"
-    cor_texto_medio = "#334155"
-    cor_texto_claro = "#64748B"
-    cor_borda = "#E2E8F0"
-    cor_sucesso = "#10B981"
-    cor_erro = "#DC2626"
-    
-    # === CAMPOS DO FORMULÁRIO ===
+
+    # ------------------------
+    # Campos do formulário
+    # ------------------------
     txt_numero_processo = ft.TextField(
         label="Número de Processo",
         value=aluno["nProcessoAluno"],
-        border_color=cor_borda,
-        focused_border_color=cor_primaria,
         prefix_icon=ft.Icons.NUMBERS,
-        text_size=15,
         read_only=True,
-        color="#000000",
+        border_color=cor_borda,
+        focused_border_color=cor_secundaria,
+        color=cor_texto_claro,
+        text_size=15
     )
-    
+
     txt_nome = ft.TextField(
-        label="Nome Completo do Aluno",
+        label="Nome Completo",
         value=aluno["NomeAluno"],
-        border_color=cor_borda,
-        focused_border_color=cor_primaria,
         prefix_icon=ft.Icons.PERSON,
-        text_size=15,
-        color="#000000",
-    )
-    
-    txt_ano = ft.Dropdown(
-        label="Ano Escolar",
-        value=str(aluno["Ano"]),
         border_color=cor_borda,
-        focused_border_color=cor_primaria,
-        prefix_icon=ft.Icons.SCHOOL,
-        options=[ft.dropdown.Option(str(i)) for i in range(1, 13)],
-        text_size=15,
-        color="#000000",
+        focused_border_color=cor_secundaria,
+        color=cor_texto_claro,
+        text_size=15
     )
-    
+
     txt_turma = ft.TextField(
         label="Turma",
         value=aluno["Turma"],
-        border_color=cor_borda,
-        focused_border_color=cor_primaria,
         prefix_icon=ft.Icons.MEETING_ROOM,
-        text_size=15,
         max_length=3,
-        color="#000000",
+        border_color=cor_borda,
+        focused_border_color=cor_secundaria,
+        color=cor_texto_claro,
+        text_size=15
     )
-    
-    # Carregar Escolas
+
+    txt_ano = ft.Dropdown(
+        label="Ano",
+        value=str(aluno["Ano"]),
+        prefix_icon=ft.Icons.SCHOOL,
+        options=[ft.dropdown.Option(str(i)) for i in range(1, 13)]
+    )
+
     try:
         escolas = listarEscolas()
     except:
         escolas = []
-    
+
     dropdown_escola = ft.Dropdown(
         label="Escola",
-        border_color=cor_borda,
-        focused_border_color=cor_primaria,
+        value=str(aluno["idEscola"]),
         prefix_icon=ft.Icons.LOCATION_CITY,
         options=[
             ft.dropdown.Option(key=str(e["idEscola"]), text=e["NomeEscola"])
             for e in escolas
-        ] if escolas else [ft.dropdown.Option("0", "Nenhuma escola disponível")],
-        text_size=15,
-        color="#000000",
+        ] if escolas else [ft.dropdown.Option("0", "Nenhuma escola disponível")]
     )
-    
-    dropdown_escola.value = str(aluno["idEscola"])
-    
+
+    # ------------------------
+    # Feedback
+    # ------------------------
     mensagem_feedback = ft.Container(visible=False)
-    
-    # === FUNÇÃO PARA ATUALIZAR ===
+
+    def mostrar_feedback(msg, cor):
+        mensagem_feedback.content = ft.Text(msg, size=14, color=cor)
+        mensagem_feedback.visible = True
+        page.update()
+
+    # ------------------------
+    # Função atualizar
+    # ------------------------
     def atualizar_aluno(e):
         erros = []
-        
         if not txt_nome.value.strip():
-            erros.append("Nome do aluno é obrigatório")
+            erros.append("O nome é obrigatório.")
         if not txt_ano.value:
-            erros.append("Ano escolar é obrigatório")
+            erros.append("Selecione o ano escolar.")
         if not txt_turma.value.strip():
-            erros.append("Turma é obrigatória")
+            erros.append("A turma é obrigatória.")
         if not dropdown_escola.value or dropdown_escola.value == "0":
-            erros.append("Escola é obrigatória")
+            erros.append("Selecione a escola.")
 
         if erros:
-            mensagem_feedback.content = ft.Container(
-                content=ft.Column([
-                    ft.Row([
-                        ft.Icon(ft.Icons.ERROR, color=cor_erro, size=20),
-                        ft.Text("Erros no formulário:", size=15, weight=ft.FontWeight.BOLD, color=cor_erro),
-                    ]),
-                    ft.Column([ft.Text(f"• {erro}", size=13, color=cor_erro) for erro in erros])
-                ]),
-                bgcolor=ft.Colors.with_opacity(0.1, cor_erro),
-                border=ft.border.all(1, cor_erro),
-                border_radius=12,
-                padding=16,
-            )
-            mensagem_feedback.visible = True
-            page.update()
+            mostrar_feedback("\n".join([f"• {err}" for err in erros]), "#EF4444")
             return
-        
+
         try:
             sucesso = atualizarAluno(
                 nProcessoAluno=txt_numero_processo.value,
@@ -132,96 +109,85 @@ def PaginaEditarAluno(page: ft.Page):
                 novaTurma=txt_turma.value.strip().upper(),
                 novoIdEscola=int(dropdown_escola.value),
             )
-            
             if sucesso:
-                mensagem_feedback.content = ft.Container(
-                    content=ft.Row([
-                        ft.Icon(ft.Icons.CHECK_CIRCLE, color=cor_sucesso, size=24),
-                        ft.Text("Aluno atualizado com sucesso!", size=15, weight=ft.FontWeight.BOLD, color=cor_sucesso),
-                    ]),
-                    bgcolor=ft.Colors.with_opacity(0.1, cor_sucesso),
-                    border=ft.border.all(1, cor_sucesso),
-                    border_radius=12,
-                    padding=16,
-                )
-                mensagem_feedback.visible = True
-                page.update()
-                
+                mostrar_feedback("Aluno atualizado com sucesso!", "#10B981")
                 import time
-                time.sleep(1.5)
+                time.sleep(1)
                 page.go("/pagina-principal")
-                return
-            
             else:
-                raise Exception("Nenhuma alteração foi realizada.")
-        
+                mostrar_feedback("Nenhuma alteração foi realizada.", "#EF4444")
         except Exception as ex:
-            mensagem_feedback.content = ft.Container(
-                content=ft.Row([
-                    ft.Icon(ft.Icons.ERROR, color=cor_erro, size=20),
-                    ft.Text(f"Erro ao atualizar aluno: {str(ex)}", size=14, color=cor_erro),
-                ]),
-                bgcolor=ft.Colors.with_opacity(0.1, cor_erro),
-                border=ft.border.all(1, cor_erro),
-                border_radius=12,
-                padding=16,
-            )
-            mensagem_feedback.visible = True
-            page.update()
-    
-    # === BOTÕES ===
-    btn_salvar = ft.ElevatedButton(
-        content=ft.Row([
-            ft.Icon(ft.Icons.SAVE, size=20),
-            ft.Text("Atualizar Aluno", size=15, weight=ft.FontWeight.BOLD),
-        ]),
-        bgcolor=cor_primaria,
-        color=ft.Colors.WHITE,
-        on_click=atualizar_aluno,
+            mostrar_feedback(str(ex), "#EF4444")
+
+    # ------------------------
+    # Botões
+    # ------------------------
+    btn_salvar = estilo_botao_acao(
+        "Salvar Alterações",
+        ft.Icons.SAVE_ROUNDED,
+        atualizar_aluno
     )
-    
-    btn_cancelar = ft.OutlinedButton(
-        content=ft.Row([
-            ft.Icon(ft.Icons.CANCEL, size=20, color=cor_texto_medio),
-            ft.Text("Voltar", size=15, weight=ft.FontWeight.W_600, color=cor_texto_medio),
-        ]),
-        on_click=lambda e: page.go("/pagina-principal"),
+
+    btn_voltar = ft.OutlinedButton(
+        content=ft.Row(
+            [ft.Icon(ft.Icons.ARROW_BACK, color=cor_texto_medio, size=18),
+             ft.Text("Voltar", color=cor_texto_medio, size=14)],
+            spacing=8
+        ),
+        style=ft.ButtonStyle(
+            padding=12,
+            shape=ft.RoundedRectangleBorder(radius=10),
+            side=ft.border.all(1, cor_borda)
+        ),
+        on_click=lambda e: page.go("/pagina-principal")
     )
-    
+
+    # ------------------------
+    # Card central
+    # ------------------------
     formulario = ft.Container(
-        content=ft.Column([
-            ft.Row([
-                ft.IconButton(
-                    icon=ft.Icons.ARROW_BACK,
-                    icon_color=cor_primaria,
-                    on_click=lambda e: page.go("/pagina-principal"),
-                ),
-                ft.Column([
-                    ft.Text("Editar Aluno", size=28, weight=ft.FontWeight.BOLD),
-                    ft.Text(f"Editando: {aluno['NomeAluno']}", size=14, color=cor_texto_claro)
-                ], expand=True),
-            ]),
-            ft.Divider(height=30, color=cor_borda),
-            mensagem_feedback,
-            txt_numero_processo,
-            txt_nome,
-            ft.Row([txt_ano, txt_turma], spacing=15),
-            dropdown_escola,
-            ft.Row([btn_cancelar, btn_salvar], alignment=ft.MainAxisAlignment.END),
-        ]),
-        bgcolor=cor_card,
+        content=ft.Column(
+            [
+                ft.Text("Editar Aluno", size=26, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                ft.Text(aluno["NomeAluno"], size=14, color=cor_texto_medio),
+                ft.Divider(height=30, color=cor_borda),
+                mensagem_feedback,
+                txt_numero_processo,
+                txt_nome,
+                ft.Row([txt_ano, txt_turma], spacing=12),
+                dropdown_escola,
+                ft.Row([btn_voltar, btn_salvar], alignment=ft.MainAxisAlignment.END, spacing=12),
+            ],
+            spacing=20
+        ),
         padding=40,
-        width=700,
+        width=600,
+        bgcolor=cor_card,
         border_radius=16,
+        shadow=ft.BoxShadow(
+            blur_radius=30,
+            spread_radius=1,
+            color=ft.Colors.with_opacity(0.35, cor_primaria),
+            offset=ft.Offset(0, 6)
+        ),
     )
-    
+
+    # ------------------------
+    # View final centralizada
+    # ------------------------
     return ft.View(
-        route="/editar-aluno",
-        controls=[ft.Container(
-            content=ft.Column([formulario], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            bgcolor=cor_fundo,
-            padding=40,
-            expand=True,
-        )],
+        "/editar-aluno",
+        [
+            ft.Container(
+                content=ft.Column(
+                    [formulario],
+                    expand=True,
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    alignment=ft.MainAxisAlignment.CENTER,
+                ),
+                expand=True,
+                bgcolor=cor_fundo,
+            )
+        ],
         bgcolor=cor_fundo,
     )
