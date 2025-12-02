@@ -26,7 +26,7 @@ def PaginaPrincipal(page: ft.Page):
         registos = listarRegistos()
 
         if vista == "dashboard":
-            conteudo_principal.content = criar_dashboard_view(alunos, escolas, registos)
+            conteudo_principal.content = criar_dashboard_view( alunos, escolas, registos)
         elif vista == "alunos":
             conteudo_principal.content = criar_alunos_view(alunos, page)
         elif vista == "escolas":

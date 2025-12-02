@@ -6,11 +6,7 @@ from .estilosAdmin import (
     cor_texto_medio, cor_borda
 )
 
-def criar_dashboard_view(page: ft.Page, alunos, escolas, registos):
-    """
-    Dashboard principal com suporte a tema claro/escuro automaticamente
-    baseado em page.theme_mode (ft.ThemeMode.DARK or ft.ThemeMode.LIGHT).
-    """
+def criar_dashboard_viewAdmin(page: ft.Page, alunos, escolas, registos):
 
     # --- Paleta de cores alternativa para o tema claro ---
     light_palette = {

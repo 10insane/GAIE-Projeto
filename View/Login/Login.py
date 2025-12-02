@@ -1,6 +1,7 @@
 import flet as ft
 import flet_lottie as fl
 from Models.TecnicoModel import listarTecnico
+from Models.AdminModel import listarAdmin
 from datetime import datetime
 
 def LoginView(page: ft.Page):
@@ -20,13 +21,15 @@ def LoginView(page: ft.Page):
     cor_erro = "#EF4444"
     cor_hover = "#7C3AED"
     
+    # Limita nº de processo a 10 dígitos
     def limitar_numero_processo(e):
-        valor = ''.join(filter(str.isdigit, e.control.value)) 
-        if len(valor) > 10:  
-            valor = valor[:10]  
+        valor = ''.join(filter(str.isdigit, e.control.value))
+        if len(valor) > 10:
+            valor = valor[:10]
         e.control.value = valor
         page.update()
     
+    # Autenticação
     def autenticar(e):
         nProc = campoNumeroProcesso.value.strip()
         password = campoSenha.value.strip()
@@ -37,29 +40,34 @@ def LoginView(page: ft.Page):
             page.update()
             return
 
-        try:
-            tecnicos = listarTecnico()
-        except Exception as ex:
-            mensagemErro.visible = True
-            mensagemErro.content.controls[1].value = f"Erro ao listar técnicos: {ex}"
-            page.update()
+        # Tentar autenticar como Admin
+        admins = listarAdmin()
+        admin_valido = next(
+            (a for a in admins if str(a.get("nProcAdmin", "")).strip() == nProc and a.get("password", "") == password),
+            None
+        )
+        if admin_valido:
+            page.session.set("usuario_tipo", "admin")
+            page.session.set("usuario_nome", admin_valido.get("NomeAdmin"))
+            page.go("/TelaPrincipalAdmin")
             return
 
-        # Busca técnico com número de processo e senha
-        tecnico_valido = None
-        for t in tecnicos:
-            if str(t.get("nProcTecnico", "")).strip() == nProc and t.get("password", "") == password:
-                tecnico_valido = t
-                break
-
+        # Se não for admin, tenta autenticar como Técnico
+        tecnicos = listarTecnico()
+        tecnico_valido = next(
+            (t for t in tecnicos if str(t.get("nProcTecnico", "")).strip() == nProc and t.get("password", "") == password),
+            None
+        )
         if tecnico_valido:
-            # Armazenar nome do técnico na sessão
-            page.session.set("tecnico_nome", tecnico_valido.get("nomeTecnico", ""))
+            page.session.set("usuario_tipo", "tecnico")
+            page.session.set("usuario_nome", tecnico_valido.get("NomeTecnico"))
             page.go("/pagina-principal")
-        else:
-            mensagemErro.visible = True
-            mensagemErro.content.controls[1].value = "Número de processo ou senha incorretos!"
-            page.update()
+            return
+
+        # Se não encontrou ninguém
+        mensagemErro.visible = True
+        mensagemErro.content.controls[1].value = "Número de processo ou senha incorretos!"
+        page.update()
 
     # === ANIMAÇÃO LOTTIE ===
     animacaoLottie = fl.Lottie(
@@ -204,13 +212,7 @@ def LoginView(page: ft.Page):
         ),
         content=ft.Column(
             [
-                # Logo e animação
-                ft.Container(
-                    content=animacaoLottie,
-                    padding=ft.padding.only(bottom=10),
-                ),
-                
-                # Título e subtítulo
+                ft.Container(content=animacaoLottie, padding=ft.padding.only(bottom=10)),
                 ft.Column(
                     [
                         ft.Text(
@@ -228,43 +230,20 @@ def LoginView(page: ft.Page):
                     spacing=5,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
-                
                 ft.Container(height=30),
-                
-                # Campos
                 campoNumeroProcesso,
-                campoSenha, 
-                
+                campoSenha,
                 ft.Container(height=5),
                 checkboxLembrar,
                 ft.Container(height=10),
-                
-                # Mensagem de erro
                 mensagemErro,
-                
-                # Botão
                 botaoEntrar,
-                
                 ft.Container(height=15),
-                
-                # Divider com texto
                 ft.Row(
                     [
-                        ft.Container(
-                            height=1,
-                            bgcolor=cor_borda,
-                            expand=True,
-                        ),
-                        ft.Text(
-                            "GAIE v1.0",
-                            size=12,
-                            color=cor_texto_medio,
-                        ),
-                        ft.Container(
-                            height=1,
-                            bgcolor=cor_borda,
-                            expand=True,
-                        ),
+                        ft.Container(height=1, bgcolor=cor_borda, expand=True),
+                        ft.Text("GAIE v1.0", size=12, color=cor_texto_medio),
+                        ft.Container(height=1, bgcolor=cor_borda, expand=True),
                     ],
                     spacing=10,
                     width=380,
@@ -290,16 +269,8 @@ def LoginView(page: ft.Page):
     # === LAYOUT PRINCIPAL ===
     layoutPrincipal = ft.Row(
         [
-            ft.Container(
-                content=caixaLogin,
-                expand=1,
-                alignment=ft.alignment.center,
-            ),
-            ft.Container(
-                content=imagemPsico,
-                expand=1,
-                alignment=ft.alignment.center,
-            ),
+            ft.Container(content=caixaLogin, expand=1, alignment=ft.alignment.center),
+            ft.Container(content=imagemPsico, expand=1, alignment=ft.alignment.center),
         ],
         alignment=ft.MainAxisAlignment.CENTER,
         expand=True,
@@ -313,24 +284,18 @@ def LoginView(page: ft.Page):
             begin=ft.Alignment(-1, -1),
             end=ft.Alignment(1, 1),
             colors=[
-                "#0F0F0F",  
-                "#1a0a2e",  
-                "#2d1b4e",  
-                "#1a0a2e",  
-                "#0F0F0F",  
+                "#0F0F0F",
+                "#1a0a2e",
+                "#2d1b4e",
+                "#1a0a2e",
+                "#0F0F0F",
             ],
         ),
         content=layoutPrincipal,
     )
 
     # === LAYOUT COMPLETO ===
-    layout_completo = ft.Column(
-        [
-            fundoComGradiente,
-        ],
-        spacing=0,
-        expand=True
-    )
+    layout_completo = ft.Column([fundoComGradiente], spacing=0, expand=True)
 
     return ft.View(
         route="/login",

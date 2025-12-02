@@ -35,7 +35,7 @@ def criar_menu_lateral(page, trocar_vista):
                 ft.Text("Menu Principal", size=18, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
                 ft.Divider(height=20, color=cor_borda),
 
-                criar_botao_menu("Dashboard", ft.Icons.DASHBOARD, acao=lambda e: trocar_vista("dashboard")),
+                criar_botao_menu("Dashboard", ft.Icons.DASHBOARD, acao=lambda e: trocar_vista("dashboardAdmin")),
                 criar_botao_menu("Alunos", ft.Icons.PEOPLE, acao=lambda e: trocar_vista("alunos")),
                 criar_botao_menu("Escolas", ft.Icons.SCHOOL, acao=lambda e: trocar_vista("escolas")),
                 criar_botao_menu("Registos", ft.Icons.ASSIGNMENT, acao=lambda e: trocar_vista("registos")),

@@ -4,14 +4,14 @@ from Models.EscolasModel import listarEscolas
 from Models.TecnicoModel import listarTecnico
 from Models.RegistoModel import listarRegistos
 
-from View.PaginaPrincipal.estilos import cor_fundo
-from View.PaginaPrincipal.cabecalho import criar_cabecalho
-from View.PaginaPrincipal.menu_lateral import criar_menu_lateral
-from View.PaginaPrincipal.dashboard_view import criar_dashboard_view
-from View.PaginaPrincipal.alunos_view import criar_alunos_view
-from View.PaginaPrincipal.escolas_view import criar_escolas_view
-from View.PaginaPrincipal.tecnicos_view import criar_tecnicos_view
-from View.PaginaPrincipal.registos_view import criar_registos_view
+from View.PaginaPrincipalAdmin.estilosAdmin import cor_fundo
+from View.PaginaPrincipalAdmin.cabecalhoAdmin import criar_cabecalho
+from View.PaginaPrincipalAdmin.menu_lateralAdmin import criar_menu_lateral
+from View.PaginaPrincipalAdmin.dashboard_viewAdmin import criar_dashboard_viewAdmin
+from View.PaginaPrincipalAdmin.alunos_viewAdmin import criar_alunos_view
+from View.PaginaPrincipalAdmin.escolas_viewAdmin import criar_escolas_view
+from View.PaginaPrincipalAdmin.tecnicos_viewAdmin import criar_tecnicos_view
+from View.PaginaPrincipalAdmin.registos_viewAdmin import criar_registos_view
 
 
 def PaginaPrincipalAdmin(page: ft.Page):
@@ -25,9 +25,8 @@ def PaginaPrincipalAdmin(page: ft.Page):
         tecnicos = listarTecnico()
         registos = listarRegistos()
 
-        if vista == "dashboard":
-            # <-- passar 'page' para que o dashboard escolha o tema corretamente
-            conteudo_principal.content = criar_dashboard_view(alunos, escolas, registos)
+        if vista == "dashboardAdmin":
+            conteudo_principal.content = criar_dashboard_viewAdmin(page, alunos, escolas, registos)
         elif vista == "alunos":
             conteudo_principal.content = criar_alunos_view(alunos, page)
         elif vista == "escolas":
@@ -49,10 +48,10 @@ def PaginaPrincipalAdmin(page: ft.Page):
         expand=True
     )
 
-    trocar_vista("dashboard")  # vista inicial
+    trocar_vista("dashboardAdmin")  # vista inicial
 
     return ft.View(
-        route="/PaginaPrincipalAdmin",   # mantém a tua rota atual
+        route="/PaginaPrincipalAdmin",
         controls=[
             criar_cabecalho(page),
             ft.Container(content=layout, padding=20, bgcolor=cor_fundo, expand=True),
