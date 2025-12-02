@@ -14,7 +14,7 @@ from View.PaginaPrincipal.tecnicos_view import criar_tecnicos_view
 from View.PaginaPrincipal.registos_view import criar_registos_view
 
 
-def PaginaPrincipal(page: ft.Page):
+def PaginaPrincipalAdmin(page: ft.Page):
 
     conteudo_principal = ft.Container(expand=True)
 
@@ -26,6 +26,7 @@ def PaginaPrincipal(page: ft.Page):
         registos = listarRegistos()
 
         if vista == "dashboard":
+            # <-- passar 'page' para que o dashboard escolha o tema corretamente
             conteudo_principal.content = criar_dashboard_view(alunos, escolas, registos)
         elif vista == "alunos":
             conteudo_principal.content = criar_alunos_view(alunos, page)
@@ -51,7 +52,7 @@ def PaginaPrincipal(page: ft.Page):
     trocar_vista("dashboard")  # vista inicial
 
     return ft.View(
-        route="/pagina-principal",
+        route="/PaginaPrincipalAdmin",   # mantém a tua rota atual
         controls=[
             criar_cabecalho(page),
             ft.Container(content=layout, padding=20, bgcolor=cor_fundo, expand=True),

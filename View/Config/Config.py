@@ -11,7 +11,7 @@ def PainelAdmin(page: ft.Page):
     cor_texto_medio = "#334155"
     cor_texto_claro = "#64748B"
 
-    # === CABEÇALHO (idêntico ao original) ===
+    # === CABEÇALHO ===
     cabecalho = ft.Container(
         padding=ft.padding.symmetric(horizontal=30, vertical=18),
         bgcolor=cor_primaria,
@@ -93,7 +93,7 @@ def PainelAdmin(page: ft.Page):
         ),
     )
 
-    # === PAINEL ADMIN SIMPLES ===
+    # === PAINEL ADMIN ===
     painel_admin = ft.Container(
         bgcolor=cor_card,
         padding=40,
@@ -103,16 +103,17 @@ def PainelAdmin(page: ft.Page):
         ),
         content=ft.Column(
             [
-               ft.IconButton(
-                  icon=ft.Icons.ARROW_BACK,
-                  on_click=lambda e: page.go("/pagina-principal"),
-                  icon_color=cor_primaria
+                ft.IconButton(
+                    icon=ft.Icons.ARROW_BACK,
+                    on_click=lambda e: page.go("/pagina-principal"),
+                    icon_color=cor_primaria
                 ),
                 
                 ft.Text("Painel do Administrador", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
                 ft.Text("Ferramentas exclusivas para gestão do sistema", size=14, color=cor_texto_claro),
                 ft.Container(height=30),
 
+                # === Botão Criar Técnico ===
                 ft.ElevatedButton(
                     content=ft.Row(
                         [
@@ -126,6 +127,22 @@ def PainelAdmin(page: ft.Page):
                     height=50,
                     width=220,
                     on_click=lambda e: page.go("/criar-tecnico"),
+                ),
+
+                # === Botão para entrar no Painel Geral do Admin ===
+                ft.ElevatedButton(
+                    content=ft.Row(
+                        [
+                            ft.Icon(ft.Icons.DASHBOARD_ROUNDED, size=22),
+                            ft.Text("Painel Geral do Admin", size=16, weight=ft.FontWeight.W_600),
+                        ],
+                        spacing=10,
+                    ),
+                    bgcolor=cor_primaria,
+                    color=ft.Colors.WHITE,
+                    height=50,
+                    width=250,
+                    on_click=lambda e: page.go("/TelaPrincipalAdmin"),
                 ),
             ],
             spacing=20,
