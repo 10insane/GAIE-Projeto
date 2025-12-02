@@ -1,5 +1,3 @@
-# Views/PaginaPrincipal/escolas_view.py
-
 import flet as ft
 from .estilos import *
 from .util_buttons import estilo_botao_acao
@@ -20,28 +18,29 @@ def criar_card_escola(escola, page):
             [
                 # Ícone da escola
                 ft.Container(
-                    content=ft.Icon(ft.Icons.SCHOOL, color="#FFFFFF", size=24),
+                    content=ft.Icon(ft.Icons.SCHOOL, color="#FFFFFF", size=20),
                     bgcolor="#10B981",
-                    padding=10,
-                    border_radius=12,
+                    padding=8,
+                    border_radius=10,
                 ),
 
                 # Informações da escola
                 ft.Column(
                     [
-                                # Sigla (mostra apenas sigla na dashboard)
-                                ft.Text(
-                                    gerar_sigla(escola.get("NomeEscola", "")),
-                                    size=18,
-                                    weight=ft.FontWeight.BOLD,
-                                    color=cor_texto_claro,
-                                ),
-                                ft.Container(height=4),
-                                ft.Text(
-                                    "",
-                                    size=12,
-                                    color=cor_texto_medio,
-                                ),
+                        ft.Text(
+                            gerar_sigla(escola.get("NomeEscola", "")),
+                            size=15,
+                            weight=ft.FontWeight.BOLD,
+                            color=cor_texto_claro,
+                            text_align=ft.TextAlign.CENTER,
+                        ),
+                        ft.Container(height=2),
+                        ft.Text(
+                            escola.get("NomeEscola", ""),
+                            size=12,
+                            color=cor_texto_medio,
+                            text_align=ft.TextAlign.CENTER,
+                        ),
                     ],
                     spacing=0,
                     expand=True,
@@ -55,7 +54,7 @@ def criar_card_escola(escola, page):
                         icon_color="#FFFFFF",
                         bgcolor="#F59E0B",
                         tooltip="Editar Escola",
-                        icon_size=18,
+                        icon_size=16,
                         on_click=lambda e, a=escola: (
                             page.session.set("escola_editar_id", a.get("idEscola")),
                             page.go("/EditarEscola")
@@ -63,20 +62,20 @@ def criar_card_escola(escola, page):
                     ),
                 ),
             ],
-            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
-            spacing=14,
+            alignment=ft.MainAxisAlignment.CENTER,
+            spacing=10,
         ),
 
         bgcolor=cor_card,
         tooltip=escola.get("NomeEscola", ""),
-        padding=16,
-        border_radius=14,
+        padding=12,
+        border_radius=12,
         border=ft.border.all(2, ft.Colors.with_opacity(0.15, "#10B981")),
         shadow=ft.BoxShadow(
-            blur_radius=20,
+            blur_radius=16,
             spread_radius=1,
             color=ft.Colors.with_opacity(0.12, "#10B981"),
-            offset=ft.Offset(0, 4),
+            offset=ft.Offset(0, 3),
         ),
         animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
     )
@@ -147,10 +146,12 @@ def criar_escolas_view(escolas, page):
                 ft.Container(height=16),
 
                 # Lista de escolas com scroll
-                ft.Column(
-                    [criar_card_escola(e, page) for e in escolas],
-                    spacing=12,
-                    scroll=ft.ScrollMode.ALWAYS,
+                ft.Container(
+                    content=ft.Column(
+                        [criar_card_escola(e, page) for e in escolas],
+                        spacing=10,
+                        scroll=ft.ScrollMode.AUTO,
+                    ),
                     expand=True,
                 ),
             ],
