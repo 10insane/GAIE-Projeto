@@ -5,6 +5,14 @@ from .estilos import *
 from .util_buttons import estilo_botao_acao
 
 
+def gerar_sigla(nome: str) -> str:
+    if not nome:
+        return ""
+    partes = [p for p in nome.split() if p]
+    sigla = "".join([p[0] for p in partes])
+    return ''.join([c for c in sigla.upper() if c.isalnum()])
+
+
 def criar_card_escola(escola, page):
     """Card de escola com design moderno e clean"""
     return ft.Container(
@@ -21,13 +29,19 @@ def criar_card_escola(escola, page):
                 # Informações da escola
                 ft.Column(
                     [
-                        # Nome
-                        ft.Text(
-                            escola.get("NomeEscola", ""),
-                            size=15,
-                            weight=ft.FontWeight.BOLD,
-                            color=cor_texto_claro,
-                        ),
+                                # Sigla (mostra apenas sigla na dashboard)
+                                ft.Text(
+                                    gerar_sigla(escola.get("NomeEscola", "")),
+                                    size=18,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=cor_texto_claro,
+                                ),
+                                ft.Container(height=4),
+                                ft.Text(
+                                    "",
+                                    size=12,
+                                    color=cor_texto_medio,
+                                ),
                     ],
                     spacing=0,
                     expand=True,
@@ -54,6 +68,7 @@ def criar_card_escola(escola, page):
         ),
 
         bgcolor=cor_card,
+        tooltip=escola.get("NomeEscola", ""),
         padding=16,
         border_radius=14,
         border=ft.border.all(2, ft.Colors.with_opacity(0.15, "#10B981")),
