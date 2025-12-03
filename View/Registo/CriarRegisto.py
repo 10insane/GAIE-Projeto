@@ -25,17 +25,50 @@ def PaginaCriarRegisto(page: ft.Page):
     tecnicos = listarTecnico()
     estados = listarEstadosProcesso()
 
-    # Dropdown Aluno
-    dropdown_aluno = ft.Dropdown(
-        label="Aluno",
-        hint_text="Selecione o aluno",
+    # -----------------------------------------------------------
+    #  CAMPOS ALTERADOS — Nº PROCESSO + ALUNO AUTOMÁTICO
+    # -----------------------------------------------------------
+
+    # Campo Nº Processo
+    txt_num_processo = ft.TextField(
+        label="Número de Processo",
+        hint_text="Digite o nº processo",
         border_color=cor_borda,
         focused_border_color=cor_primaria,
-        prefix_icon=ft.Icons.PERSON,
-        options=[ft.dropdown.Option(key=str(a["nProcessoAluno"]), text=a["NomeAluno"]) for a in alunos] if alunos else [ft.dropdown.Option("0", "Nenhum aluno disponível")],
+        prefix_icon=ft.Icons.NUMBERS,
         text_size=15,
         color="#000000",
     )
+
+    # Campo Nome do Aluno (read-only)
+    txt_nome_aluno = ft.TextField(
+        label="Aluno",
+        read_only=True,
+        border_color=cor_borda,
+        prefix_icon=ft.Icons.PERSON,
+        text_size=15,
+        color="#000000",
+    )
+
+    # Função para preencher nome do aluno automaticamente
+    def preencher_nome_aluno(e=None):
+        nproc = txt_num_processo.value.strip()
+
+        if nproc.isdigit():
+            aluno = next((a for a in alunos if str(a["nProcessoAluno"]) == nproc), None)
+            if aluno:
+                txt_nome_aluno.value = aluno["NomeAluno"]
+            else:
+                txt_nome_aluno.value = "Aluno não encontrado"
+        else:
+            txt_nome_aluno.value = ""
+
+        page.update()
+
+    # Ativar função quando escreve no campo
+    txt_num_processo.on_change = preencher_nome_aluno
+
+    # -----------------------------------------------------------
 
     # Dropdown Estado do Processo
     dropdown_estadosprocesso = ft.Dropdown(
@@ -44,7 +77,8 @@ def PaginaCriarRegisto(page: ft.Page):
         border_color=cor_borda,
         focused_border_color=cor_primaria,
         prefix_icon=ft.Icons.FLAG,
-        options=[ft.dropdown.Option(key=str(e["idEstado"]), text=e["Estado"]) for e in estados] if estados else [ft.dropdown.Option("0", "Nenhum estado disponível")],
+        options=[ft.dropdown.Option(key=str(e["idEstado"]), text=e["Estado"]) for e in estados] 
+                 if estados else [ft.dropdown.Option("0", "Nenhum estado disponível")],
         text_size=15,
         color="#000000",
     )
@@ -93,7 +127,8 @@ def PaginaCriarRegisto(page: ft.Page):
         border_color=cor_borda,
         focused_border_color=cor_primaria,
         prefix_icon=ft.Icons.PERSON,
-        options=[ft.dropdown.Option(key=str(t["nProcTecnico"]), text=t["NomeTecnico"]) for t in tecnicos] if tecnicos else [ft.dropdown.Option("0", "Nenhum técnico disponível")],
+        options=[ft.dropdown.Option(key=str(t["nProcTecnico"]), text=t["NomeTecnico"]) for t in tecnicos] 
+                if tecnicos else [ft.dropdown.Option("0", "Nenhum técnico disponível")],
         text_size=15,
         color="#000000",
     )
@@ -101,13 +136,16 @@ def PaginaCriarRegisto(page: ft.Page):
     # Mensagem de feedback
     mensagem_feedback = ft.Container(visible=False)
 
-    # Função salvar
+    # ======================= SALVAR ==========================
+
     def salvar_registo(e):
         erros = []
 
         # Validações
-        if not dropdown_aluno.value or dropdown_aluno.value == "0":
-            erros.append("Aluno é obrigatório")
+        if not txt_num_processo.value.strip():
+            erros.append("Número de processo é obrigatório")
+        if txt_nome_aluno.value in ["", "Aluno não encontrado"]:
+            erros.append("Número de processo inválido")
         if not dropdown_estadosprocesso.value or dropdown_estadosprocesso.value == "0":
             erros.append("Estado do processo é obrigatório")
         if not txt_data.value or txt_data.value.strip() == "":
@@ -136,17 +174,16 @@ def PaginaCriarRegisto(page: ft.Page):
             return
 
         try:
-            # Criar Problemática e obter ID
+            # Criar Problemática
             idProblematica = criarProblematica(txt_problematica.value.strip())
             if not idProblematica:
                 raise Exception("Erro ao criar problemática")
 
-            # Selecionar técnico se houver
             nProcTecnico = dropdown_tecnico.value if dropdown_tecnico.value and dropdown_tecnico.value != "0" else None
 
-            # Criar registo
+            # Criar Registo
             sucesso = criarRegisto(
-                nProcessoAluno=dropdown_aluno.value,
+                nProcessoAluno=txt_num_processo.value.strip(),
                 idEstado=int(dropdown_estadosprocesso.value),
                 DataArquivo=txt_data.value.strip(),
                 Observacoes=txt_descricao.value.strip() if txt_descricao.value else None,
@@ -186,46 +223,77 @@ def PaginaCriarRegisto(page: ft.Page):
             mensagem_feedback.visible = True
             page.update()
 
-    # Botões
+    # ======================= BOTÕES ==========================
+
     btn_salvar = ft.ElevatedButton(
         content=ft.Row([ft.Icon(ft.Icons.SAVE, size=20),
                         ft.Text("Guardar Registo", size=15, weight=ft.FontWeight.BOLD)], spacing=8),
         bgcolor=cor_primaria,
         color=ft.Colors.WHITE,
         on_click=salvar_registo,
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=12), padding=ft.padding.symmetric(horizontal=28, vertical=18)),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=12),
+                             padding=ft.padding.symmetric(horizontal=28, vertical=18)),
     )
 
     btn_cancelar = ft.OutlinedButton(
         content=ft.Row([ft.Icon(ft.Icons.CANCEL, size=20, color=cor_texto_medio),
                         ft.Text("Voltar", size=15, weight=ft.FontWeight.W_600, color=cor_texto_medio)], spacing=8),
         on_click=lambda e: page.go("/pagina-principal"),
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=12), padding=ft.padding.symmetric(horizontal=28, vertical=18), side=ft.BorderSide(1, cor_borda)),
+        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=12),
+                             padding=ft.padding.symmetric(horizontal=28, vertical=18),
+                             side=ft.BorderSide(1, cor_borda)),
     )
 
-    # Formulário
+    # ======================= FORMULÁRIO ==========================
+
     formulario = ft.Container(
         content=ft.Column(
             [
-                ft.Row([ft.IconButton(icon=ft.Icons.ARROW_BACK, icon_color=cor_primaria, icon_size=28, on_click=lambda e: page.go("/pagina-principal"), tooltip="Voltar"),
-                        ft.Column([ft.Text("Criar Novo Registo", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
-                                   ft.Text("Preencha os dados do registo", size=14, color=cor_texto_claro)], spacing=5, expand=True)], spacing=15),
+                ft.Row([
+                    ft.IconButton(icon=ft.Icons.ARROW_BACK, icon_color=cor_primaria, icon_size=28,
+                                  on_click=lambda e: page.go("/pagina-principal"), tooltip="Voltar"),
+                    ft.Column([
+                        ft.Text("Criar Novo Registo", size=28, weight=ft.FontWeight.BOLD, color=cor_texto_escuro),
+                        ft.Text("Preencha os dados do registo", size=14, color=cor_texto_claro)
+                    ], spacing=5, expand=True)
+                ], spacing=15),
+
                 ft.Divider(height=30, color=cor_borda),
+
                 mensagem_feedback,
-                ft.Container(content=ft.Column([dropdown_aluno, dropdown_estadosprocesso, txt_data, txt_descricao, txt_problematica, dropdown_tecnico], spacing=20), padding=ft.padding.only(top=10, bottom=20)),
-                ft.Row([btn_cancelar, btn_salvar], spacing=15, alignment=ft.MainAxisAlignment.END),
+
+                ft.Container(
+                    content=ft.Column([
+                        txt_num_processo,
+                        txt_nome_aluno,
+                        dropdown_estadosprocesso,
+                        txt_data,
+                        txt_descricao,
+                        txt_problematica,
+                        dropdown_tecnico
+                    ], spacing=20),
+                    padding=ft.padding.only(top=10, bottom=20)
+                ),
+
+                ft.Row([btn_cancelar, btn_salvar],
+                       spacing=15, alignment=ft.MainAxisAlignment.END),
             ],
             spacing=15,
         ),
         bgcolor=cor_card,
         padding=40,
         border_radius=16,
-        shadow=ft.BoxShadow(spread_radius=0, blur_radius=20, color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)),
+        shadow=ft.BoxShadow(
+            spread_radius=0,
+            blur_radius=20,
+            color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK)
+        ),
         width=700,
     )
 
     conteudo_principal = ft.Container(
-        content=ft.Column([formulario], horizontal_alignment=ft.CrossAxisAlignment.CENTER, scroll=ft.ScrollMode.AUTO),
+        content=ft.Column([formulario], horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                          scroll=ft.ScrollMode.AUTO),
         bgcolor=cor_fundo,
         padding=40,
         alignment=ft.alignment.center,
