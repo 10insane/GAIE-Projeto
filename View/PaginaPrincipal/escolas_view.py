@@ -48,22 +48,7 @@ def criar_card_escola(escola, page):
                 ),
 
                 # Botão de editar
-                ft.Container(
-                    content=ft.IconButton(
-                        icon=ft.Icons.EDIT_ROUNDED,
-                        icon_color="#FFFFFF",
-                        bgcolor="#F59E0B",
-                        tooltip="Editar Escola",
-                        icon_size=16,
-                        on_click=lambda e, a=escola: (
-                            page.session.set("escola_editar_id", a.get("idEscola")),
-                            page.go("/EditarEscola")
-                        ),
-                    ),
-                ),
             ],
-            alignment=ft.MainAxisAlignment.CENTER,
-            spacing=10,
         ),
 
         bgcolor=cor_card,
@@ -128,11 +113,6 @@ def criar_escolas_view(escolas, page):
                             ft.Container(expand=True),
 
                             # Botão adicionar
-                            estilo_botao_acao(
-                                "Adicionar Escola",
-                                ft.Icons.ADD_CIRCLE_ROUNDED,
-                                lambda e: page.go("/criar-escola")
-                            ),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                         vertical_alignment=ft.CrossAxisAlignment.CENTER,

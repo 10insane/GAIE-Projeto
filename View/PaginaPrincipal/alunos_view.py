@@ -79,19 +79,6 @@ def criar_card_aluno(aluno, page):
                 ),
 
                 # Botão de editar
-                ft.Container(
-                    content=ft.IconButton(
-                        icon=ft.Icons.EDIT_ROUNDED,
-                        icon_color="#FFFFFF",
-                        bgcolor="#F59E0B",
-                        tooltip="Editar aluno",
-                        icon_size=18,
-                        on_click=lambda e, a=aluno: (
-                            page.session.set("aluno_editar_id", a["nProcessoAluno"]),
-                            page.go("/EditarAluno")
-                        ),
-                    ),
-                ),
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             spacing=14,
@@ -158,11 +145,6 @@ def criar_alunos_view(alunos, page):
                             ft.Container(expand=True),
 
                             # Botão adicionar
-                            estilo_botao_acao(
-                                "Adicionar Aluno", 
-                                ft.Icons.ADD_CIRCLE_ROUNDED,
-                                lambda e: page.go("/CriarAluno")
-                            ),
                         ],
                         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                         vertical_alignment=ft.CrossAxisAlignment.CENTER,
