@@ -173,7 +173,7 @@ def PaginaCriarAluno(page: ft.Page):
                 # Redirecionar após 1.5 segundos
                 import time
                 time.sleep(1.5),
-                page.go("/pagina-principal"),
+                page.go("/TelaPrincipalAdmin"),
             else:
                 raise Exception("Erro ao criar aluno")
                 
@@ -220,7 +220,7 @@ def PaginaCriarAluno(page: ft.Page):
             ],
             spacing=8,
         ),
-        on_click=lambda e: page.go("/pagina-principal"),
+        on_click=lambda e: page.go("/TelaPrincipalAdmin"),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=12),
             padding=ft.padding.symmetric(horizontal=28, vertical=18),
@@ -239,7 +239,7 @@ def PaginaCriarAluno(page: ft.Page):
                             icon=ft.Icons.ARROW_BACK,
                             icon_color=cor_primaria,
                             icon_size=28,
-                            on_click=lambda e: page.go("/pagina-principal"),
+                            on_click=lambda e: page.go("/TelaPrincipalAdmin"),
                             tooltip="Voltar",
                         ),
                         ft.Column(

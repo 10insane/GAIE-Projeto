@@ -5,10 +5,10 @@ from Models.AlunosModel import listarAlunos
 from Models.TecnicoModel import listarTecnico
 from Controller.EstadoProcessoController import Listar as listarEstadosProcesso
 from datetime import date
-
+ 
 def PaginaCriarRegisto(page: ft.Page):
     tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
-
+ 
     # === CORES (do estilos.py) ===
     cor_primaria = "#8B5CF6"
     cor_secundaria = "#A78BFA"
@@ -21,16 +21,16 @@ def PaginaCriarRegisto(page: ft.Page):
     cor_borda = "#242424"
     cor_sucesso = "#10B981"
     cor_erro = "#DC2626"
-
+ 
     # Carregar dados
     alunos = listarAlunos()
     tecnicos = listarTecnico()
     estados = listarEstadosProcesso()
-
+ 
     # -----------------------------------------------------------
     #  CAMPOS — Nº PROCESSO ALUNO + ALUNO AUTOMÁTICO
     # -----------------------------------------------------------
-
+ 
     txt_num_processo = ft.TextField(
         label="Número de Processo (Aluno)",
         hint_text="Digite o nº processo do aluno",
@@ -44,7 +44,7 @@ def PaginaCriarRegisto(page: ft.Page):
         bgcolor=cor_fundo,
         filled=True,
     )
-
+ 
     txt_nome_aluno = ft.TextField(
         label="Aluno",
         read_only=True,
@@ -56,24 +56,24 @@ def PaginaCriarRegisto(page: ft.Page):
         bgcolor=cor_fundo,
         filled=True,
     )
-
+ 
     def preencher_nome_aluno(e=None):
         nproc = txt_num_processo.value.strip()
-
+ 
         if nproc.isdigit():
             aluno = next((a for a in alunos if str(a["nProcessoAluno"]) == nproc), None)
             txt_nome_aluno.value = aluno["NomeAluno"] if aluno else "Aluno não encontrado"
         else:
             txt_nome_aluno.value = ""
-
+ 
         page.update()
-
+ 
     txt_num_processo.on_change = preencher_nome_aluno
-
+ 
     # -----------------------------------------------------------
     #  CAMPOS — Nº PROCESSO TÉCNICO + TÉCNICO AUTOMÁTICO
     # -----------------------------------------------------------
-
+ 
     txt_num_tecnico = ft.TextField(
         label="Número de Processo do Técnico",
         hint_text="Digite o nº processo do técnico",
@@ -87,7 +87,7 @@ def PaginaCriarRegisto(page: ft.Page):
         bgcolor=cor_fundo,
         filled=True,
     )
-
+ 
     txt_nome_tecnico = ft.TextField(
         label="Técnico",
         read_only=True,
@@ -99,22 +99,22 @@ def PaginaCriarRegisto(page: ft.Page):
         bgcolor=cor_fundo,
         filled=True,
     )
-
+ 
     def preencher_nome_tecnico(e=None):
         nproc = txt_num_tecnico.value.strip()
-
+ 
         if nproc.isdigit():
             tecnico = next((t for t in tecnicos if str(t["nProcTecnico"]) == nproc), None)
             txt_nome_tecnico.value = tecnico["NomeTecnico"] if tecnico else "Técnico não encontrado"
         else:
             txt_nome_tecnico.value = ""
-
+ 
         page.update()
-
+ 
     txt_num_tecnico.on_change = preencher_nome_tecnico
-
+ 
     # -----------------------------------------------------------
-
+ 
     dropdown_estadosprocesso = ft.Dropdown(
         label="Estado do Processo",
         hint_text="Selecione o estado",
@@ -130,21 +130,63 @@ def PaginaCriarRegisto(page: ft.Page):
         bgcolor=cor_fundo,
         filled=True,
     )
-
-    txt_data = ft.TextField(
-        label="Data do Registo",
-        hint_text="AAAA-MM-DD",
-        border_color=cor_borda,
-        focused_border_color=cor_primaria,
-        prefix_icon=ft.Icons.CALENDAR_TODAY,
-        text_size=15,
-        color=cor_texto_claro,
-        label_style=ft.TextStyle(color=cor_texto_medio),
-        hint_style=ft.TextStyle(color=cor_texto_medio),
+ 
+    # Container para mostrar a data selecionada
+    data_registo = {"valor": None, "display": "Selecionar Data"}
+ 
+    def abrir_calendario(e):
+        def ao_selecionar_data(e):
+            if date_picker.value:
+                data_registo["valor"] = date_picker.value.strftime("%Y-%m-%d")
+               
+                # Formatar data em português
+                meses_pt = {
+                    1: "Janeiro", 2: "Fevereiro", 3: "Março", 4: "Abril",
+                    5: "Maio", 6: "Junho", 7: "Julho", 8: "Agosto",
+                    9: "Setembro", 10: "Outubro", 11: "Novembro", 12: "Dezembro"
+                }
+               
+                data_obj = date_picker.value
+                data_registo["display"] = f"{data_obj.day} de {meses_pt[data_obj.month]} de {data_obj.year}"
+               
+                btn_selecionar_data.content.controls[0] = ft.Icon(ft.Icons.CHECK_CIRCLE, size=20, color=cor_primaria)
+                btn_selecionar_data.content.controls[1] = ft.Text(data_registo["display"], size=15, color=cor_texto_claro)
+                page.update()
+            date_picker.open = False
+            page.update()
+ 
+        def fechar_calendario(e):
+            date_picker.open = False
+            page.update()
+ 
+        date_picker = ft.DatePicker(
+            first_date=date(2000, 1, 1),
+            last_date=date(2100, 12, 31),
+            on_change=ao_selecionar_data,
+            on_dismiss=fechar_calendario,
+        )
+       
+        page.overlay.append(date_picker)
+        page.update()
+        date_picker.open = True
+        page.update()
+ 
+    btn_selecionar_data = ft.Container(
+        content=ft.Row(
+            [
+                ft.Icon(ft.Icons.CALENDAR_TODAY, size=20, color=cor_texto_medio),
+                ft.Text("Selecionar Data", size=15, color=cor_texto_medio),
+            ],
+            spacing=10,
+        ),
         bgcolor=cor_fundo,
-        filled=True,
+        padding=ft.padding.only(left=15, right=15, top=16, bottom=16),
+        border_radius=4,
+        border=ft.border.all(1, cor_borda),
+        on_click=abrir_calendario,
+        ink=True,
     )
-
+ 
     txt_descricao = ft.TextField(
         label="Descrição",
         hint_text="Descrição opcional",
@@ -160,7 +202,7 @@ def PaginaCriarRegisto(page: ft.Page):
         multiline=True,
         max_lines=3,
     )
-
+ 
     txt_problematica = ft.TextField(
         label="Problemática",
         hint_text="Digite a problemática",
@@ -176,31 +218,31 @@ def PaginaCriarRegisto(page: ft.Page):
         multiline=True,
         max_lines=2,
     )
-
+ 
     mensagem_feedback = ft.Container(visible=False)
-
+ 
     # ======================= SALVAR ==========================
-
+ 
     def salvar_registo(e):
         erros = []
-
+ 
         if not txt_num_processo.value.strip():
             erros.append("Número de processo do aluno é obrigatório")
         if txt_nome_aluno.value in ["", "Aluno não encontrado"]:
             erros.append("Número de processo do aluno inválido")
-
+ 
         if txt_num_tecnico.value.strip() and txt_nome_tecnico.value == "Técnico não encontrado":
             erros.append("Número de processo do técnico inválido")
-
+ 
         if not dropdown_estadosprocesso.value:
             erros.append("Estado do processo é obrigatório")
-
-        if not txt_data.value.strip():
+ 
+        if not data_registo["valor"]:
             erros.append("Data é obrigatória")
-
+ 
         if not txt_problematica.value.strip():
             erros.append("Problemática é obrigatória")
-
+ 
         if erros:
             mensagem_feedback.content = ft.Container(
                 content=ft.Text("\n".join(erros), color=cor_erro, size=14),
@@ -212,21 +254,21 @@ def PaginaCriarRegisto(page: ft.Page):
             mensagem_feedback.visible = True
             page.update()
             return
-
+ 
         try:
             idProblematica = criarProblematica(txt_problematica.value.strip())
-
+ 
             nProcTecnico = txt_num_tecnico.value.strip() or None
-
+ 
             sucesso = criarRegisto(
                 nProcessoAluno=txt_num_processo.value.strip(),
                 idEstado=int(dropdown_estadosprocesso.value),
-                DataArquivo=txt_data.value.strip(),
+                DataArquivo=data_registo["valor"],
                 Observacoes=txt_descricao.value.strip() or None,
                 nProcTecnico=nProcTecnico,
                 tipoProblematica=txt_problematica.value.strip()
             )
-
+ 
             if sucesso:
                 mensagem_feedback.content = ft.Container(
                     content=ft.Text("✓ Registo criado com sucesso!", color=cor_sucesso, size=14),
@@ -240,7 +282,7 @@ def PaginaCriarRegisto(page: ft.Page):
                 import time
                 time.sleep(1)
                 page.go("/pagina-principal")
-
+ 
         except Exception as ex:
             mensagem_feedback.content = ft.Container(
                 content=ft.Text(f"✗ Erro: {str(ex)}", color=cor_erro, size=14),
@@ -251,9 +293,9 @@ def PaginaCriarRegisto(page: ft.Page):
             )
             mensagem_feedback.visible = True
             page.update()
-
+ 
     # ======================= BOTÕES ==========================
-
+ 
     btn_salvar = ft.Container(
         content=ft.ElevatedButton(
             content=ft.Row(
@@ -273,7 +315,7 @@ def PaginaCriarRegisto(page: ft.Page):
             ),
         ),
     )
-
+ 
     btn_cancelar = ft.Container(
         content=ft.OutlinedButton(
             content=ft.Row(
@@ -293,9 +335,9 @@ def PaginaCriarRegisto(page: ft.Page):
             ),
         ),
     )
-
+ 
     # ======================= CABEÇALHO ==========================
-
+ 
     cabecalho = ft.Container(
         content=ft.Row(
             [
@@ -321,9 +363,9 @@ def PaginaCriarRegisto(page: ft.Page):
         border_radius=12,
         border=ft.border.all(1, cor_borda),
     )
-
+ 
     # ======================= FORMULÁRIO ==========================
-
+ 
     formulario = ft.Container(
         content=ft.Column(
             [
@@ -356,9 +398,9 @@ def PaginaCriarRegisto(page: ft.Page):
                     ]),
                     padding=ft.padding.only(bottom=15),
                 ),
-
+ 
                 mensagem_feedback,
-
+ 
                 # Linha 1: Aluno e Técnico lado a lado
                 ft.Row(
                     [
@@ -382,7 +424,7 @@ def PaginaCriarRegisto(page: ft.Page):
                             border=ft.border.all(1, cor_borda),
                             expand=1,
                         ),
-
+ 
                         # Seção Técnico
                         ft.Container(
                             content=ft.Column(
@@ -406,7 +448,7 @@ def PaginaCriarRegisto(page: ft.Page):
                     ],
                     spacing=15,
                 ),
-
+ 
                 # Seção Processo
                 ft.Container(
                     content=ft.Column(
@@ -416,7 +458,7 @@ def PaginaCriarRegisto(page: ft.Page):
                                 ft.Text("Detalhes do Processo", size=14, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
                             ], spacing=8),
                             ft.Container(height=5),
-                            ft.Row([dropdown_estadosprocesso, txt_data], spacing=15),
+                            ft.Row([dropdown_estadosprocesso, btn_selecionar_data], spacing=15),
                             txt_descricao,
                             txt_problematica,
                         ],
@@ -427,7 +469,7 @@ def PaginaCriarRegisto(page: ft.Page):
                     border_radius=12,
                     border=ft.border.all(1, cor_borda),
                 ),
-
+ 
                 # Botões
                 ft.Container(
                     content=ft.Row(
@@ -451,7 +493,7 @@ def PaginaCriarRegisto(page: ft.Page):
             color=ft.Colors.with_opacity(0.1, cor_primaria),
         ),
     )
-
+ 
     return ft.View(
         route="/CriarRegisto",
         controls=[

@@ -8,12 +8,12 @@ def PaginaEditarAluno(page: ft.Page):
 
     nProcessoAluno = page.session.get("aluno_editar_id")
     if not nProcessoAluno:
-        page.go("/pagina-principal")
+        page.go("/TelaPrincipalAdmin")
         return
 
     aluno = buscarAlunoPorProcesso(nProcessoAluno)
     if not aluno:
-        page.go("/pagina-principal")
+        page.go("/TelaPrincipalAdmin")
         return
 
     # ------------------------
@@ -113,7 +113,7 @@ def PaginaEditarAluno(page: ft.Page):
                 mostrar_feedback("Aluno atualizado com sucesso!", "#10B981")
                 import time
                 time.sleep(1)
-                page.go("/pagina-principal")
+                page.go("/TelaPrincipalAdmin")
             else:
                 mostrar_feedback("Nenhuma alteração foi realizada.", "#EF4444")
         except Exception as ex:
@@ -139,7 +139,7 @@ def PaginaEditarAluno(page: ft.Page):
             shape=ft.RoundedRectangleBorder(radius=10),
             side=ft.border.all(1, cor_borda)
         ),
-        on_click=lambda e: page.go("/pagina-principal")
+        on_click=lambda e: page.go("/TelaPrincipalAdmin")
     )
 
     # ------------------------

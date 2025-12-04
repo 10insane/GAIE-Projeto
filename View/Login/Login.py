@@ -60,7 +60,8 @@ def LoginView(page: ft.Page):
         )
         if tecnico_valido:
             page.session.set("usuario_tipo", "tecnico")
-            page.session.set("usuario_nome", tecnico_valido.get("NomeTecnico"))
+            page.session.set("tecnico_nome", tecnico_valido.get("NomeTecnico"))
+            page.session.set("nProcTecnico", tecnico_valido.get("nProcTecnico"))
             page.go("/pagina-principal")
             return
 

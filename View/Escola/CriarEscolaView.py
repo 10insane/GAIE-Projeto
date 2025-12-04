@@ -34,7 +34,7 @@ def CriarEscola(page: ft.Page):
                 page.update()
  
                 # Opcional: voltar à tela principal depois de criar
-                page.go("/pagina-principal")
+                page.go("/TelaPrincipalAdmin")
             finally:
                 cursor.close()
                 conn.close()
@@ -54,7 +54,7 @@ def CriarEscola(page: ft.Page):
             ft.Container(height=20),
             ft.Row([
                 ft.ElevatedButton("Guardar", bgcolor=cor_primaria, color="white", on_click=guardar_escola),
-                ft.OutlinedButton("Cancelar", on_click=lambda e: page.go("/pagina-principal")),
+                ft.OutlinedButton("Cancelar", on_click=lambda e: page.go("/TelaPrincipalAdmin")),
             ], spacing=15),
         ], spacing=10),
         bgcolor=cor_card,

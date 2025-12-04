@@ -10,7 +10,7 @@ def PaginaEditarEscola(page: ft.Page):
     id_escola = page.session.get("escola_editar_id")
 
     if not id_escola:
-        page.go("/pagina-principal")
+        page.go("/TelaPrincipalAdmin")
         return
 
     # Buscar dados da escola
@@ -22,7 +22,7 @@ def PaginaEditarEscola(page: ft.Page):
     escola = next((e for e in escolas if e["idEscola"] == id_escola), None)
 
     if not escola:
-        page.go("/pagina-principal")
+        page.go("/TelaPrincipalAdmin")
         return
 
     # Campo do formulário
@@ -56,7 +56,7 @@ def PaginaEditarEscola(page: ft.Page):
                 mostrar_feedback("✅ Escola atualizada com sucesso!", "#10B981")
                 import time
                 time.sleep(1)
-                page.go("/pagina-principal")
+                page.go("/TelaPrincipalAdmin")
             else:
                 mostrar_feedback("Nenhuma alteração foi realizada.", "#EF4444")
         except Exception as ex:
@@ -80,7 +80,7 @@ def PaginaEditarEscola(page: ft.Page):
             shape=ft.RoundedRectangleBorder(radius=10),
             side=ft.border.all(1, cor_borda)
         ),
-        on_click=lambda e: page.go("/pagina-principal")
+        on_click=lambda e: page.go("/TelaPrincipalAdmin")
     )
 
     # Card central

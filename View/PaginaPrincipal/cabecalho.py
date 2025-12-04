@@ -5,7 +5,7 @@ from .estilos import *
 
 def criar_cabecalho(page):
     tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
-
+    
     return ft.Container(
         padding=ft.padding.symmetric(horizontal=28, vertical=16),
         gradient=ft.LinearGradient(
