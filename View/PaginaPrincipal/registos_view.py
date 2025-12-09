@@ -104,7 +104,12 @@ def criar_card_registo(registo, page):
                 # Botões de ação
                 ft.Row(
                     [
-                        # Botão Ver
+                      ft.IconButton(
+                                icon=ft.Icons.VISIBILITY,
+                                icon_color=cor_primaria,
+                                tooltip="Ver detalhes",
+                                on_click=lambda e, r=registo: page.go(f"/registo/{r.get('idRegisto')}"),
+                      ),
 
                         # Botão Editar
                         ft.Container(
