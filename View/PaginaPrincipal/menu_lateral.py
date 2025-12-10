@@ -121,8 +121,6 @@ def criar_menu_lateral(page, trocar_vista):
                     )
                 ),
 
-                criar_botao_menu("Configurações", ft.Icons.SETTINGS, acao=lambda e: page.go("/Config")),
-
                 ft.Text("v1.0.0", size=11, color=cor_texto_medio),
             ],
             spacing=8,

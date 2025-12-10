@@ -2,9 +2,31 @@
 
 import flet as ft
 from .estilosAdmin import *
+import os
+
+TOKEN_FILE = "token.json"  # Arquivo do "lembrar-me"
+
+
+def logout(page: ft.Page):
+    # Remove token de lembrar-me se existir
+    if os.path.exists(TOKEN_FILE):
+        os.remove(TOKEN_FILE)
+
+    # Limpa sessão e todas as views
+    page.session.clear()
+    page.views.clear()
+
+    # Importa e adiciona view de login
+    from View.Login.Login import LoginView  # Ajuste conforme seu projeto
+    page.views.append(LoginView(page))
+
+    # Vai para rota de login
+    page.go("/login")
+    page.update()
+
 
 def criar_cabecalho(page):
-    tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
+    Admin_nome = page.session.get("Admin_nome") or "Admin"
 
     return ft.Container(
         padding=ft.padding.symmetric(horizontal=28, vertical=16),
@@ -20,6 +42,7 @@ def criar_cabecalho(page):
         ),
         content=ft.Row(
             [
+                # LOGO E NOME
                 ft.Row(
                     [
                         ft.Container(
@@ -42,15 +65,18 @@ def criar_cabecalho(page):
                     ],
                     spacing=12,
                 ),
+
                 ft.Container(expand=True),
+
+                # PERFIL / MENU
                 ft.Container(
                     content=ft.Row(
                         [
                             ft.Column(
                                 [
-                                    ft.Text(tecnico_nome, size=14, weight=ft.FontWeight.W_600, color=ft.Colors.WHITE),
+                                    ft.Text(Admin_nome, size=14, weight=ft.FontWeight.W_600, color=ft.Colors.WHITE),
                                     ft.Text(
-                                        "Técnico Responsável",
+                                        "Modo Administrador",
                                         size=11,
                                         color=ft.Colors.with_opacity(0.9, ft.Colors.WHITE),
                                     ),
@@ -58,6 +84,7 @@ def criar_cabecalho(page):
                                 spacing=0,
                                 horizontal_alignment=ft.CrossAxisAlignment.END,
                             ),
+
                             ft.PopupMenuButton(
                                 icon=ft.Icons.ACCOUNT_CIRCLE,
                                 icon_color=ft.Colors.WHITE,
@@ -81,9 +108,12 @@ def criar_cabecalho(page):
                                             ],
                                             spacing=12,
                                         ),
-                                        on_click=lambda e: page.go("/configuracoes"),
+                                        on_click=lambda e: page.go("/Config"),
                                     ),
-                                    ft.PopupMenuItem(),
+
+                                    ft.PopupMenuItem(),  # divisor
+
+                                    # 🔴 TERMINAR SESSÃO COM LOGOUT REAL
                                     ft.PopupMenuItem(
                                         content=ft.Row(
                                             [
@@ -92,7 +122,7 @@ def criar_cabecalho(page):
                                             ],
                                             spacing=12,
                                         ),
-                                        on_click=lambda e: page.go("/login"),
+                                        on_click=lambda e: logout(page),
                                     ),
                                 ],
                             ),

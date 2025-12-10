@@ -102,7 +102,7 @@ def criar_cabecalho(page: ft.Page):
                                             ],
                                             spacing=12,
                                         ),
-                                        on_click=lambda e: page.go("/configuracoes"),
+                                        on_click=lambda e: page.go("/Config"),
                                     ),
                                     ft.PopupMenuItem(),
                                     ft.PopupMenuItem(

@@ -105,7 +105,7 @@ def PainelAdmin(page: ft.Page):
             [
                 ft.IconButton(
                     icon=ft.Icons.ARROW_BACK,
-                    on_click=lambda e: page.go("/pagina-principal"),
+                    on_click=lambda e: page.go("/TelaPrincipalAdmin"),
                     icon_color=cor_primaria
                 ),
                 
