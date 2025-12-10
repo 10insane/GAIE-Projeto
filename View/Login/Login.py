@@ -2,25 +2,25 @@ import flet as ft
 import flet_lottie as fl
 from Models.TecnicoModel import listarTecnico
 from Models.AdminModel import listarAdmin
-from datetime import datetime
+import json
+import os
+
+TOKEN_FILE = "token.json"
 
 def LoginView(page: ft.Page):
     page.title = "GAIE - Login"
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    
-    # === CORES - TEMA PRETO E ROXO ===
-    cor_primaria = "#8B5CF6"  # Roxo vibrante
-    cor_secundaria = "#A78BFA"  # Roxo claro
-    cor_roxo_escuro = "#6D28D9"  # Roxo escuro
-    cor_fundo_escuro = "#0F0F0F"  # Preto profundo
-    cor_card = "#1A1A1A"  # Cinza muito escuro
+
+    # === CORES ===
+    cor_primaria = "#8B5CF6"
+    cor_card = "#1A1A1A"
     cor_texto_claro = "#E5E7EB"
     cor_texto_medio = "#9CA3AF"
     cor_borda = "#2D2D2D"
     cor_erro = "#EF4444"
-    cor_hover = "#7C3AED"
-    
+    cor_fundo_escuro = "#0F0F0F"
+
     # Limita nº de processo a 10 dígitos
     def limitar_numero_processo(e):
         valor = ''.join(filter(str.isdigit, e.control.value))
@@ -28,57 +28,13 @@ def LoginView(page: ft.Page):
             valor = valor[:10]
         e.control.value = valor
         page.update()
-    
-    # Autenticação
-    def autenticar(e):
-        nProc = campoNumeroProcesso.value.strip()
-        password = campoSenha.value.strip()
 
-        if not nProc or not password:
-            mensagemErro.visible = True
-            mensagemErro.content.controls[1].value = "Preencha ambos os campos!"
-            page.update()
-            return
+    # Função fictícia para gerar OAuth token
+    def gerar_oauth_token(nProc, password):
+        # Aqui você implementa a chamada ao backend para obter o token real
+        return f"token_{nProc}"
 
-        # Tentar autenticar como Admin
-        admins = listarAdmin()
-        admin_valido = next(
-            (a for a in admins if str(a.get("nProcAdmin", "")).strip() == nProc and a.get("password", "") == password),
-            None
-        )
-        if admin_valido:
-            page.session.set("usuario_tipo", "admin")
-            page.session.set("usuario_nome", admin_valido.get("NomeAdmin"))
-            page.go("/TelaPrincipalAdmin")
-            return
-
-        # Se não for admin, tenta autenticar como Técnico
-        tecnicos = listarTecnico()
-        tecnico_valido = next(
-            (t for t in tecnicos if str(t.get("nProcTecnico", "")).strip() == nProc and t.get("password", "") == password),
-            None
-        )
-        if tecnico_valido:
-            page.session.set("usuario_tipo", "tecnico")
-            page.session.set("tecnico_nome", tecnico_valido.get("NomeTecnico"))
-            page.session.set("nProcTecnico", tecnico_valido.get("nProcTecnico"))
-            page.go("/pagina-principal")
-            return
-
-        # Se não encontrou ninguém
-        mensagemErro.visible = True
-        mensagemErro.content.controls[1].value = "Número de processo ou senha incorretos!"
-        page.update()
-
-    # === ANIMAÇÃO LOTTIE ===
-    animacaoLottie = fl.Lottie(
-        src="https://lottie.host/5859fa72-f001-4fa0-9c23-f5df61e4bfe5/MpooU95fLc.json",
-        animate=True,
-        width=150,
-        height=150,
-    )
-
-    # === CAMPOS DE INPUT MODERNOS ===
+    # === CAMPOS DE INPUT ===
     campoNumeroProcesso = ft.TextField(
         label="Nº Processo Técnico",
         prefix_icon=ft.Icons.BADGE_ROUNDED,
@@ -89,11 +45,7 @@ def LoginView(page: ft.Page):
         focused_border_width=2,
         hint_text="Digite o número do processo",
         hint_style=ft.TextStyle(color=cor_texto_medio, size=13),
-        text_style=ft.TextStyle(
-            color=cor_texto_claro,
-            weight=ft.FontWeight.W_500,
-            size=15,
-        ),
+        text_style=ft.TextStyle(color=cor_texto_claro, weight=ft.FontWeight.W_500, size=15),
         label_style=ft.TextStyle(color=cor_texto_medio),
         border_radius=12,
         height=60,
@@ -114,11 +66,7 @@ def LoginView(page: ft.Page):
         focused_border_width=2,
         hint_text="Digite a sua password",
         hint_style=ft.TextStyle(color=cor_texto_medio, size=13),
-        text_style=ft.TextStyle(
-            color=cor_texto_claro,
-            weight=ft.FontWeight.W_500,
-            size=15,
-        ),
+        text_style=ft.TextStyle(color=cor_texto_claro, weight=ft.FontWeight.W_500, size=15),
         label_style=ft.TextStyle(color=cor_texto_medio),
         border_radius=12,
         height=60,
@@ -127,17 +75,12 @@ def LoginView(page: ft.Page):
         cursor_color=cor_primaria,
     )
 
-    # === MENSAGEM DE ERRO ESTILIZADA ===
+    # === MENSAGEM DE ERRO ===
     mensagemErro = ft.Container(
         content=ft.Row(
             [
                 ft.Icon(ft.Icons.ERROR_ROUNDED, color=cor_erro, size=20),
-                ft.Text(
-                    "",
-                    size=13,
-                    color=cor_erro,
-                    weight=ft.FontWeight.W_500,
-                ),
+                ft.Text("", size=13, color=cor_erro, weight=ft.FontWeight.W_500),
             ],
             spacing=10,
         ),
@@ -148,36 +91,7 @@ def LoginView(page: ft.Page):
         visible=False,
     )
 
-    # === BOTÃO ENTRAR MODERNO ===
-    botaoEntrar = ft.Container(
-        content=ft.Row(
-            [
-                ft.Icon(ft.Icons.LOGIN_ROUNDED, color=ft.Colors.WHITE, size=22),
-                ft.Text(
-                    "Entrar no Sistema",
-                    size=16,
-                    weight=ft.FontWeight.BOLD,
-                    color=ft.Colors.WHITE,
-                ),
-            ],
-            alignment=ft.MainAxisAlignment.CENTER,
-            spacing=10,
-        ),
-        width=380,
-        height=56,
-        bgcolor=cor_primaria,
-        border_radius=12,
-        ink=True,
-        on_click=autenticar,
-        shadow=ft.BoxShadow(
-            spread_radius=0,
-            blur_radius=20,
-            color=ft.Colors.with_opacity(0.4, cor_primaria),
-            offset=ft.Offset(0, 4),
-        ),
-    )
-
-    # === CHECKBOX LEMBRAR ===
+    # === CHECKBOX LEMBRAR-ME ===
     checkboxLembrar = ft.Row(
         [
             ft.Checkbox(
@@ -188,14 +102,117 @@ def LoginView(page: ft.Page):
                 label_style=ft.TextStyle(color=cor_texto_medio, size=13),
             ),
             ft.Container(expand=True),
-            ft.TextButton(
-                "Esqueceu a senha?",
-                style=ft.ButtonStyle(
-                    color=cor_primaria,
-                ),
-            ),
+            ft.TextButton("Esqueceu a senha?", style=ft.ButtonStyle(color=cor_primaria)),
         ],
         width=380,
+    )
+
+    # Autenticação
+    def autenticar(e=None):
+        nProc = campoNumeroProcesso.value.strip()
+        password = campoSenha.value.strip()
+        lembrar = checkboxLembrar.controls[0].value  # Valor do checkbox
+
+        if not nProc or not password:
+            mensagemErro.visible = True
+            mensagemErro.content.controls[1].value = "Preencha ambos os campos!"
+            page.update()
+            return
+
+        # Autenticar Admin
+        admins = listarAdmin()
+        admin_valido = next(
+            (a for a in admins if str(a.get("nProcAdmin", "")).strip() == nProc and a.get("password", "") == password),
+            None
+        )
+        if admin_valido:
+            token = gerar_oauth_token(nProc, password) if lembrar else None
+            page.session.set("usuario_tipo", "admin")
+            page.session.set("usuario_nome", admin_valido.get("NomeAdmin"))
+            if token:
+                page.session.set("oauth_token", token)
+                salvar_token(token, "admin")
+            page.go("/TelaPrincipalAdmin")
+            return
+
+        # Autenticar Técnico
+        tecnicos = listarTecnico()
+        tecnico_valido = next(
+            (t for t in tecnicos if str(t.get("nProcTecnico", "")).strip() == nProc and t.get("password", "") == password),
+            None
+        )
+        if tecnico_valido:
+            token = gerar_oauth_token(nProc, password) if lembrar else None
+            page.session.set("usuario_tipo", "tecnico")
+            page.session.set("tecnico_nome", tecnico_valido.get("NomeTecnico"))
+            page.session.set("nProcTecnico", tecnico_valido.get("nProcTecnico"))
+            if token:
+                page.session.set("oauth_token", token)
+                salvar_token(token, "tecnico")
+            page.go("/pagina-principal")
+            return
+
+        # Nenhum usuário encontrado
+        mensagemErro.visible = True
+        mensagemErro.content.controls[1].value = "Número de processo ou senha incorretos!"
+        page.update()
+
+    # Salva token em arquivo local para persistência
+    def salvar_token(token, usuario_tipo):
+        with open(TOKEN_FILE, "w") as f:
+            json.dump({"oauth_token": token, "usuario_tipo": usuario_tipo}, f)
+
+    # Verifica token existente ao iniciar a página
+    if os.path.exists(TOKEN_FILE):
+        try:
+            with open(TOKEN_FILE, "r") as f:
+                data = json.load(f)
+                token = data.get("oauth_token")
+                usuario_tipo = data.get("usuario_tipo")
+                if token and usuario_tipo:
+                    page.session.set("oauth_token", token)
+                    page.session.set("usuario_tipo", usuario_tipo)
+                    if usuario_tipo == "admin":
+                        page.go("/TelaPrincipalAdmin")
+                    else:
+                        page.go("/pagina-principal")
+        except:
+            pass
+
+    # === BOTÃO ENTRAR ===
+    botaoEntrar = ft.Container(
+        content=ft.Row(
+            [
+                ft.Icon(ft.Icons.LOGIN_ROUNDED, color=ft.Colors.WHITE, size=22),
+                ft.Text("Entrar no Sistema", size=16, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            spacing=10,
+        ),
+        width=380,
+        height=56,
+        bgcolor=cor_primaria,
+        border_radius=12,
+        ink=True,
+        on_click=autenticar,
+    )
+
+    # === ANIMAÇÕES LOTTIE ===
+    animacaoLottie = fl.Lottie(
+        src="https://lottie.host/5859fa72-f001-4fa0-9c23-f5df61e4bfe5/MpooU95fLc.json",
+        animate=True,
+        width=150,
+        height=150,
+    )
+
+    imagemPsico = ft.Container(
+        content=fl.Lottie(
+            src="https://lottie.host/3ca3724a-1dd4-41d0-8783-b409dabecb3d/TMc5F1aZeS.json",
+            animate=True,
+            width=760,
+            height=760,
+        ),
+        padding=60,
     )
 
     # === CARD DE LOGIN ===
@@ -216,17 +233,8 @@ def LoginView(page: ft.Page):
                 ft.Container(content=animacaoLottie, padding=ft.padding.only(bottom=10)),
                 ft.Column(
                     [
-                        ft.Text(
-                            "Bem-vindo de volta",
-                            size=32,
-                            weight=ft.FontWeight.BOLD,
-                            color=cor_texto_claro,
-                        ),
-                        ft.Text(
-                            "Entre com suas credenciais para continuar",
-                            size=14,
-                            color=cor_texto_medio,
-                        ),
+                        ft.Text("Bem-vindo de volta", size=32, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+                        ft.Text("Entre com suas credenciais para continuar", size=14, color=cor_texto_medio),
                     ],
                     spacing=5,
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -256,17 +264,6 @@ def LoginView(page: ft.Page):
         ),
     )
 
-    # === IMAGEM LATERAL ===
-    imagemPsico = ft.Container(
-        content=fl.Lottie(
-            src="https://lottie.host/3ca3724a-1dd4-41d0-8783-b409dabecb3d/TMc5F1aZeS.json",
-            animate=True,
-            width=760,
-            height=760,
-        ),
-        padding=60,
-    )
-
     # === LAYOUT PRINCIPAL ===
     layoutPrincipal = ft.Row(
         [
@@ -278,7 +275,7 @@ def LoginView(page: ft.Page):
         spacing=60,
     )
 
-    # === FUNDO COM GRADIENTE ROXO E PRETO ===
+    # === FUNDO COM GRADIENTE ===
     fundoComGradiente = ft.Container(
         expand=True,
         gradient=ft.LinearGradient(
@@ -295,7 +292,6 @@ def LoginView(page: ft.Page):
         content=layoutPrincipal,
     )
 
-    # === LAYOUT COMPLETO ===
     layout_completo = ft.Column([fundoComGradiente], spacing=0, expand=True)
 
     return ft.View(
