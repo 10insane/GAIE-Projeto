@@ -10,6 +10,7 @@ from View.Escola.EditarEscola import PaginaEditarEscola
 from View.Registo.EditarRegisto import PaginaEditarRegisto
 from View.Config.Config import PainelAdmin
 from View.TelaPrincipalAdmin import PaginaPrincipalAdmin
+from View.PaginaPrincipal.maisDetalhesRegisto import MaisDetalhesRegistos
 
 
 def main(page: ft.Page):
@@ -45,6 +46,8 @@ def main(page: ft.Page):
             view= PainelAdmin(page)
         elif route=="/TelaPrincipalAdmin":
             view= PaginaPrincipalAdmin(page)
+        elif route=="/maisDetalhesRegisto":
+            view= MaisDetalhesRegistos(page)
         else:
             view = LoginView(page)  
 

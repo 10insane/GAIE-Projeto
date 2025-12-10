@@ -320,7 +320,7 @@ def PaginaEditarRegisto(page: ft.Page):
                 page.update()
                 import time
                 time.sleep(1)
-                page.go("/pagina-principal")
+                page.go("/maisDetalhesRegisto")
 
         except Exception as ex:
             mensagem_feedback.content = ft.Container(
@@ -365,7 +365,7 @@ def PaginaEditarRegisto(page: ft.Page):
                 tight=True,
                 spacing=8,
             ),
-            on_click=lambda e: page.go("/pagina-principal"),
+            on_click=lambda e: page.go("/maisDetalhesRegisto"),
             style=ft.ButtonStyle(
                 shape=ft.RoundedRectangleBorder(radius=8),
                 padding=ft.padding.symmetric(horizontal=24, vertical=12),
@@ -415,7 +415,7 @@ def PaginaEditarRegisto(page: ft.Page):
                             icon=ft.Icons.ARROW_BACK,
                             icon_color=cor_primaria,
                             icon_size=24,
-                            on_click=lambda e: page.go("/pagina-principal"),
+                            on_click=lambda e: page.go("/maisDetalhesRegisto"),
                             tooltip="Voltar",
                         ),
                         ft.Column(

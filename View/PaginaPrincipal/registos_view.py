@@ -108,23 +108,13 @@ def criar_card_registo(registo, page):
                                 icon=ft.Icons.VISIBILITY,
                                 icon_color=cor_primaria,
                                 tooltip="Ver detalhes",
-                                on_click=lambda e, r=registo: page.go(f"/registo/{r.get('idRegisto')}"),
+                                on_click=lambda e, a=registo: (
+                                page.session.set("registo_detalhes_id", a["nPIA"]),
+                                page.go("/maisDetalhesRegisto")
+                         )
                       ),
 
                         # Botão Editar
-                        ft.Container(
-                            content=ft.IconButton(
-                                icon=ft.Icons.EDIT_ROUNDED,
-                                icon_color="#FFFFFF",
-                                bgcolor="#F59E0B",
-                                tooltip="Editar registo",
-                                icon_size=18,
-                                on_click=lambda e, a=registo: (
-                                    page.session.set("registo_editar_id", a["nPIA"]),
-                                    page.go("/EditarRegisto")
-                                ),
-                            ),
-                        ),
                     ],
                     spacing=8,
                 ),

@@ -1,5 +1,6 @@
 import flet as ft
 from .estilos import *
+import re
 from .util_buttons import estilo_botao_acao
  
 # ======================
@@ -25,16 +26,22 @@ def card_aluno_simples(a, abrir_detalhe):
                     height=50,
                     bgcolor=cor_primaria,
                     border_radius=25,
+                    shadow=ft.BoxShadow(
+                        spread_radius=0,
+                        blur_radius=12,
+                        color=ft.Colors.with_opacity(0.25, ft.Colors.BLACK),
+                        offset=ft.Offset(0, 4),
+                    ),
                     alignment=ft.alignment.center,
                 ),
                 # Info do aluno
                 ft.Column(
                     [
                         ft.Text(
-                            a.get("NomeAluno", ""),
-                            size=16,
-                            weight=ft.FontWeight.W_600,
-                            color=ft.Colors.GREY_900,
+                                    a.get("NomeAluno", ""),
+                                    size=16,
+                                    weight=ft.FontWeight.W_600,
+                                    color=cor_texto_claro,
                         ),
                         ft.Row(
                             [
@@ -45,7 +52,7 @@ def card_aluno_simples(a, abrir_detalhe):
                                         weight=ft.FontWeight.W_500,
                                         color=ft.Colors.WHITE,
                                     ),
-                                    bgcolor=ft.Colors.BLUE_400,
+                                    bgcolor=cor_primaria,
                                     padding=ft.padding.symmetric(horizontal=8, vertical=3),
                                     border_radius=12,
                                 ),
@@ -56,14 +63,14 @@ def card_aluno_simples(a, abrir_detalhe):
                                         weight=ft.FontWeight.W_500,
                                         color=ft.Colors.WHITE,
                                     ),
-                                    bgcolor=ft.Colors.PURPLE_400,
+                                    bgcolor=cor_secundaria,
                                     padding=ft.padding.symmetric(horizontal=8, vertical=3),
                                     border_radius=12,
                                 ),
                                 ft.Text(
-                                    f"Nº {a.get('NProcesso', 'N/A')}",
+                                    f"Nº {a.get('nProcessoAluno', 'N/A')}",
                                     size=11,
-                                    color=ft.Colors.GREY_600,
+                                    color=cor_texto_medio,
                                     weight=ft.FontWeight.W_500,
                                 ),
                             ],
@@ -85,14 +92,14 @@ def card_aluno_simples(a, abrir_detalhe):
         ),
         padding=16,
         border_radius=12,
-        bgcolor=ft.Colors.WHITE,
-        border=ft.border.all(1, ft.Colors.GREY_200),
+        bgcolor=cor_card,
+        border=None,
         on_click=lambda e: abrir_detalhe(a),
         shadow=ft.BoxShadow(
             spread_radius=0,
-            blur_radius=8,
-            color=ft.Colors.with_opacity(0.08, ft.Colors.BLACK),
-            offset=ft.Offset(0, 2),
+            blur_radius=14,
+            color=ft.Colors.with_opacity(0.12, ft.Colors.BLACK),
+            offset=ft.Offset(0, 6),
         ),
         animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
     )
@@ -125,6 +132,7 @@ def card_aluno_completo(a):
                     size=22,
                     weight=ft.FontWeight.BOLD,
                     text_align=ft.TextAlign.CENTER,
+                    color=cor_texto_claro,
                 ),
                 # Escola
                 ft.Row(
@@ -133,20 +141,20 @@ def card_aluno_completo(a):
                         ft.Text(
                             a.get("NomeEscola", ""),
                             size=14,
-                            color=ft.Colors.GREY_700,
+                            color=cor_texto_medio,
                         ),
                     ],
                     alignment=ft.MainAxisAlignment.CENTER,
                     spacing=8,
                 ),
-                ft.Divider(height=20, color=ft.Colors.GREY_300),
+                ft.Divider(height=20, color=cor_borda),
                 # Info detalhada
                 ft.Row(
                     [
                         ft.Container(
                             content=ft.Column(
                                 [
-                                    ft.Text("Ano", size=11, color=ft.Colors.GREY_600),
+                                    ft.Text("Ano", size=11, color=cor_texto_medio),
                                     ft.Text(
                                         f"{a.get('Ano','?')}º",
                                         size=20,
@@ -189,9 +197,9 @@ def card_aluno_completo(a):
                         [
                             ft.Icon(ft.Icons.BADGE, size=16, color=ft.Colors.GREY_600),
                             ft.Text(
-                                f"Nº Processo: {a.get('NProcesso', 'N/A')}",
+                                f"Nº Processo: {a.get('nProcessoAluno', 'N/A')}",
                                 size=13,
-                                color=ft.Colors.GREY_700,
+                                color=cor_texto_medio,
                             ),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
@@ -203,7 +211,7 @@ def card_aluno_completo(a):
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=8,
         ),
-        bgcolor=ft.Colors.WHITE,
+        bgcolor=cor_card,
         padding=25,
         border_radius=16,
         width=400,
@@ -248,15 +256,26 @@ def criar_alunos_view(alunos, page):
     def carregar_pagina():
         lista.controls.clear()
  
-        filtro_norm = estado["filtro"].strip().lower()
-        if filtro_norm:
-            alunos_filtrados = [
-                a for a in alunos
-                if (
-                    filtro_norm in a.get("NomeAluno", "").lower()
-                    or filtro_norm in str(a.get("NProcesso", "")).lower()
-                )
-            ]
+        filtro_raw = estado["filtro"].strip()
+       
+        if filtro_raw:
+            alunos_filtrados = []
+            filtro_lower = filtro_raw.lower()
+           
+            for a in alunos:
+                # Verifica pelo nome (case-insensitive)
+                nome = a.get("NomeAluno", "").lower()
+               
+                # Verifica pelo número do processo - CORRIGIDO: usa 'nProcessoAluno'
+                nproc = str(a.get("nProcessoAluno", ""))
+               
+                # DEBUG: Mostrar valores para verificação
+                # print(f"DEBUG: Procurando '{filtro_raw}' em nome='{nome}' ou nproc='{nproc}'")
+               
+                # Verifica se o filtro corresponde ao nome OU ao número do processo
+                # Permite correspondência parcial para ambos
+                if filtro_lower in nome or filtro_raw in nproc:
+                    alunos_filtrados.append(a)
         else:
             alunos_filtrados = alunos
  
@@ -298,7 +317,7 @@ def criar_alunos_view(alunos, page):
     info_resultados = ft.Text(
         f"A mostrar {min(PAGE_SIZE, len(alunos))} de {len(alunos)} alunos",
         size=13,
-        color=ft.Colors.GREY_600,
+        color=cor_texto_medio,
     )
  
     header = ft.Container(
@@ -306,12 +325,30 @@ def criar_alunos_view(alunos, page):
             [
                 ft.Row(
                     [
-                        ft.Icon(ft.Icons.GROUPS, size=32, color=cor_primaria),
-                        ft.Text(
-                            "Lista de Alunos",
-                            size=28,
-                            weight=ft.FontWeight.BOLD,
-                            color=ft.Colors.GREY_900,
+                        ft.Container(
+                            content=ft.Icon(ft.Icons.GROUPS, size=28, color=ft.Colors.WHITE),
+                            width=48,
+                            height=48,
+                            bgcolor=cor_primaria,
+                            border_radius=12,
+                            alignment=ft.alignment.center,
+                            shadow=ft.BoxShadow(spread_radius=0, blur_radius=8, color=ft.Colors.with_opacity(0.14, ft.Colors.BLACK), offset=ft.Offset(0,4)),
+                        ),
+                        ft.Column(
+                            [
+                                ft.Text(
+                                    "Lista de Alunos",
+                                    size=26,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=cor_texto_claro,
+                                ),
+                                ft.Text(
+                                    "Gestão rápida e visual dos alunos",
+                                    size=12,
+                                    color=cor_texto_medio,
+                                ),
+                            ],
+                            spacing=2,
                         ),
                         ft.Container(expand=True),
                         ft.Container(
@@ -330,21 +367,35 @@ def criar_alunos_view(alunos, page):
                     spacing=12,
                 ),
                 ft.Container(height=15),
-                # Barra de pesquisa moderna
-                ft.Container(
-                    content=ft.TextField(
-                        hint_text="🔍  Pesquisar por nome ou nº de processo...",
-                        on_change=on_search,
-                        border_radius=12,
-                        filled=True,
-                        bgcolor=ft.Colors.GREY_50,
-                        border_color=ft.Colors.GREY_300,
-                        focused_border_color=cor_primaria,
-                        hint_style=ft.TextStyle(color=ft.Colors.GREY_500),
-                        text_size=14,
-                        content_padding=ft.padding.symmetric(horizontal=20, vertical=15),
-                    ),
-                    width=500,
+                # Barra de pesquisa moderna com ícone integrado
+                ft.Row(
+                    [
+                        ft.Container(
+                            content=ft.Icon(ft.Icons.SEARCH, size=18, color=cor_texto_medio),
+                            width=44,
+                            height=44,
+                            bgcolor=cor_borda,
+                            border_radius=12,
+                            alignment=ft.alignment.center,
+                        ),
+                        ft.Container(width=10),
+                        ft.Container(
+                            content=ft.TextField(
+                                hint_text="Pesquisar por nome ou número do aluno...",
+                                on_change=on_search,
+                                border_radius=12,
+                                filled=True,
+                                bgcolor=cor_borda,
+                                border_color=cor_borda,
+                                focused_border_color=cor_primaria,
+                                hint_style=ft.TextStyle(color=cor_texto_medio),
+                                text_size=14,
+                                content_padding=ft.padding.symmetric(horizontal=18, vertical=12),
+                                width=420,
+                            ),
+                        ),
+                    ],
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
                 ft.Container(height=5),
                 info_resultados,
@@ -352,7 +403,7 @@ def criar_alunos_view(alunos, page):
             spacing=0,
         ),
         padding=20,
-        bgcolor=ft.Colors.WHITE,
+        bgcolor=cor_card,
         border_radius=12,
         shadow=ft.BoxShadow(
             spread_radius=0,
@@ -373,8 +424,8 @@ def criar_alunos_view(alunos, page):
                     "← Anterior",
                     on_click=prev_page,
                     style=ft.ButtonStyle(
-                        bgcolor=ft.Colors.WHITE,
-                        color=cor_primaria,
+                        bgcolor=cor_borda,
+                        color=cor_texto_claro,
                         shape=ft.RoundedRectangleBorder(radius=8),
                         elevation=2,
                     ),
@@ -386,7 +437,7 @@ def criar_alunos_view(alunos, page):
                     on_click=prox_page,
                     style=ft.ButtonStyle(
                         bgcolor=cor_primaria,
-                        color=ft.Colors.WHITE,
+                        color=cor_texto_claro,
                         shape=ft.RoundedRectangleBorder(radius=8),
                         elevation=2,
                     ),
@@ -396,7 +447,7 @@ def criar_alunos_view(alunos, page):
             alignment=ft.MainAxisAlignment.CENTER,
         ),
         padding=15,
-        bgcolor=ft.Colors.WHITE,
+        bgcolor=cor_card,
         border_radius=12,
         shadow=ft.BoxShadow(
             spread_radius=0,
@@ -424,7 +475,8 @@ def criar_alunos_view(alunos, page):
             expand=True,
             spacing=0,
         ),
-        bgcolor=ft.Colors.GREY_50,
+        bgcolor=cor_fundo,
         padding=20,
         expand=True,
     )
+ 

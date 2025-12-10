@@ -7,3 +7,5 @@ colocar direito o n de processo na listagem dos alunos
 login seguro
 melhorar css do tecnicos
 otimizar todas as views como o dos alunos
+pop-up depois do login
+flyer para apresentar o trabalho
