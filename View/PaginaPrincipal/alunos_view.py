@@ -266,14 +266,10 @@ def criar_alunos_view(alunos, page):
                 # Verifica pelo nome (case-insensitive)
                 nome = a.get("NomeAluno", "").lower()
                
-                # Verifica pelo número do processo - CORRIGIDO: usa 'nProcessoAluno'
+                # Verifica pelo número do processo
                 nproc = str(a.get("nProcessoAluno", ""))
                
-                # DEBUG: Mostrar valores para verificação
-                # print(f"DEBUG: Procurando '{filtro_raw}' em nome='{nome}' ou nproc='{nproc}'")
-               
                 # Verifica se o filtro corresponde ao nome OU ao número do processo
-                # Permite correspondência parcial para ambos
                 if filtro_lower in nome or filtro_raw in nproc:
                     alunos_filtrados.append(a)
         else:
@@ -291,12 +287,24 @@ def criar_alunos_view(alunos, page):
             else:
                 lista.controls.append(card_aluno_completo(a))
  
+        # Atualiza o indicador de página
+        total_paginas = (estado["total"] + PAGE_SIZE - 1) // PAGE_SIZE  # Arredonda para cima
+        if total_paginas == 0:
+            total_paginas = 1
+       
+        # Atualiza o texto do indicador
+        indicador_pagina_text.value = f"Página {estado['pagina'] + 1} de {total_paginas}"
+       
+        # Atualiza o valor do campo de entrada (sem disparar on_change)
+        campo_pagina.value = str(estado['pagina'] + 1)
+       
         # Info de resultados
         info_resultados.value = f"A mostrar {len(pagina)} de {estado['total']} alunos"
         page.update()
  
     def prox_page(e):
-        if (estado["pagina"] + 1) * PAGE_SIZE < estado["total"]:
+        total_paginas = (estado["total"] + PAGE_SIZE - 1) // PAGE_SIZE
+        if (estado["pagina"] + 1) < total_paginas:
             estado["pagina"] += 1
             carregar_pagina()
  
@@ -309,6 +317,28 @@ def criar_alunos_view(alunos, page):
         estado["filtro"] = e.control.value
         estado["pagina"] = 0
         carregar_pagina()
+ 
+    def ir_para_pagina(e):
+        """Função para ir para uma página específica"""
+        try:
+            nova_pagina = int(campo_pagina.value) - 1  # Converte para índice 0-based
+            total_paginas = (estado["total"] + PAGE_SIZE - 1) // PAGE_SIZE
+           
+            if 0 <= nova_pagina < total_paginas:
+                estado["pagina"] = nova_pagina
+                carregar_pagina()
+            else:
+                # Página inválida, restaurar valor atual
+                campo_pagina.value = str(estado['pagina'] + 1)
+                page.update()
+        except ValueError:
+            # Valor inválido, restaurar valor atual
+            campo_pagina.value = str(estado['pagina'] + 1)
+            page.update()
+ 
+    def on_enter_pagina(e):
+        """Quando pressionar Enter no campo de página"""
+        ir_para_pagina(e)
  
     # ======================
     #  HEADER MODERNO
@@ -414,12 +444,35 @@ def criar_alunos_view(alunos, page):
     )
  
     # ======================
-    #  FOOTER MODERNO
+    #  FOOTER MODERNO COM NAVEGAÇÃO COMPLETA
     # ======================
+ 
+    # Criar o indicador de página
+    indicador_pagina_text = ft.Text(
+        "Página 1 de 1",
+        size=14,
+        weight=ft.FontWeight.W_600,
+        color=cor_texto_medio,
+    )
+ 
+    # Campo para digitar o número da página
+    campo_pagina = ft.TextField(
+        value="1",
+        width=70,
+        height=40,
+        text_size=14,
+        text_align=ft.TextAlign.CENTER,
+        content_padding=ft.padding.all(10),
+        border_radius=8,
+        border_color=cor_borda,
+        focused_border_color=cor_primaria,
+        on_submit=on_enter_pagina,  # Quando pressionar Enter
+    )
  
     footer = ft.Container(
         content=ft.Row(
             [
+                # Botão Anterior
                 ft.ElevatedButton(
                     "← Anterior",
                     on_click=prev_page,
@@ -431,7 +484,43 @@ def criar_alunos_view(alunos, page):
                     ),
                     icon=ft.Icons.ARROW_BACK,
                 ),
+               
                 ft.Container(expand=True),
+               
+                # Seção de navegação de página
+                ft.Row(
+                    [
+                        # Indicador de página
+                        ft.Container(
+                            content=indicador_pagina_text,
+                            bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
+                            padding=ft.padding.symmetric(horizontal=16, vertical=10),
+                            border_radius=20,
+                            border=ft.border.all(1, ft.Colors.with_opacity(0.2, cor_primaria)),
+                        ),
+                        ft.Container(width=10),
+                        ft.Text("Ir para:", size=14, color=cor_texto_medio),
+                        ft.Container(width=5),
+                        # Campo para digitar a página
+                        campo_pagina,
+                        ft.Container(width=5),
+                        # Botão para ir para a página
+                        ft.IconButton(
+                            icon=ft.Icons.ARROW_FORWARD,
+                            icon_color=ft.Colors.WHITE,
+                            bgcolor=cor_primaria,
+                            on_click=ir_para_pagina,
+                            tooltip="Ir para página",
+                            icon_size=18,
+                        ),
+                    ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                ),
+               
+                ft.Container(expand=True),
+               
+                # Botão Seguinte
                 ft.ElevatedButton(
                     "Seguinte →",
                     on_click=prox_page,
@@ -444,7 +533,8 @@ def criar_alunos_view(alunos, page):
                     icon=ft.Icons.ARROW_FORWARD,
                 ),
             ],
-            alignment=ft.MainAxisAlignment.CENTER,
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
         ),
         padding=15,
         bgcolor=cor_card,
