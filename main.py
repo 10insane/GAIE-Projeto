@@ -11,7 +11,7 @@ from View.Registo.EditarRegisto import PaginaEditarRegisto
 from View.Config.Config import PainelAdmin
 from View.TelaPrincipalAdmin import PaginaPrincipalAdmin
 from View.PaginaPrincipal.maisDetalhesRegisto import MaisDetalhesRegistos
-
+from View.PaginaPrincipal.maisDetalhesAlunos import DetalhesAluno
 
 def main(page: ft.Page):
     page.title = "GAIE - Psicologia"
@@ -48,6 +48,8 @@ def main(page: ft.Page):
             view= PaginaPrincipalAdmin(page)
         elif route=="/maisDetalhesRegisto":
             view= MaisDetalhesRegistos(page)
+        elif route =="/maisDetalhesAlunos":
+            view= DetalhesAluno(page)
         else:
             view = LoginView(page)  
 

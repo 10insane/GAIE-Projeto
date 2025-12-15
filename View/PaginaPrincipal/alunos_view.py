@@ -96,6 +96,11 @@ def card_aluno_simples(a, abrir_detalhe):
 def card_aluno_completo(a):
     """Card de detalhes redesenhado com melhor estrutura"""
     return ft.Container(
+      on_click=lambda e: (
+        e.page.session.set("aluno_detalhes_id", a["nProcessoAluno"]),
+        e.page.go("/maisDetalhesAlunos")
+       ),
+        ink=True, 
         content=ft.Column(
             [
                 # Avatar melhorado

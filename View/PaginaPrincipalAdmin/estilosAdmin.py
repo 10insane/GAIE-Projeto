@@ -1,11 +1,10 @@
-
-
-cor_primaria = "#93bf85"        # Roxo principal moderno
-cor_secundaria = "#b7d5ac"      # Roxo suave pastel
-cor_roxo_escuro = "#dbead5"     # Roxo profundo
-cor_fundo = "#0F0F0F"           # Fundo quase branco (muito leve)
-cor_card = "#121212"            # Cards brancos
-cor_texto_branco = "#D1D5DB"    # Preto para melhor contraste
-cor_texto_claro = "#E5E7EB"     # Cinza escuro (para textos principais)
-cor_texto_medio = "#9CA3AF"     # Cinza médio elegante
-cor_borda = "#0f1a07"           # Cinza claro para bordas
+cor_primaria = "#93bf85"        # Verde suave principal
+cor_secundaria = "#b7d5ac"      # Verde pastel claro
+cor_roxo_escuro = "#7a9c6d"     # Verde mais escuro (profundo)
+cor_fundo = "#f8faf9"           # Branco esverdeado muito claro
+cor_card = "#ffffff"            # Branco puro para cards
+cor_texto_branco = "#ffffff"    # Branco para texto em fundo escuro
+cor_texto_claro = "#1a2c1b"     # Verde muito escuro (quase preto)
+cor_texto_medio = "#4a5d4c"     # Verde acinzentado médio
+cor_borda = "#e8f0e5"           # Verde muito claro para bordas
+ 
