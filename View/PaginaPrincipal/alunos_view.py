@@ -12,173 +12,235 @@ CARD_SIMPLES = True
 # ======================
 
 def card_aluno_simples(a, abrir_detalhe):
-    """Card compacto e clean"""
+    """Card compacto com efeito neon"""
     return ft.Container(
         content=ft.Row(
             [
                 ft.Container(
-                    content=ft.Icon(ft.Icons.PERSON, color=ft.Colors.WHITE, size=20),
-                    width=40,
-                    height=40,
+                    content=ft.Icon(ft.Icons.PERSON, color=ft.Colors.WHITE, size=18),
+                    width=36,
+                    height=36,
                     bgcolor=cor_primaria,
-                    border_radius=20,
+                    border_radius=18,
                     alignment=ft.alignment.center,
                 ),
                 ft.Column(
                     [
                         ft.Text(
                             a.get("NomeAluno", ""),
-                            size=14,
-                            weight=ft.FontWeight.W_500,
+                            size=13,
+                            weight=ft.FontWeight.W_600,
                             color=cor_texto_claro,
                         ),
                         ft.Row(
                             [
-                                ft.Text(
-                                    f"{a.get('Ano','?')}º ano",
-                                    size=11,
-                                    color=cor_texto_medio,
+                                ft.Container(
+                                    content=ft.Text(
+                                        f"{a.get('Ano','?')}º",
+                                        size=10,
+                                        weight=ft.FontWeight.W_500,
+                                        color=cor_primaria,
+                                    ),
+                                    bgcolor=ft.Colors.with_opacity(0.15, cor_primaria),
+                                    padding=ft.padding.symmetric(horizontal=6, vertical=1),
+                                    border_radius=8,
                                 ),
-                                ft.Text(
-                                    f"Turma {a.get('Turma','?')}",
-                                    size=11,
-                                    color=cor_texto_medio,
+                                ft.Container(
+                                    content=ft.Text(
+                                        f"Turma {a.get('Turma','?')}",
+                                        size=10,
+                                        weight=ft.FontWeight.W_500,
+                                        color=cor_secundaria,
+                                    ),
+                                    bgcolor=ft.Colors.with_opacity(0.15, cor_secundaria),
+                                    padding=ft.padding.symmetric(horizontal=6, vertical=1),
+                                    border_radius=8,
                                 ),
                                 ft.Text(
                                     f"Nº {a.get('nProcessoAluno', 'N/A')}",
-                                    size=11,
+                                    size=10,
                                     color=cor_texto_medio,
                                 ),
                             ],
                             spacing=6,
                         ),
                     ],
-                    spacing=2,
+                    spacing=4,
                     expand=True,
                 ),
                 ft.Icon(
-                    ft.Icons.CHEVRON_RIGHT_ROUNDED,
-                    color=ft.Colors.GREY_400,
-                    size=16,
+                    ft.Icons.ARROW_FORWARD_IOS_ROUNDED,
+                    color=cor_primaria,
+                    size=12,
                 ),
             ],
             spacing=10,
             alignment=ft.MainAxisAlignment.START,
         ),
         padding=10,
-        border_radius=8,
+        border_radius=10,
         bgcolor=cor_card,
+        border=ft.border.all(1, cor_borda),
         on_click=lambda e: abrir_detalhe(a),
         shadow=ft.BoxShadow(
             spread_radius=0,
-            blur_radius=6,
-            color=ft.Colors.with_opacity(0.2, ft.Colors.BLACK),
+            blur_radius=8,
+            color=ft.Colors.with_opacity(0.15, ft.Colors.BLACK),
             offset=ft.Offset(0, 2),
         ),
-        animate=ft.Animation(150, ft.AnimationCurve.EASE_OUT),
+        animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
+        ink=True,
     )
 
 
 def card_aluno_completo(a):
-    """Card de detalhes mais leve e compacto"""
+    """Card de detalhes redesenhado com melhor estrutura"""
     return ft.Container(
         content=ft.Column(
             [
+                # Avatar melhorado
                 ft.Container(
-                    content=ft.Icon(ft.Icons.PERSON, color=ft.Colors.WHITE, size=32),
-                    width=64,
-                    height=64,
-                    bgcolor=cor_primaria,
-                    border_radius=32,
+                    content=ft.Container(
+                        content=ft.Icon(ft.Icons.PERSON, color=ft.Colors.WHITE, size=36),
+                        width=72,
+                        height=72,
+                        bgcolor=cor_primaria,
+                        border_radius=36,
+                        alignment=ft.alignment.center,
+                    ),
+                    bgcolor=ft.Colors.with_opacity(0.15, cor_primaria),
+                    width=88,
+                    height=88,
+                    border_radius=44,
                     alignment=ft.alignment.center,
                 ),
-                ft.Container(height=6),
+                ft.Container(height=12),
+                
+                # Nome do aluno
                 ft.Text(
                     a.get("NomeAluno", ""),
-                    size=18,
-                    weight=ft.FontWeight.W_600,
+                    size=20,
+                    weight=ft.FontWeight.W_700,
                     text_align=ft.TextAlign.CENTER,
                     color=cor_texto_claro,
                 ),
-                ft.Row(
-                    [
-                        ft.Icon(ft.Icons.SCHOOL, size=14, color=cor_texto_medio),
-                        ft.Text(
-                            a.get("NomeEscola", ""),
-                            size=12,
-                            color=cor_texto_medio,
-                        ),
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    spacing=6,
-                ),
-                ft.Divider(height=16, color=cor_borda),
-                ft.Row(
-                    [
-                        ft.Container(
-                            content=ft.Column(
-                                [
-                                    ft.Text("Ano", size=11, color=cor_texto_medio),
-                                    ft.Text(
-                                        f"{a.get('Ano','?')}º",
-                                        size=18,
-                                        weight=ft.FontWeight.W_600,
-                                        color=cor_primaria,
-                                    ),
-                                ],
-                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                                spacing=2,
-                            ),
-                            bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
-                            padding=10,
-                            border_radius=10,
-                            expand=True,
-                        ),
-                        ft.Container(
-                            content=ft.Column(
-                                [
-                                    ft.Text("Turma", size=11, color=cor_texto_medio),
-                                    ft.Text(
-                                        a.get("Turma", "?"),
-                                        size=18,
-                                        weight=ft.FontWeight.W_600,
-                                        color=cor_primaria,
-                                    ),
-                                ],
-                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                                spacing=2,
-                            ),
-                            bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
-                            padding=10,
-                            border_radius=10,
-                            expand=True,
-                        ),
-                    ],
-                    spacing=8,
-                ),
+                
+                # Escola
                 ft.Container(
                     content=ft.Row(
                         [
-                            ft.Icon(ft.Icons.BADGE, size=14, color=cor_texto_medio),
+                            ft.Icon(ft.Icons.SCHOOL_ROUNDED, size=16, color=cor_primaria),
                             ft.Text(
-                                f"Nº Processo: {a.get('nProcessoAluno', 'N/A')}",
-                                size=12,
+                                a.get("NomeEscola", ""),
+                                size=13,
                                 color=cor_texto_medio,
+                                weight=ft.FontWeight.W_500,
                             ),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
-                        spacing=6,
+                        spacing=8,
                     ),
-                    margin=ft.margin.only(top=8),
+                    bgcolor=ft.Colors.with_opacity(0.08, cor_primaria),
+                    padding=ft.padding.symmetric(horizontal=16, vertical=8),
+                    border_radius=20,
+                    margin=ft.margin.only(bottom=16),
+                ),
+                
+                ft.Divider(height=1, color=cor_borda),
+                ft.Container(height=16),
+                
+                # Cards de Ano e Turma lado a lado
+                ft.Row(
+                    [
+                        ft.Container(
+                            content=ft.Column(
+                                [
+                                    ft.Icon(
+                                        ft.Icons.CALENDAR_TODAY_ROUNDED,
+                                        size=20,
+                                        color=cor_primaria,
+                                    ),
+                                    ft.Text("Ano", size=12, color=cor_texto_medio),
+                                    ft.Text(
+                                        f"{a.get('Ano','?')}º",
+                                        size=24,
+                                        weight=ft.FontWeight.W_700,
+                                        color=cor_primaria,
+                                    ),
+                                ],
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                spacing=4,
+                            ),
+                            bgcolor=ft.Colors.with_opacity(0.12, cor_primaria),
+                            padding=16,
+                            border_radius=12,
+                            expand=True,
+                            border=ft.border.all(1, ft.Colors.with_opacity(0.2, cor_primaria)),
+                        ),
+                        ft.Container(
+                            content=ft.Column(
+                                [
+                                    ft.Icon(
+                                        ft.Icons.GROUP_ROUNDED,
+                                        size=20,
+                                        color=cor_secundaria,
+                                    ),
+                                    ft.Text("Turma", size=12, color=cor_texto_medio),
+                                    ft.Text(
+                                        a.get("Turma", "?"),
+                                        size=24,
+                                        weight=ft.FontWeight.W_700,
+                                        color=cor_secundaria,
+                                    ),
+                                ],
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                spacing=4,
+                            ),
+                            bgcolor=ft.Colors.with_opacity(0.12, cor_secundaria),
+                            padding=16,
+                            border_radius=12,
+                            expand=True,
+                            border=ft.border.all(1, ft.Colors.with_opacity(0.2, cor_secundaria)),
+                        ),
+                    ],
+                    spacing=12,
+                ),
+                
+                ft.Container(height=16),
+                
+                # Número do processo
+                ft.Container(
+                    content=ft.Row(
+                        [
+                            ft.Icon(ft.Icons.BADGE_ROUNDED, size=16, color=cor_texto_medio),
+                            ft.Text(
+                                "Nº Processo:",
+                                size=13,
+                                color=cor_texto_medio,
+                            ),
+                            ft.Text(
+                                a.get('nProcessoAluno', 'N/A'),
+                                size=13,
+                                weight=ft.FontWeight.W_600,
+                                color=cor_texto_claro,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=8,
+                    ),
+                    bgcolor=cor_fundo,
+                    padding=12,
+                    border_radius=10,
+                    border=ft.border.all(1, cor_borda),
                 ),
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=6,
+            spacing=0,
         ),
         bgcolor=cor_card,
-        padding=20,
-        border_radius=12,
-        width=360,
+        padding=24,
+        border_radius=16,
+        width=400,
     )
 
 
@@ -195,7 +257,7 @@ def criar_alunos_view(alunos, page):
         "filtro_ano": "",
     }
 
-    lista = ft.ListView(expand=True, spacing=8, padding=8)
+    lista = ft.ListView(expand=True, spacing=6, padding=ft.padding.symmetric(horizontal=4, vertical=6))
 
     # --------- Dialog de detalhe ---------
 
@@ -209,10 +271,12 @@ def criar_alunos_view(alunos, page):
                     on_click=lambda e: fechar_dialog(),
                     style=ft.ButtonStyle(
                         color=cor_primaria,
+                        overlay_color=ft.Colors.with_opacity(0.1, cor_primaria),
                     ),
                 ),
             ],
-            shape=ft.RoundedRectangleBorder(radius=12),
+            shape=ft.RoundedRectangleBorder(radius=16),
+            bgcolor=cor_card,
         )
         page.dialog.open = True
         page.update()
@@ -272,7 +336,7 @@ def criar_alunos_view(alunos, page):
 
         indicador_pagina_text.value = f"Página {estado['pagina'] + 1} de {total_paginas}"
         campo_pagina.value = str(estado["pagina"] + 1)
-        info_resultados.value = f"A mostrar {len(pagina)} de {estado['total']} alunos"
+        info_resultados.value = f"{len(pagina)} de {estado['total']} alunos"
         page.update()
 
     def prox_page(e):
@@ -334,288 +398,202 @@ def criar_alunos_view(alunos, page):
     # ======================
 
     info_resultados = ft.Text(
-        f"A mostrar {min(PAGE_SIZE, len(alunos))} de {len(alunos)} alunos",
+        f"{min(PAGE_SIZE, len(alunos))} de {len(alunos)} alunos",
         size=12,
         color=cor_texto_medio,
+        weight=ft.FontWeight.W_500,
     )
 
-    # Campos em dark theme com as tuas cores
     campo_nome = ft.TextField(
-        hint_text="Nome ou nº do aluno",
+        hint_text="Procurar por nome ou número...",
         on_change=on_search_nome,
         border_radius=8,
         filled=True,
         bgcolor=cor_fundo,
         border_color=cor_borda,
         focused_border_color=cor_primaria,
-        hint_style=ft.TextStyle(color=cor_texto_medio),
+        hint_style=ft.TextStyle(color=cor_texto_medio, size=12),
         color=cor_texto_claro,
-        text_size=13,
-        content_padding=ft.padding.symmetric(horizontal=10, vertical=8),
+        text_size=12,
+        content_padding=ft.padding.symmetric(horizontal=12, vertical=10),
         expand=True,
+        prefix_icon=ft.Icons.SEARCH,
     )
 
     campo_turma = ft.TextField(
-        hint_text="Turma (ex: A, B, C)",
+        hint_text="Turma",
         on_change=on_search_turma,
         border_radius=8,
         filled=True,
         bgcolor=cor_fundo,
         border_color=cor_borda,
         focused_border_color=cor_primaria,
-        hint_style=ft.TextStyle(color=cor_texto_medio),
+        hint_style=ft.TextStyle(color=cor_texto_medio, size=12),
         color=cor_texto_claro,
-        text_size=13,
-        content_padding=ft.padding.symmetric(horizontal=10, vertical=8),
-        width=110,
+        text_size=12,
+        content_padding=ft.padding.symmetric(horizontal=12, vertical=10),
+        width=100,
     )
 
     campo_ano = ft.TextField(
-        hint_text="Ano (ex: 5, 6, 7)",
+        hint_text="Ano",
         on_change=on_search_ano,
         border_radius=8,
         filled=True,
         bgcolor=cor_fundo,
         border_color=cor_borda,
         focused_border_color=cor_primaria,
-        hint_style=ft.TextStyle(color=cor_texto_medio),
+        hint_style=ft.TextStyle(color=cor_texto_medio, size=12),
         color=cor_texto_claro,
-        text_size=13,
-        content_padding=ft.padding.symmetric(horizontal=10, vertical=8),
+        text_size=12,
+        content_padding=ft.padding.symmetric(horizontal=12, vertical=10),
         width=90,
     )
 
     header = ft.Container(
         content=ft.Column(
             [
+                # Título principal
                 ft.Row(
                     [
                         ft.Container(
                             content=ft.Icon(
-                                ft.Icons.GROUPS,
+                                ft.Icons.GROUPS_ROUNDED,
                                 size=24,
                                 color=ft.Colors.WHITE,
                             ),
-                            width=40,
-                            height=40,
+                            width=48,
+                            height=48,
                             bgcolor=cor_primaria,
-                            border_radius=10,
+                            border_radius=14,
                             alignment=ft.alignment.center,
+                            shadow=ft.BoxShadow(
+                                spread_radius=0,
+                                blur_radius=10,
+                                color=ft.Colors.with_opacity(0.4, cor_primaria),
+                                offset=ft.Offset(0, 3),
+                            ),
                         ),
                         ft.Column(
                             [
                                 ft.Text(
                                     "Lista de Alunos",
                                     size=20,
-                                    weight=ft.FontWeight.W_600,
+                                    weight=ft.FontWeight.W_700,
                                     color=cor_texto_claro,
                                 ),
                                 ft.Text(
-                                    "Gestão rápida dos alunos",
-                                    size=11,
+                                    "Gestão e consulta rápida",
+                                    size=12,
                                     color=cor_texto_medio,
                                 ),
                             ],
-                            spacing=2,
+                            spacing=1,
                         ),
                         ft.Container(expand=True),
                         ft.Container(
-                            content=ft.Text(
-                                str(len(alunos)),
-                                size=16,
-                                weight=ft.FontWeight.W_600,
-                                color=cor_primaria,
+                            content=ft.Column(
+                                [
+                                    ft.Text(
+                                        str(len(alunos)),
+                                        size=20,
+                                        weight=ft.FontWeight.W_700,
+                                        color=cor_primaria,
+                                    ),
+                                    ft.Text(
+                                        "Total",
+                                        size=10,
+                                        color=cor_texto_medio,
+                                    ),
+                                ],
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                                spacing=0,
                             ),
                             bgcolor=ft.Colors.with_opacity(0.12, cor_primaria),
-                            padding=ft.padding.symmetric(horizontal=10, vertical=4),
-                            border_radius=16,
+                            padding=ft.padding.symmetric(horizontal=16, vertical=8),
+                            border_radius=10,
+                            border=ft.border.all(1, ft.Colors.with_opacity(0.2, cor_primaria)),
                         ),
                     ],
                     alignment=ft.MainAxisAlignment.START,
-                    spacing=10,
+                    spacing=12,
                 ),
-                ft.Container(height=10),
+                
+                ft.Container(height=12),
 
-                # Card de filtros com as tuas cores
+                # Card de filtros mais compacto
                 ft.Container(
                     content=ft.Column(
                         [
                             ft.Row(
                                 [
+                                    ft.Icon(
+                                        ft.Icons.TUNE_ROUNDED,
+                                        size=16,
+                                        color=cor_primaria,
+                                    ),
                                     ft.Text(
                                         "Filtros",
-                                        size=14,
+                                        size=13,
                                         weight=ft.FontWeight.W_600,
-                                        color=cor_primaria,
+                                        color=cor_texto_claro,
                                     ),
                                     ft.Container(expand=True),
-                                    ft.Icon(
-                                        ft.Icons.FILTER_ALT,
-                                        size=18,
-                                        color=cor_primaria,
-                                    ),
+                                    info_resultados,
                                 ],
                                 alignment=ft.MainAxisAlignment.START,
                             ),
-                            ft.Container(height=8),
+                            
+                            ft.Container(height=10),
+                            
                             ft.Row(
                                 [
-                                    # Nome / Número
-                                    ft.Container(
-                                        content=ft.Column(
-                                            [
-                                                ft.Row(
-                                                    [
-                                                        ft.Icon(
-                                                            ft.Icons.PERSON_SEARCH,
-                                                            size=16,
-                                                            color=cor_primaria,
-                                                        ),
-                                                        ft.Text(
-                                                            "Nome ou Número",
-                                                            size=12,
-                                                            weight=ft.FontWeight.W_500,
-                                                            color=cor_texto_claro,
-                                                        ),
-                                                    ],
-                                                    spacing=4,
-                                                ),
-                                                campo_nome,
-                                            ],
-                                            spacing=4,
+                                    campo_nome,
+                                    campo_turma,
+                                    campo_ano,
+                                    ft.ElevatedButton(
+                                        "Limpar",
+                                        on_click=limpar_filtros,
+                                        icon=ft.Icons.CLEAR_ALL_ROUNDED,
+                                        style=ft.ButtonStyle(
+                                            bgcolor=cor_fundo,
+                                            color=cor_texto_claro,
+                                            shape=ft.RoundedRectangleBorder(radius=8),
+                                            elevation=0,
+                                            padding=ft.padding.symmetric(horizontal=12, vertical=10),
+                                            overlay_color=ft.Colors.with_opacity(0.1, cor_primaria),
                                         ),
-                                        expand=True,
-                                        padding=8,
-                                        bgcolor=cor_card,
-                                        border_radius=10,
-                                        border=ft.border.all(1, cor_borda),
-                                    ),
-                                    ft.Container(width=8),
-                                    # Turma
-                                    ft.Container(
-                                        content=ft.Column(
-                                            [
-                                                ft.Row(
-                                                    [
-                                                        ft.Icon(
-                                                            ft.Icons.GROUP_WORK,
-                                                            size=16,
-                                                            color=cor_secundaria,
-                                                        ),
-                                                        ft.Text(
-                                                            "Turma",
-                                                            size=12,
-                                                            weight=ft.FontWeight.W_500,
-                                                            color=cor_texto_claro,
-                                                        ),
-                                                    ],
-                                                    spacing=4,
-                                                ),
-                                                campo_turma,
-                                            ],
-                                            spacing=4,
-                                        ),
-                                        padding=8,
-                                        bgcolor=cor_card,
-                                        border_radius=10,
-                                        border=ft.border.all(1, cor_borda),
-                                    ),
-                                    ft.Container(width=8),
-                                    # Ano
-                                    ft.Container(
-                                        content=ft.Column(
-                                            [
-                                                ft.Row(
-                                                    [
-                                                        ft.Icon(
-                                                            ft.Icons.SCHEDULE,
-                                                            size=16,
-                                                            color=ft.Colors.ORANGE_400,
-                                                        ),
-                                                        ft.Text(
-                                                            "Ano",
-                                                            size=12,
-                                                            weight=ft.FontWeight.W_500,
-                                                            color=cor_texto_claro,
-                                                        ),
-                                                    ],
-                                                    spacing=4,
-                                                ),
-                                                campo_ano,
-                                            ],
-                                            spacing=4,
-                                        ),
-                                        padding=8,
-                                        bgcolor=cor_card,
-                                        border_radius=10,
-                                        border=ft.border.all(1, cor_borda),
-                                    ),
-                                    ft.Container(width=8),
-                                    # Limpar
-                                    ft.Container(
-                                        content=ft.Column(
-                                            [
-                                                ft.Text(
-                                                    "Limpar",
-                                                    size=12,
-                                                    weight=ft.FontWeight.W_500,
-                                                    color=cor_texto_claro,
-                                                ),
-                                                ft.ElevatedButton(
-                                                    "Limpar",
-                                                    on_click=limpar_filtros,
-                                                    icon=ft.Icons.DELETE_SWEEP,
-                                                    style=ft.ButtonStyle(
-                                                        bgcolor=cor_fundo,
-                                                        color=cor_texto_claro,
-                                                        shape=ft.RoundedRectangleBorder(
-                                                            radius=8
-                                                        ),
-                                                        elevation=0,
-                                                        padding=ft.padding.symmetric(
-                                                            horizontal=10, vertical=8
-                                                        ),
-                                                    ),
-                                                    height=36,
-                                                ),
-                                            ],
-                                            spacing=4,
-                                        ),
-                                        padding=8,
-                                        bgcolor=cor_card,
-                                        border_radius=10,
-                                        border=ft.border.all(1, cor_borda),
+                                        height=38,
                                     ),
                                 ],
-                                vertical_alignment=ft.CrossAxisAlignment.START,
+                                spacing=10,
                             ),
                         ],
                         spacing=0,
                     ),
-                    padding=12,
+                    padding=14,
                     bgcolor=cor_card,
                     border_radius=10,
                     border=ft.border.all(1, cor_borda),
                     shadow=ft.BoxShadow(
                         spread_radius=0,
-                        blur_radius=10,
-                        color=ft.Colors.with_opacity(0.25, ft.Colors.BLACK),
-                        offset=ft.Offset(0, 4),
+                        blur_radius=12,
+                        color=ft.Colors.with_opacity(0.15, ft.Colors.BLACK),
+                        offset=ft.Offset(0, 3),
                     ),
                 ),
-                ft.Container(height=8),
-                info_resultados,
             ],
             spacing=0,
         ),
-        padding=16,
+        padding=14,
         bgcolor=cor_card,
-        border_radius=10,
+        border_radius=12,
+        border=ft.border.all(1, cor_borda),
         shadow=ft.BoxShadow(
             spread_radius=0,
-            blur_radius=8,
-            color=ft.Colors.with_opacity(0.2, ft.Colors.BLACK),
-            offset=ft.Offset(0, 1),
+            blur_radius=10,
+            color=ft.Colors.with_opacity(0.12, ft.Colors.BLACK),
+            offset=ft.Offset(0, 2),
         ),
     )
 
@@ -625,19 +603,19 @@ def criar_alunos_view(alunos, page):
 
     indicador_pagina_text = ft.Text(
         "Página 1 de 1",
-        size=13,
-        weight=ft.FontWeight.W_500,
-        color=cor_texto_medio,
+        size=14,
+        weight=ft.FontWeight.W_600,
+        color=cor_texto_claro,
     )
 
     campo_pagina = ft.TextField(
         value="1",
-        width=60,
-        height=34,
-        text_size=13,
+        width=70,
+        height=40,
+        text_size=14,
         text_align=ft.TextAlign.CENTER,
-        content_padding=ft.padding.all(6),
-        border_radius=6,
+        content_padding=ft.padding.all(8),
+        border_radius=10,
         border_color=cor_borda,
         focused_border_color=cor_primaria,
         color=cor_texto_claro,
@@ -649,72 +627,73 @@ def criar_alunos_view(alunos, page):
         content=ft.Row(
             [
                 ft.ElevatedButton(
-                    "← Anterior",
+                    "Anterior",
                     on_click=prev_page,
                     style=ft.ButtonStyle(
-                        bgcolor=cor_borda,
+                        bgcolor=cor_fundo,
                         color=cor_texto_claro,
-                        shape=ft.RoundedRectangleBorder(radius=6),
-                        elevation=1,
-                        padding=ft.padding.symmetric(horizontal=10, vertical=8),
+                        shape=ft.RoundedRectangleBorder(radius=10),
+                        elevation=0,
+                        padding=ft.padding.symmetric(horizontal=20, vertical=12),
+                        overlay_color=ft.Colors.with_opacity(0.1, cor_primaria),
                     ),
-                    icon=ft.Icons.ARROW_BACK,
+                    icon=ft.Icons.ARROW_BACK_ROUNDED,
                 ),
                 ft.Container(expand=True),
-                ft.Row(
-                    [
-                        ft.Container(
-                            content=indicador_pagina_text,
-                            bgcolor=ft.Colors.with_opacity(0.1, cor_primaria),
-                            padding=ft.padding.symmetric(horizontal=12, vertical=6),
-                            border_radius=16,
-                            border=ft.border.all(
-                                1,
-                                ft.Colors.with_opacity(0.2, cor_primaria),
+                ft.Container(
+                    content=ft.Row(
+                        [
+                            indicador_pagina_text,
+                            ft.Container(
+                                content=ft.Container(width=1, height=24, bgcolor=cor_borda),
+                                margin=ft.margin.symmetric(horizontal=16),
                             ),
-                        ),
-                        ft.Container(width=8),
-                        ft.Text("Ir para:", size=13, color=cor_texto_medio),
-                        ft.Container(width=4),
-                        campo_pagina,
-                        ft.Container(width=4),
-                        ft.IconButton(
-                            icon=ft.Icons.ARROW_FORWARD,
-                            icon_color=ft.Colors.WHITE,
-                            bgcolor=cor_primaria,
-                            on_click=ir_para_pagina,
-                            tooltip="Ir para página",
-                            icon_size=16,
-                        ),
-                    ],
-                    alignment=ft.MainAxisAlignment.CENTER,
-                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                            ft.Text("Ir para:", size=13, color=cor_texto_medio),
+                            campo_pagina,
+                            ft.IconButton(
+                                icon=ft.Icons.ARROW_FORWARD_ROUNDED,
+                                icon_color=ft.Colors.WHITE,
+                                bgcolor=cor_primaria,
+                                on_click=ir_para_pagina,
+                                tooltip="Ir para página",
+                                icon_size=18,
+                            ),
+                        ],
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                        spacing=12,
+                    ),
+                    bgcolor=ft.Colors.with_opacity(0.08, cor_primaria),
+                    padding=ft.padding.symmetric(horizontal=20, vertical=8),
+                    border_radius=12,
                 ),
                 ft.Container(expand=True),
                 ft.ElevatedButton(
-                    "Seguinte →",
+                    "Seguinte",
                     on_click=prox_page,
                     style=ft.ButtonStyle(
                         bgcolor=cor_primaria,
-                        color=cor_texto_claro,
-                        shape=ft.RoundedRectangleBorder(radius=6),
-                        elevation=1,
-                        padding=ft.padding.symmetric(horizontal=10, vertical=8),
+                        color=ft.Colors.WHITE,
+                        shape=ft.RoundedRectangleBorder(radius=10),
+                        elevation=2,
+                        padding=ft.padding.symmetric(horizontal=20, vertical=12),
+                        overlay_color=ft.Colors.with_opacity(0.2, ft.Colors.WHITE),
                     ),
-                    icon=ft.Icons.ARROW_FORWARD,
+                    icon=ft.Icons.ARROW_FORWARD_ROUNDED,
                 ),
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             vertical_alignment=ft.CrossAxisAlignment.CENTER,
         ),
-        padding=10,
+        padding=16,
         bgcolor=cor_card,
-        border_radius=10,
+        border_radius=12,
+        border=ft.border.all(1, cor_borda),
         shadow=ft.BoxShadow(
             spread_radius=0,
-            blur_radius=8,
-            color=ft.Colors.with_opacity(0.2, ft.Colors.BLACK),
-            offset=ft.Offset(0, -1),
+            blur_radius=12,
+            color=ft.Colors.with_opacity(0.15, ft.Colors.BLACK),
+            offset=ft.Offset(0, -2),
         ),
     )
 
@@ -724,9 +703,9 @@ def criar_alunos_view(alunos, page):
         content=ft.Column(
             [
                 header,
-                ft.Container(height=10),
+                ft.Container(height=12),
                 lista,
-                ft.Container(height=10),
+                ft.Container(height=12),
                 footer,
             ],
             expand=True,
