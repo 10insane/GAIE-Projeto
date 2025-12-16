@@ -125,7 +125,7 @@ def DetalhesAluno(page: ft.Page):
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=10),
         ),
-        on_click=lambda e: page.go("/pagina-alunos"),
+        on_click=lambda e: page.go("/pagina-principal"),
     )
 
     # ===== CARD PRINCIPAL =====
