@@ -29,7 +29,6 @@ def DetalhesAluno(page: ft.Page):
     cor_texto_medio = "#A0A0A0"
     cor_borda = "#2A2A2A"
     cor_primaria = "#8B5CF6"
-    cor_editar = "#F59E0B"
     cor_voltar = "#F50B0B"
 
     # ===== Cabeçalho =====
@@ -53,7 +52,7 @@ def DetalhesAluno(page: ft.Page):
                     icon_color=cor_primaria,
                     icon_size=24,
                     tooltip="Voltar",
-                    on_click=lambda e: page.go("/pagina-alunos"),
+                    on_click=lambda e: page.go("/pagina-"),
                 ),
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -97,33 +96,11 @@ def DetalhesAluno(page: ft.Page):
 
             ft.Container(height=15),
 
-            ft.Text(
-                "Observações",
-                size=16,
-                weight=ft.FontWeight.BOLD,
-                color=cor_texto_claro,
-            ),
-            ft.Text(
-                aluno.get("Observacoes", "Sem observações."),
-                size=15,
-                color=cor_texto_medio,
-            ),
         ],
         spacing=10,
     )
 
     # ===== Botões =====
-    btn_editar = ft.ElevatedButton(
-        text="Editar Aluno",
-        bgcolor=cor_editar,
-        color="#FFFFFF",
-        icon=ft.Icons.EDIT,
-        on_click=lambda e: (
-            page.session.set("aluno_editar_id", aluno["nProcessoAluno"]),
-            page.go("/EditarAluno"),
-        ),
-    )
-
     btn_voltar = ft.ElevatedButton(
         text="Voltar",
         bgcolor=cor_voltar,
@@ -138,7 +115,7 @@ def DetalhesAluno(page: ft.Page):
             [
                 detalhes_aluno,
                 ft.Row(
-                    [btn_voltar, btn_editar],
+                    [btn_voltar],
                     alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
                 ),
             ],

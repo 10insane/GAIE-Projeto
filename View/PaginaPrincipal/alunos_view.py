@@ -81,10 +81,12 @@ def card_aluno_simples(a, page):
         border_radius=10,
         bgcolor=cor_card,
         border=ft.border.all(1, cor_borda),
-        on_click=lambda     : (
+        
+        on_click=lambda e : (
             page.session.set("aluno_detalhes_id", a["nProcessoAluno"]),
-            page.go("/MaisDetalhesAluno")
+            page.go("/maisDetalhesAlunos")
         ),
+        
         shadow=ft.BoxShadow(
             spread_radius=0,
             blur_radius=8,
