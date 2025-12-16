@@ -11,7 +11,7 @@ CARD_SIMPLES = True
 # CARDS
 # ======================
 
-def card_aluno_simples(a, abrir_detalhe):
+def card_aluno_simples(a, page):
     """Card compacto com efeito neon"""
     return ft.Container(
         content=ft.Row(
@@ -81,7 +81,10 @@ def card_aluno_simples(a, abrir_detalhe):
         border_radius=10,
         bgcolor=cor_card,
         border=ft.border.all(1, cor_borda),
-        on_click=lambda e: abrir_detalhe(a),
+        on_click=lambda     : (
+            page.session.set("aluno_detalhes_id", a["nProcessoAluno"]),
+            page.go("/MaisDetalhesAluno")
+        ),
         shadow=ft.BoxShadow(
             spread_radius=0,
             blur_radius=8,
@@ -93,14 +96,10 @@ def card_aluno_simples(a, abrir_detalhe):
     )
 
 
+
 def card_aluno_completo(a):
     """Card de detalhes redesenhado com melhor estrutura"""
     return ft.Container(
-      on_click=lambda e: (
-        e.page.session.set("aluno_detalhes_id", a["nProcessoAluno"]),
-        e.page.go("/maisDetalhesAlunos")
-       ),
-        ink=True, 
         content=ft.Column(
             [
                 # Avatar melhorado
@@ -264,31 +263,7 @@ def criar_alunos_view(alunos, page):
 
     lista = ft.ListView(expand=True, spacing=6, padding=ft.padding.symmetric(horizontal=4, vertical=6))
 
-    # --------- Dialog de detalhe ---------
-
-    def abrir_detalhe(a):
-        page.dialog = ft.AlertDialog(
-            modal=True,
-            content=card_aluno_completo(a),
-            actions=[
-                ft.TextButton(
-                    "Fechar",
-                    on_click=lambda e: fechar_dialog(),
-                    style=ft.ButtonStyle(
-                        color=cor_primaria,
-                        overlay_color=ft.Colors.with_opacity(0.1, cor_primaria),
-                    ),
-                ),
-            ],
-            shape=ft.RoundedRectangleBorder(radius=16),
-            bgcolor=cor_card,
-        )
-        page.dialog.open = True
-        page.update()
-
-    def fechar_dialog():
-        page.dialog.open = False
-        page.update()
+   
 
     # --------- Paginação e filtros ---------
 
@@ -331,7 +306,7 @@ def criar_alunos_view(alunos, page):
 
         for a in pagina:
             if CARD_SIMPLES:
-                lista.controls.append(card_aluno_simples(a, abrir_detalhe))
+                lista.controls.append(card_aluno_simples(a, page))
             else:
                 lista.controls.append(card_aluno_completo(a))
 

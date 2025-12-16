@@ -4,23 +4,22 @@ from Models.AlunosModel import buscarAlunoPorProcesso
 
 def DetalhesAluno(page: ft.Page):
     """
-    Página de detalhes do aluno com design moderno,
-    semelhante à página de detalhes de registos.
+    Página de detalhes do aluno com design moderno
     """
 
     # ===== Buscar aluno pelo ID salvo na sessão =====
     aluno_id = page.session.get("aluno_detalhes_id")
+
     if not aluno_id:
         return ft.View(
-            route="/MaisDetalhesAluno",
-            controls=[ft.Text("Nenhum aluno selecionado.")],
+            controls=[ft.Text("Nenhum aluno selecionado.")]
         )
 
     aluno = buscarAlunoPorProcesso(aluno_id)
+
     if not aluno:
         return ft.View(
-            route="/MaisDetalhesAluno",
-            controls=[ft.Text(f"Aluno {aluno_id} não encontrado.")],
+            controls=[ft.Text(f"Aluno {aluno_id} não encontrado.")]
         )
 
     # ===== Cores =====
@@ -54,7 +53,7 @@ def DetalhesAluno(page: ft.Page):
                     icon_color=cor_primaria,
                     icon_size=24,
                     tooltip="Voltar",
-                    on_click=lambda e: page.go("/pagina-principal"),
+                    on_click=lambda e: page.go("/pagina-alunos"),
                 ),
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -70,7 +69,11 @@ def DetalhesAluno(page: ft.Page):
         return ft.Row(
             [
                 ft.Icon(icone, size=18, color=cor_texto_medio),
-                ft.Text(f"{label}: {valor}", size=15, color=cor_texto_medio),
+                ft.Text(
+                    f"{label}: {valor}",
+                    size=15,
+                    color=cor_texto_medio,
+                ),
             ],
             spacing=8,
         )
@@ -84,6 +87,7 @@ def DetalhesAluno(page: ft.Page):
                 weight=ft.FontWeight.BOLD,
                 color=cor_texto_claro,
             ),
+
             ft.Container(height=15),
 
             linha_info(ft.Icons.BADGE_ROUNDED, "Nº Processo", aluno.get("nProcessoAluno", "N/A")),
@@ -93,7 +97,12 @@ def DetalhesAluno(page: ft.Page):
 
             ft.Container(height=15),
 
-            ft.Text("Observações", size=16, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
+            ft.Text(
+                "Observações",
+                size=16,
+                weight=ft.FontWeight.BOLD,
+                color=cor_texto_claro,
+            ),
             ft.Text(
                 aluno.get("Observacoes", "Sem observações."),
                 size=15,
@@ -104,29 +113,23 @@ def DetalhesAluno(page: ft.Page):
     )
 
     # ===== Botões =====
-    btn_editar = ft.Container(
-        content=ft.ElevatedButton(
-            "Editar Aluno",
-            bgcolor=cor_editar,
-            color="#FFFFFF",
-            icon=ft.Icons.EDIT,
-            on_click=lambda e: (
-                page.session.set("aluno_editar_id", aluno["nProcessoAluno"]),
-                page.go("/EditarAluno"),
-            ),
+    btn_editar = ft.ElevatedButton(
+        text="Editar Aluno",
+        bgcolor=cor_editar,
+        color="#FFFFFF",
+        icon=ft.Icons.EDIT,
+        on_click=lambda e: (
+            page.session.set("aluno_editar_id", aluno["nProcessoAluno"]),
+            page.go("/EditarAluno"),
         ),
-        padding=ft.padding.symmetric(horizontal=20, vertical=10),
     )
 
-    btn_voltar = ft.Container(
-        content=ft.ElevatedButton(
-            "Voltar",
-            bgcolor=cor_voltar,
-            color="#FFFFFF",
-            icon=ft.Icons.ARROW_BACK,
-            on_click=lambda e: page.go("/pagina-alunos"),
-        ),
-        padding=ft.padding.symmetric(horizontal=20, vertical=10),
+    btn_voltar = ft.ElevatedButton(
+        text="Voltar",
+        bgcolor=cor_voltar,
+        color="#FFFFFF",
+        icon=ft.Icons.ARROW_BACK,
+        on_click=lambda e: page.go("/pagina-alunos"),
     )
 
     # ===== Card principal =====
@@ -155,7 +158,6 @@ def DetalhesAluno(page: ft.Page):
 
     # ===== View final =====
     return ft.View(
-        route="/MaisDetalhesAluno",
         controls=[
             ft.Column(
                 [
