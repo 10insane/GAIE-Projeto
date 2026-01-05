@@ -12,6 +12,7 @@ from View.Config.Config import PainelAdmin
 from View.TelaPrincipalAdmin import PaginaPrincipalAdmin
 from View.PaginaPrincipal.maisDetalhesRegisto import MaisDetalhesRegistos
 from View.PaginaPrincipal.maisDetalhesAlunos import DetalhesAluno
+from View.PaginaPrincipal.TecnicoPerfil import PerfilTecnico
 
 def main(page: ft.Page):
     page.title = "GAIE - Psicologia"
@@ -50,6 +51,20 @@ def main(page: ft.Page):
             view= MaisDetalhesRegistos(page)
         elif route =="/maisDetalhesAlunos":
             view= DetalhesAluno(page)
+        elif route == "/TecnicoPerfil":
+          tecnico = page.session.get("tecnico")
+
+          view = ft.View(
+         "/TecnicoPerfil",
+         controls=[
+            ft.Container(
+                content=PerfilTecnico(tecnico),
+                alignment=ft.alignment.center,
+                expand=True,
+            )
+        ]
+    )
+
         else:
             view = LoginView(page)  
 

@@ -1,25 +1,19 @@
-# Views/PaginaPrincipal/cabecalho.py
-
 import flet as ft
 from .estilos import *
 import os
 
-TOKEN_FILE = "token.json"  # Arquivo do "lembrar-me"
+TOKEN_FILE = "token.json"  
 
 def logout(page: ft.Page):
-    # Remove token de lembrar-me se existir
     if os.path.exists(TOKEN_FILE):
         os.remove(TOKEN_FILE)
 
-    # Limpa sessão e todas as views
     page.session.clear()
     page.views.clear()
 
-    # Adiciona apenas a view de login
-    from View.Login.Login import LoginView  # Ajuste o import conforme seu projeto
+    from View.Login.Login import LoginView 
     page.views.append(LoginView(page))
 
-    # Vai para a rota de login
     page.go("/login")
     page.update()
 
@@ -92,7 +86,13 @@ def criar_cabecalho(page: ft.Page):
                                             ],
                                             spacing=12,
                                         ),
-                                        on_click=lambda e: page.go("/perfil"),
+                                       on_click=lambda e: (
+                                         page.session.set("tecnico", {
+                                        "NomeTecnico": page.session.get("tecnico_nome"),
+                                        "nProcTecnico": page.session.get("nProcTecnico"),
+                                      }),
+                                        page.go("/TecnicoPerfil")
+                                      )
                                     ),
                                     ft.PopupMenuItem(
                                         content=ft.Row(

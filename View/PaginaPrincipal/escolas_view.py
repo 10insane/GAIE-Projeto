@@ -2,20 +2,9 @@ import flet as ft
 from .estilos import *
 from .util_buttons import estilo_botao_acao
 
-
-# ======================
-#  CONFIGURAÇÃO
-# ======================
-
-PAGE_SIZE = 20  # Mostra 20 escolas por página
-
-
-# ======================
-#  FUNÇÕES AUXILIARES
-# ======================
+PAGE_SIZE = 20  
 
 def gerar_sigla(nome: str) -> str:
-    """Gera sigla a partir do nome da escola"""
     if not nome:
         return ""
     partes = [p for p in nome.split() if p]
@@ -136,7 +125,7 @@ def criar_escolas_view(escolas, page):
                         "Adicionar Primeira Escola",
                         ft.Icons.ADD_CIRCLE_ROUNDED,
                         lambda e: page.go("/criar-escola")
-                    ),
+                    ),  
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=0,
