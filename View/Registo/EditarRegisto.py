@@ -10,9 +10,9 @@ def PaginaEditarRegisto(page: ft.Page):
     tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
 
     # === CORES (do estilos.py) ===
-    cor_primaria = "#8B5CF6"
-    cor_secundaria = "#A78BFA"
-    cor_roxo_escuro = "#6D28D9"
+    cor_primaria = "#3B82F6"
+    cor_secundaria = "#60A5FA"
+    cor_azul_escuro = "#1E40AF"
     cor_fundo = "#0F0F0F"
     cor_card = "#121212"
     cor_texto_claro = "#E5E7EB"
@@ -493,7 +493,7 @@ def PaginaEditarRegisto(page: ft.Page):
                     content=ft.Column(
                         [
                             ft.Row([
-                                ft.Icon(ft.Icons.ARTICLE, color=cor_roxo_escuro, size=18),
+                                ft.Icon(ft.Icons.ARTICLE, color=cor_azul_escuro, size=18),
                                 ft.Text("Detalhes do Processo", size=14, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
                             ], spacing=8),
                             ft.Container(height=5),

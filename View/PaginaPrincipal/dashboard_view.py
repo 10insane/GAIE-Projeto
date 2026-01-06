@@ -14,7 +14,7 @@ def criar_card_grande(titulo, valor, icone, cor, subtitulo):
                 # Ícone com fundo colorido
                 ft.Container(
                     content=ft.Icon(icone, color="#FFFFFF", size=36),
-                    bgcolor=cor,
+                    gradient=ft.LinearGradient([cor, cor_secundaria]),
                     border_radius=16,
                     padding=16,
                     animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
@@ -50,7 +50,7 @@ def criar_card_grande(titulo, valor, icone, cor, subtitulo):
             spacing=6,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         ),
-        bgcolor=cor_card,
+        gradient=ft.LinearGradient([cor_card, ft.Colors.with_opacity(0.8, cor_card)]),
         padding=32,
         border_radius=18,
         shadow=ft.BoxShadow(
@@ -73,7 +73,7 @@ def criar_card_estado(titulo, valor, icone, cor):
                 # Ícone à esquerda
                 ft.Container(
                     content=ft.Icon(icone, color="#FFFFFF", size=26),
-                    bgcolor=cor,
+                    gradient=ft.LinearGradient([cor, cor_secundaria]),
                     border_radius=14,
                     padding=14,
                 ),
@@ -100,7 +100,7 @@ def criar_card_estado(titulo, valor, icone, cor):
             spacing=18,
             alignment=ft.MainAxisAlignment.START,
         ),
-        bgcolor=cor_card,
+        gradient=ft.LinearGradient([cor_card, ft.Colors.with_opacity(0.8, cor_card)]),
         padding=22,
         border_radius=16,
         border=ft.border.all(1.5, ft.Colors.with_opacity(0.08, cor)),

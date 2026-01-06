@@ -26,7 +26,7 @@ def criar_cabecalho(page: ft.Page):
         gradient=ft.LinearGradient(
             begin=ft.Alignment(-1, -1),
             end=ft.Alignment(1, 1),
-            colors=[cor_roxo_escuro, cor_primaria],
+            colors=[cor_primaria, cor_secundaria],
         ),
         shadow=ft.BoxShadow(
             blur_radius=18,
@@ -41,7 +41,7 @@ def criar_cabecalho(page: ft.Page):
                             content=ft.Icon(ft.Icons.SCHOOL_ROUNDED, color=ft.Colors.WHITE, size=30),
                             bgcolor=ft.Colors.with_opacity(0.18, ft.Colors.WHITE),
                             padding=10,
-                            border_radius=10,
+                            border_radius=15,
                         ),
                         ft.Column(
                             [
@@ -121,7 +121,7 @@ def criar_cabecalho(page: ft.Page):
                         spacing=12,
                     ),
                     padding=ft.padding.symmetric(horizontal=12, vertical=6),
-                    border_radius=20,
+                    border_radius=25,
                     bgcolor=ft.Colors.with_opacity(0.08, ft.Colors.WHITE),
                 ),
             ]

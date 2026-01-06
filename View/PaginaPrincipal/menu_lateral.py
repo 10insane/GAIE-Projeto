@@ -60,10 +60,10 @@ def criar_botao_menu(texto, icone, ativo=False, acao=None):
             spacing=12,
         ),
         padding=ft.padding.symmetric(horizontal=14, vertical=12),
-        border_radius=12,
+        border_radius=15,
         ink=True,
         on_click=acao,
-        bgcolor=cor_primaria if ativo else "transparent",
+        bgcolor=ft.LinearGradient([cor_primaria, cor_secundaria]) if ativo else "transparent",
     )
 
 
@@ -85,9 +85,15 @@ def criar_menu_lateral(page, trocar_vista):
 
     return ft.Container(
         width=260,
-        bgcolor=cor_card,
+        gradient=ft.LinearGradient([cor_card, "#1A2332"]),
         padding=24,
         border=ft.border.all(1, cor_borda),
+        border_radius=20,
+        shadow=ft.BoxShadow(
+            blur_radius=20,
+            color=ft.Colors.with_opacity(0.2, ft.Colors.BLACK),
+            spread_radius=3,
+        ),
         content=ft.Column(
             [
                 ft.Text("Menu Principal", size=18, weight=ft.FontWeight.BOLD, color=cor_texto_claro),

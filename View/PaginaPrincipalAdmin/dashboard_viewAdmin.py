@@ -12,27 +12,27 @@ def criar_dashboard_viewAdmin(page: ft.Page, alunos, escolas, registos):
     # --- Paleta de cores premium ---
     premium_palette = {
         "light": {
-            "cor_primaria": "#6366F1",        # Índigo moderno
-            "cor_secundaria": "#8B5CF6",      # Violeta
+            "cor_primaria": "#10B981",        # Esmeralda
+            "cor_secundaria": "#34D399",      # Verde claro
             "cor_sucesso": "#10B981",         # Esmeralda
             "cor_alerta": "#F59E0B",          # Âmbar
             "cor_perigo": "#EF4444",          # Vermelho
             "cor_info": "#0EA5E9",            # Ciano
             "cor_card": "#FFFFFF",
-            "cor_fundo": "#F8FAFC",           # Azul cinza muito claro
-            "cor_texto_claro": "#1E293B",     # Azul escuro
-            "cor_texto_medio": "#64748B",     # Azul cinza
-            "cor_borda": "#E2E8F0",           # Borda clara
-            "cor_shadow": "#CBD5E1",
-            "gradient_prim": ["#6366F1", "#8B5CF6"],     # Índigo → Violeta
+            "cor_fundo": "#F0FDF4",           # Verde muito claro
+            "cor_texto_claro": "#065F46",     # Verde escuro
+            "cor_texto_medio": "#6B7280",     # Cinza médio
+            "cor_borda": "#D1FAE5",           # Verde claro
+            "cor_shadow": "#A7F3D0",
+            "gradient_prim": ["#10B981", "#34D399"],     # Verde
             "gradient_sec": ["#10B981", "#059669"],      # Verde
             "gradient_alt": ["#0EA5E9", "#0284C7"],      # Azul
             "gradient_warm": ["#F59E0B", "#D97706"],     # Laranja
-            "gradient_bg": ["#F8FAFC", "#F1F5F9"],       # Fundo sutil
+            "gradient_bg": ["#F0FDF4", "#ECFDF5"],       # Fundo verde sutil
         },
         "dark": {
-            "cor_primaria": "#818CF8",        # Índigo claro
-            "cor_secundaria": "#A78BFA",      # Violeta claro
+            "cor_primaria": "#34D399",        # Verde claro
+            "cor_secundaria": "#10B981",      # Esmeralda
             "cor_sucesso": "#34D399",         # Esmeralda claro
             "cor_alerta": "#FBBF24",          # Âmbar claro
             "cor_perigo": "#F87171",          # Vermelho claro
@@ -43,7 +43,7 @@ def criar_dashboard_viewAdmin(page: ft.Page, alunos, escolas, registos):
             "cor_texto_medio": "#94A3B8",     # Cinza azulado
             "cor_borda": "#334155",           # Borda escura
             "cor_shadow": "#1E293B",
-            "gradient_prim": ["#818CF8", "#A78BFA"],
+            "gradient_prim": ["#34D399", "#10B981"],
             "gradient_sec": ["#34D399", "#10B981"],
             "gradient_alt": ["#60A5FA", "#3B82F6"],
             "gradient_warm": ["#FBBF24", "#F59E0B"],

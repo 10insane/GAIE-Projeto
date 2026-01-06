@@ -13,7 +13,7 @@ def PaginaCriarAluno(page: ft.Page):
      page.update()
     
     # === CORES ===
-    cor_primaria = "#1E40AF"
+    cor_primaria = "#3B82F6"
     cor_fundo = "#F8FAFC"
     cor_card = "#FFFFFF"
     cor_texto_escuro = "#0F172A"
@@ -206,6 +206,7 @@ def PaginaCriarAluno(page: ft.Page):
         bgcolor=cor_primaria,
         color=ft.Colors.WHITE,
         on_click=salvar_aluno,
+        elevation=5,
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=12),
             padding=ft.padding.symmetric(horizontal=28, vertical=18),

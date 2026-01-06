@@ -33,7 +33,7 @@ def criar_cabecalho(page):
         gradient=ft.LinearGradient(
             begin=ft.Alignment(-1, -1),
             end=ft.Alignment(1, 1),
-            colors=[cor_roxo_escuro, cor_primaria],
+            colors=[cor_verde_escuro, cor_primaria],
         ),
         shadow=ft.BoxShadow(
             blur_radius=18,

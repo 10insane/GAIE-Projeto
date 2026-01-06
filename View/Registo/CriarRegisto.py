@@ -10,14 +10,14 @@ def PaginaCriarRegisto(page: ft.Page):
     tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
  
     # === CORES (do estilos.py) ===
-    cor_primaria = "#8B5CF6"
-    cor_secundaria = "#A78BFA"
-    cor_roxo_escuro = "#6D28D9"
-    cor_fundo = "#0F0F0F"
-    cor_card = "#121212"
-    cor_texto_claro = "#E5E7EB"
-    cor_texto_medio = "#9CA3AF"
-    cor_texto_escuro = "#D1D5DB"
+    cor_primaria = "#3B82F6"
+    cor_secundaria = "#60A5FA"
+    cor_azul_escuro = "#1E40AF"
+    cor_fundo = "#0F172A"
+    cor_card = "#1E293B"
+    cor_texto_claro = "#F1F5F9"
+    cor_texto_medio = "#94A3B8"
+    cor_texto_escuro = "#CBD5E1"
     cor_borda = "#242424"
     cor_sucesso = "#10B981"
     cor_erro = "#DC2626"
@@ -454,7 +454,7 @@ def PaginaCriarRegisto(page: ft.Page):
                     content=ft.Column(
                         [
                             ft.Row([
-                                ft.Icon(ft.Icons.ARTICLE, color=cor_roxo_escuro, size=18),
+                                ft.Icon(ft.Icons.ARTICLE, color=cor_azul_escuro, size=18),
                                 ft.Text("Detalhes do Processo", size=14, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
                             ], spacing=8),
                             ft.Container(height=5),

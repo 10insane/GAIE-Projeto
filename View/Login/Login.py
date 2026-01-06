@@ -13,13 +13,17 @@ def LoginView(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
     # === CORES ===
-    cor_primaria = "#8B5CF6"
-    cor_card = "#1A1A1A"
-    cor_texto_claro = "#E5E7EB"
-    cor_texto_medio = "#9CA3AF"
-    cor_borda = "#2D2D2D"
+    cor_primaria = "#3B82F6"
+    cor_secundaria = "#60A5FA"
+    cor_azul_escuro = "#1E40AF"
+    cor_fundo = "#0F172A"
+    cor_card = "#1E293B"
+    cor_texto_claro = "#F1F5F9"
+    cor_texto_medio = "#94A3B8"
+    cor_texto_escuro = "#CBD5E1"
+    cor_borda = "#334155"
     cor_erro = "#EF4444"
-    cor_fundo_escuro = "#0F0F0F"
+    cor_fundo_escuro = "#0F172A"
 
     # Limita nº de processo a 10 dígitos
     def limitar_numero_processo(e):
@@ -47,7 +51,7 @@ def LoginView(page: ft.Page):
         hint_style=ft.TextStyle(color=cor_texto_medio, size=13),
         text_style=ft.TextStyle(color=cor_texto_claro, weight=ft.FontWeight.W_500, size=15),
         label_style=ft.TextStyle(color=cor_texto_medio),
-        border_radius=12,
+        border_radius=15,
         height=60,
         bgcolor=cor_card,
         filled=True,
@@ -68,7 +72,7 @@ def LoginView(page: ft.Page):
         hint_style=ft.TextStyle(color=cor_texto_medio, size=13),
         text_style=ft.TextStyle(color=cor_texto_claro, weight=ft.FontWeight.W_500, size=15),
         label_style=ft.TextStyle(color=cor_texto_medio),
-        border_radius=12,
+        border_radius=15,
         height=60,
         bgcolor=cor_card,
         filled=True,
@@ -85,7 +89,7 @@ def LoginView(page: ft.Page):
             spacing=10,
         ),
         padding=12,
-        border_radius=10,
+        border_radius=15,
         bgcolor=ft.Colors.with_opacity(0.1, cor_erro),
         border=ft.border.all(1, ft.Colors.with_opacity(0.3, cor_erro)),
         visible=False,
@@ -191,8 +195,13 @@ def LoginView(page: ft.Page):
         ),
         width=380,
         height=56,
-        bgcolor=cor_primaria,
-        border_radius=12,
+        gradient=ft.LinearGradient([cor_primaria, cor_secundaria]),
+        border_radius=15,
+        shadow=ft.BoxShadow(
+            blur_radius=10,
+            color=ft.Colors.with_opacity(0.3, ft.Colors.BLACK),
+            spread_radius=2,
+        ),
         ink=True,
         on_click=autenticar,
     )
@@ -220,8 +229,8 @@ def LoginView(page: ft.Page):
         width=480,
         height=780,
         padding=50,
-        bgcolor=cor_card,
-        border_radius=30,
+        gradient=ft.LinearGradient([cor_card, "#1A2332"]),
+        border_radius=35,
         border=ft.border.all(1, cor_borda),
         shadow=ft.BoxShadow(
             blur_radius=40,
@@ -282,11 +291,11 @@ def LoginView(page: ft.Page):
             begin=ft.Alignment(-1, -1),
             end=ft.Alignment(1, 1),
             colors=[
-                "#0F0F0F",
-                "#1a0a2e",
-                "#2d1b4e",
-                "#1a0a2e",
-                "#0F0F0F",
+                "#0F172A",
+                "#1E293B",
+                "#334155",
+                "#1E293B",
+                "#0F172A",
             ],
         ),
         content=layoutPrincipal,

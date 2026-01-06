@@ -23,12 +23,12 @@ def MaisDetalhesRegistos(page: ft.Page):
         )
 
     # ===== Cores =====
-    cor_fundo = "#0F0F0F"
-    cor_card = "#1A1A1A"
-    cor_texto_claro = "#E5E7EB"
-    cor_texto_medio = "#A0A0A0"
-    cor_borda = "#2A2A2A"
-    cor_primaria = "#8B5CF6"
+    cor_fundo = "#0F172A"
+    cor_card = "#1E293B"
+    cor_texto_claro = "#F1F5F9"
+    cor_texto_medio = "#94A3B8"
+    cor_borda = "#334155"
+    cor_primaria = "#3B82F6"
     cor_editar = "#F59E0B"
     cor_voltar = "#F50B0B"
 
