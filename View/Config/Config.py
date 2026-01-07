@@ -113,22 +113,6 @@ def PainelAdmin(page: ft.Page):
                 ft.Text("Ferramentas exclusivas para gestão do sistema", size=14, color=cor_texto_claro),
                 ft.Container(height=30),
 
-                # === Botão Criar Técnico ===
-                ft.ElevatedButton(
-                    content=ft.Row(
-                        [
-                            ft.Icon(ft.Icons.PERSON_ADD, size=22),
-                            ft.Text("Criar Técnico", size=16, weight=ft.FontWeight.W_600),
-                        ],
-                        spacing=10,
-                    ),
-                    bgcolor=cor_primaria,
-                    color=ft.Colors.WHITE,
-                    height=50,
-                    width=220,
-                    on_click=lambda e: page.go("/criar-tecnico"),
-                ),
-
                 # === Botão para entrar no Painel Geral do Admin ===
                 ft.ElevatedButton(
                     content=ft.Row(

@@ -1,200 +1,189 @@
-# Views/PaginaPrincipal/dashboard_view.py
-
 import flet as ft
 from .estilos import (
-    cor_primaria, cor_secundaria, cor_card, cor_texto_claro,
-    cor_texto_medio, cor_borda
+    cor_primaria,
+    cor_secundaria,
+    cor_card,
+    cor_texto_claro,
+    cor_texto_medio,
+    cor_borda,
 )
 
-def criar_card_grande(titulo, valor, icone, cor, subtitulo):
-    """Card principal com animação hover"""
+
+def criar_card_grande(titulo, valor, icone, subtitulo):
     return ft.Container(
         content=ft.Column(
             [
-                # Ícone com fundo colorido
+                # Ícone
                 ft.Container(
-                    content=ft.Icon(icone, color="#FFFFFF", size=36),
-                    gradient=ft.LinearGradient([cor, cor_secundaria]),
+                    content=ft.Icon(icone, color="#FFFFFF", size=34),
+                    gradient=ft.LinearGradient(
+                        colors=[cor_primaria, cor_secundaria],
+                        begin=ft.alignment.top_center,
+                        end=ft.alignment.bottom_center,
+                    ),
                     border_radius=16,
                     padding=16,
-                    animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
                 ),
-                ft.Container(height=8),
-                # Valor principal
+
+                ft.Container(height=12),
+
+                # Valor
                 ft.Text(
-                    str(valor), 
-                    size=52, 
-                    weight=ft.FontWeight.BOLD, 
-                    color=cor,
-                    animate_opacity=300,
+                    str(valor),
+                    size=48,
+                    weight=ft.FontWeight.BOLD,
+                    color=cor_texto_claro,
                 ),
+
                 # Título
                 ft.Text(
-                    titulo, 
-                    size=16, 
-                    weight=ft.FontWeight.W_600, 
+                    titulo,
+                    size=16,
+                    weight=ft.FontWeight.W_600,
                     color=cor_texto_claro,
+                ),
+
+                # Subtítulo
+                ft.Text(
+                    subtitulo,
+                    size=13,
+                    color=cor_texto_medio,
                     text_align=ft.TextAlign.CENTER,
                 ),
-                # Subtítulo
-                ft.Container(
-                    content=ft.Text(
-                        subtitulo, 
-                        size=13, 
-                        color=cor_texto_medio,
-                        text_align=ft.TextAlign.CENTER,
-                    ),
-                    padding=ft.padding.only(top=2),
-                ),
             ],
-            spacing=6,
+            spacing=4,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         ),
-        gradient=ft.LinearGradient([cor_card, ft.Colors.with_opacity(0.8, cor_card)]),
-        padding=32,
-        border_radius=18,
-        shadow=ft.BoxShadow(
-            blur_radius=24, 
-            spread_radius=1,
-            color=ft.Colors.with_opacity(0.12, cor),
-            offset=ft.Offset(0, 6),
+        gradient=ft.LinearGradient(
+            colors=[cor_card, "#1B2A4A"],
+            begin=ft.alignment.top_center,
+            end=ft.alignment.bottom_center,
         ),
-        border=ft.border.all(1.5, ft.Colors.with_opacity(0.1, cor)),
+        padding=30,
+        border_radius=20,
+        border=ft.border.all(1, cor_borda),
+        shadow=ft.BoxShadow(
+            blur_radius=20,
+            color=ft.Colors.with_opacity(0.35, "#000000"),
+            offset=ft.Offset(0, 10),
+        ),
         expand=True,
-        animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
     )
 
 
-def criar_card_estado(titulo, valor, icone, cor):
-    """Card de estado compacto e moderno"""
+def criar_card_estado(titulo, valor, icone):
     return ft.Container(
         content=ft.Row(
             [
-                # Ícone à esquerda
                 ft.Container(
-                    content=ft.Icon(icone, color="#FFFFFF", size=26),
-                    gradient=ft.LinearGradient([cor, cor_secundaria]),
+                    content=ft.Icon(icone, color="#FFFFFF", size=24),
+                    gradient=ft.LinearGradient(
+                        colors=[cor_primaria, cor_secundaria],
+                        begin=ft.alignment.top_center,
+                        end=ft.alignment.bottom_center,
+                    ),
                     border_radius=14,
                     padding=14,
                 ),
-                # Conteúdo à direita
+
                 ft.Column(
                     [
                         ft.Text(
-                            str(valor), 
-                            size=36, 
-                            weight=ft.FontWeight.BOLD, 
+                            str(valor),
+                            size=30,
+                            weight=ft.FontWeight.BOLD,
                             color=cor_texto_claro,
                         ),
                         ft.Text(
-                            titulo, 
-                            size=14, 
-                            color=cor_texto_medio, 
-                            weight=ft.FontWeight.W_500,
+                            titulo,
+                            size=14,
+                            color=cor_texto_medio,
                         ),
                     ],
-                    spacing=0,
-                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=2,
                 ),
             ],
             spacing=18,
-            alignment=ft.MainAxisAlignment.START,
         ),
-        gradient=ft.LinearGradient([cor_card, ft.Colors.with_opacity(0.8, cor_card)]),
+        gradient=ft.LinearGradient(
+            colors=[cor_card, "#1B2A4A"],
+            begin=ft.alignment.top_center,
+            end=ft.alignment.bottom_center,
+        ),
         padding=22,
-        border_radius=16,
-        border=ft.border.all(1.5, ft.Colors.with_opacity(0.08, cor)),
+        border_radius=18,
+        border=ft.border.all(1, cor_borda),
         shadow=ft.BoxShadow(
-            blur_radius=18, 
-            spread_radius=0,
-            color=ft.Colors.with_opacity(0.1, cor),
-            offset=ft.Offset(0, 4),
+            blur_radius=18,
+            color=ft.Colors.with_opacity(0.3, "#000000"),
+            offset=ft.Offset(0, 8),
         ),
         expand=True,
-        animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
     )
 
 
 def criar_dashboard_view(alunos, escolas, registos):
-    """Dashboard principal com layout otimizado"""
     return ft.Column(
         [
-            # ====== Cabeçalho ======
-            ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Text(
-                            "Dashboard", 
-                            size=28, 
-                            weight=ft.FontWeight.BOLD, 
-                            color=cor_texto_claro,
-                        ),
-                        ft.Text(
-                            "Visão geral do sistema", 
-                            size=14, 
-                            color=cor_texto_medio,
-                        ),
-                    ],
-                    spacing=4,
-                ),
-                padding=ft.padding.only(bottom=24),
+            # Cabeçalho
+            ft.Text(
+                "Dashboard",
+                size=28,
+                weight=ft.FontWeight.BOLD,
+                color=cor_texto_claro,
+            ),
+            ft.Text(
+                "Visão geral do sistema",
+                size=14,
+                color=cor_texto_medio,
             ),
 
-            # ====== Cards Principais ======
+            ft.Container(height=28),
+
+            # Cards principais
             ft.Row(
                 [
                     criar_card_grande(
-                        "Alunos", 
-                        len(alunos), 
+                        "Alunos",
+                        len(alunos),
                         ft.Icons.PEOPLE_ALT_ROUNDED,
-                        cor_primaria, 
-                        "Registados no sistema"
+                        "Registados no sistema",
                     ),
                     criar_card_grande(
-                        "Registos", 
-                        len(registos), 
+                        "Registos",
+                        len(registos),
                         ft.Icons.ASSIGNMENT_ROUNDED,
-                        cor_secundaria, 
-                        "Processos totais"
+                        "Processos totais",
                     ),
                     criar_card_grande(
-                        "Escolas", 
-                        len(escolas), 
+                        "Escolas",
+                        len(escolas),
                         ft.Icons.SCHOOL_ROUNDED,
-                        "#10B981", 
-                        "Instituições registadas"
+                        "Instituições registadas",
                     ),
                 ],
                 spacing=20,
             ),
 
-            # ====== Separador ======
-            ft.Container(height=32),
-            ft.Divider(height=1, color=cor_borda),
+            ft.Container(height=36),
+            ft.Divider(color=cor_borda),
             ft.Container(height=24),
 
-            # ====== Seção Estados ======
-            ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Text(
-                            "Estados dos Processos", 
-                            size=22, 
-                            weight=ft.FontWeight.BOLD, 
-                            color=cor_texto_claro,
-                        ),
-                        ft.Text(
-                            "Distribuição atual dos processos por estado", 
-                            size=13, 
-                            color=cor_texto_medio,
-                        ),
-                    ],
-                    spacing=4,
-                ),
-                padding=ft.padding.only(bottom=20),
+            # Estados
+            ft.Text(
+                "Estados dos Processos",
+                size=22,
+                weight=ft.FontWeight.BOLD,
+                color=cor_texto_claro,
+            ),
+            ft.Text(
+                "Distribuição atual dos processos",
+                size=13,
+                color=cor_texto_medio,
             ),
 
-            # ====== Grid de Estados (3 colunas x 2 linhas) ======
+            ft.Container(height=20),
+
             ft.Column(
                 [
                     ft.Row(
@@ -203,19 +192,16 @@ def criar_dashboard_view(alunos, escolas, registos):
                                 "A Aguardar",
                                 len([r for r in registos if r.get("idEstado") == 1]),
                                 ft.Icons.PENDING_ACTIONS,
-                                "#F59E0B"
                             ),
                             criar_card_estado(
                                 "Em Avaliação",
                                 len([r for r in registos if r.get("idEstado") == 2]),
                                 ft.Icons.ASSESSMENT,
-                                "#3B82F6"
                             ),
                             criar_card_estado(
                                 "Em Intervenção",
                                 len([r for r in registos if r.get("idEstado") == 3]),
                                 ft.Icons.PSYCHOLOGY,
-                                cor_primaria
                             ),
                         ],
                         spacing=16,
@@ -226,19 +212,16 @@ def criar_dashboard_view(alunos, escolas, registos):
                                 "Pendente",
                                 len([r for r in registos if r.get("idEstado") == 4]),
                                 ft.Icons.SCHEDULE,
-                                "#EAB308"
                             ),
                             criar_card_estado(
                                 "Arquivado",
                                 len([r for r in registos if r.get("idEstado") == 5]),
                                 ft.Icons.ARCHIVE,
-                                "#6B7280"
                             ),
                             criar_card_estado(
                                 "Em Vigilância",
                                 len([r for r in registos if r.get("idEstado") == 6]),
                                 ft.Icons.VISIBILITY,
-                                "#10B981"
                             ),
                         ],
                         spacing=16,
@@ -247,10 +230,8 @@ def criar_dashboard_view(alunos, escolas, registos):
                 spacing=16,
             ),
 
-            # ====== Espaço final para scroll ======
-            ft.Container(height=24),
+            ft.Container(height=32),
         ],
-        scroll=ft.ScrollMode.AUTO,
-        spacing=0,
         expand=True,
+        scroll=ft.ScrollMode.AUTO,
     )

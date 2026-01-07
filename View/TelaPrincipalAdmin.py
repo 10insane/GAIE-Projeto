@@ -32,7 +32,7 @@ def PaginaPrincipalAdmin(page: ft.Page):
         elif vista == "escolas":
             conteudo_principal.content = criar_escolas_view(escolas, page)
         elif vista == "tecnicos":
-            conteudo_principal.content = criar_tecnicos_view(tecnicos)
+            conteudo_principal.content = criar_tecnicos_view(tecnicos, page)
         elif vista == "registos":
             conteudo_principal.content = criar_registos_view(registos, page)
 

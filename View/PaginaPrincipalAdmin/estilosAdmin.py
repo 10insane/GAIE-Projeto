@@ -1,10 +1,18 @@
-cor_primaria = "#10B981"        # Verde emerald
-cor_secundaria = "#34D399"      # Verde claro
-cor_verde_escuro = "#047857"     # Verde escuro
-cor_fundo = "#F0FDF4"           # Verde muito claro
-cor_card = "#FFFFFF"            # Branco puro para cards
-cor_texto_branco = "#FFFFFF"    # Branco para texto em fundo escuro
-cor_texto_claro = "#065F46"     # Verde muito escuro
-cor_texto_medio = "#6B7280"     # Cinza médio
-cor_borda = "#D1FAE5"           # Verde claro para bordas
- 
+# Views/PaginaPrincipal/estilosAdmin.py
+
+# Identidade ADMIN (azul / índigo)
+cor_primaria = "#60A5FA"        # azul claro moderno
+cor_secundaria = "#818CF8"      # índigo suave
+cor_azul_escuro = "#1E3A8A"     # azul profundo (detalhes)
+
+# Fundo
+cor_fundo = "#0B1020"           # dark azulado
+cor_card = "#131A33"            # card azul escuro
+
+# Texto
+cor_texto_branco = "#EEF2FF"    # branco azulado
+cor_texto_claro = "#E0E7FF"     # índigo muito claro
+cor_texto_medio = "#A5B4FC"     # índigo suave
+
+# Bordas
+cor_borda = "#1F2A55"           # borda azulada
