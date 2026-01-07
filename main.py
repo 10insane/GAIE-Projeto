@@ -61,7 +61,7 @@ def main(page: ft.Page):
          "/TecnicoPerfil",
          controls=[
             ft.Container(
-                content=PerfilTecnico(tecnico),
+                content=PerfilTecnico(tecnico, page),
                 alignment=ft.alignment.center,
                 expand=True,
             )

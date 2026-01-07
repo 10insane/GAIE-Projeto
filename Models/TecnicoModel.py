@@ -32,13 +32,13 @@ def listarTecnico():
         cursor.close()
         conn.close()
 
-def atualizarTecnico(nProcTecnico, novoNome, novaPassword):
+def atualizarTecnico(nProcTecnico, novoNome):
     conn = bd_connection()
     cursor = conn.cursor()
     try:
         cursor.execute(
             "UPDATE tecnicos SET nomeTecnico = %s WHERE nProcTecnico = %s",
-            (novoNome, nProcTecnico, novaPassword)
+            (novoNome, nProcTecnico)  # 2 valores para 2 %s
         )
         conn.commit()
         return cursor.rowcount > 0
@@ -48,6 +48,7 @@ def atualizarTecnico(nProcTecnico, novoNome, novaPassword):
     finally:
         cursor.close()
         conn.close()
+
 
 def deletarTecnico(nProcTecnico):
     conn = bd_connection()
@@ -62,6 +63,22 @@ def deletarTecnico(nProcTecnico):
     except mysql.connector.Error as error:
         print("Erro ao deletar tecnico:", error)
         return False
+    finally:
+        cursor.close()
+        conn.close()
+
+def buscarTecnicoPorProc(nProcTecnico):
+    conn = bd_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute(
+            "SELECT * FROM tecnicos WHERE nProcTecnico = %s",
+            (nProcTecnico,)
+        )
+        return cursor.fetchone()
+    except mysql.connector.Error as error:
+        print("Erro ao buscar tecnico:", error)
+        return None
     finally:
         cursor.close()
         conn.close()
