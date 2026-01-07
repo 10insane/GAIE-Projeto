@@ -10,15 +10,14 @@ def PaginaEditarRegisto(page: ft.Page):
     tecnico_nome = page.session.get("tecnico_nome") or "Técnico"
 
     # === CORES (do estilos.py) ===
-    cor_primaria = "#3B82F6"
-    cor_secundaria = "#60A5FA"
-    cor_azul_escuro = "#1E40AF"
-    cor_fundo = "#0F0F0F"
-    cor_card = "#121212"
-    cor_texto_claro = "#E5E7EB"
-    cor_texto_medio = "#9CA3AF"
-    cor_texto_escuro = "#D1D5DB"
-    cor_borda = "#242424"
+    cor_primaria = "#6EA8FE"        # azul suave
+    cor_secundaria = "#9B8CFF"      # lilás leve
+    cor_fundo = "#0E1628"           # dark azulado
+    cor_card = "#16213E"            # card com tom azul
+    cor_texto_claro = "#E6EBFF"
+    cor_texto_medio = "#A5B4D6"
+    cor_texto_escuro = "#8A94B8"
+    cor_borda = "#23325C"
     cor_sucesso = "#10B981"
     cor_erro = "#DC2626"
 
@@ -421,7 +420,7 @@ def PaginaEditarRegisto(page: ft.Page):
                         ft.Column(
                             [
                                 ft.Text(
-                                    "Editar Registo",
+                                    "Sistema SPO - Editar Registo",
                                     size=24,
                                     weight=ft.FontWeight.BOLD,
                                     color=cor_texto_claro,
@@ -493,7 +492,7 @@ def PaginaEditarRegisto(page: ft.Page):
                     content=ft.Column(
                         [
                             ft.Row([
-                                ft.Icon(ft.Icons.ARTICLE, color=cor_azul_escuro, size=18),
+                                ft.Icon(ft.Icons.ARTICLE, color=cor_primaria, size=18),
                                 ft.Text("Detalhes do Processo", size=14, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
                             ], spacing=8),
                             ft.Container(height=5),
@@ -542,12 +541,16 @@ def PaginaEditarRegisto(page: ft.Page):
                     ft.Container(
                         content=formulario,
                         alignment=ft.alignment.center,
+                        expand=True,
                     ),
                 ],
                 spacing=20,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                scroll=ft.ScrollMode.AUTO,
             )
         ],
         bgcolor=cor_fundo,
         padding=20,
     )
+
+
