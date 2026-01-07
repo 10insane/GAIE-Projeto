@@ -1,6 +1,7 @@
 import flet as ft
 from .estilos import *
 import os
+from assets import *
 
 TOKEN_FILE = "token.json"  
 
@@ -38,11 +39,16 @@ def criar_cabecalho(page: ft.Page):
                 ft.Row(
                     [
                         ft.Container(
-                            content=ft.Icon(ft.Icons.SCHOOL_ROUNDED, color=ft.Colors.WHITE, size=30),
-                            bgcolor=ft.Colors.with_opacity(0.18, ft.Colors.WHITE),
-                            padding=10,
-                            border_radius=15,
-                        ),
+    content=ft.Image(
+        src="icone-Gaie.png",   # nome do ficheiro dentro da pasta assets
+        width=70,
+        height=60,
+        fit=ft.ImageFit.CONTAIN,
+    ),
+  bgcolor=ft.Colors.with_opacity(0.18, ft.Colors.WHITE),
+  padding=8,  # Adiciona padding interno
+  border_radius=15,
+),
                         ft.Column(
                             [
                                 ft.Text("GAIE", size=22, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
