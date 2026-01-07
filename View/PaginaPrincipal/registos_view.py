@@ -168,7 +168,7 @@ def criar_registos_view(registos, page):
                     ft.Text(
                         "Comece por adicionar o primeiro registo",
                         size=14,
-                        color=cor_texto_medio,
+                        color=cor_secundaria,
                         text_align=ft.TextAlign.CENTER,
                     ),
                    

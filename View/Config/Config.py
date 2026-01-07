@@ -128,6 +128,22 @@ def PainelAdmin(page: ft.Page):
                     width=250,
                     on_click=lambda e: page.go("/TelaPrincipalAdmin"),
                 ),
+
+                # === Botão para entrar no Painel Técnico Normal ===
+                ft.ElevatedButton(
+                    content=ft.Row(
+                        [
+                            ft.Icon(ft.Icons.ENGINEERING_ROUNDED, size=22),
+                            ft.Text("Painel Técnico Normal", size=16, weight=ft.FontWeight.W_600),
+                        ],
+                        spacing=10,
+                    ),
+                    bgcolor="#10B981",  # Verde para diferenciar
+                    color=ft.Colors.WHITE,
+                    height=50,
+                    width=250,
+                    on_click=lambda e: page.go("/pagina-principal"),
+                ),
             ],
             spacing=20,
         ),

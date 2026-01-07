@@ -20,72 +20,73 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.DARK
     page.session.clear()
 
-    def route_change(e: ft.RouteChangeEvent):
-        page.views.clear()
+    protected_routes = [
+        "/pagina-principal", "/criar-tecnico", "/CriarAluno", "/criar-escola", "/criar-registo",
+        "/EditarAluno", "/EditarEscola", "/EditarRegisto", "/registos", "/Config", "/TelaPrincipalAdmin",
+        "/maisDetalhesRegisto", "/maisDetalhesAlunos", "/TecnicoPerfil"
+    ]
 
-        
-        route = page.route
-
+    def get_view(route, page):
         if route == "/login":
-            view = LoginView(page)
+            return LoginView(page)
         elif route == "/pagina-principal":
-            view = PaginaPrincipal(page)
+            return PaginaPrincipal(page)
         elif route == "/criar-tecnico":
-            view = CreateTecnico(page)
+            return CreateTecnico(page)
         elif route == "/CriarAluno": 
-            view = PaginaCriarAluno(page) 
+            return PaginaCriarAluno(page) 
         elif route == "/criar-escola": 
-            view = CriarEscola(page)  
+            return CriarEscola(page)  
         elif route=="/criar-registo":
-            view= PaginaCriarRegisto(page)
+            return PaginaCriarRegisto(page)
         elif route=="/EditarAluno":
-            view= PaginaEditarAluno(page)
+            return PaginaEditarAluno(page)
         elif route=="/EditarEscola":
-            view= PaginaEditarEscola(page)
+            return PaginaEditarEscola(page)
         elif route=="/EditarRegisto":
-            view= PaginaEditarRegisto(page)
+            return PaginaEditarRegisto(page)
         elif route=="/registos":
-            view= RegistosAdminPage(page)
+            return RegistosAdminPage(page)
         elif route=="/Config":
-            view= PainelAdmin(page)
+            return PainelAdmin(page)
         elif route=="/TelaPrincipalAdmin":
-            view= PaginaPrincipalAdmin(page)
+            return PaginaPrincipalAdmin(page)
         elif route=="/maisDetalhesRegisto":
-            view= MaisDetalhesRegistos(page)
+            return MaisDetalhesRegistos(page)
         elif route =="/maisDetalhesAlunos":
-            view= DetalhesAluno(page)
+            return DetalhesAluno(page)
         elif route == "/TecnicoPerfil":
-          tecnico = page.session.get("tecnico")
-
-          view = ft.View(
-         "/TecnicoPerfil",
-         controls=[
-            ft.Container(
-                content=PerfilTecnico(tecnico, page),
-                alignment=ft.alignment.center,
-                expand=True,
+            tecnico = page.session.get("tecnico")
+            return ft.View(
+                "/TecnicoPerfil",
+                controls=[
+                    ft.Container(
+                        content=PerfilTecnico(tecnico, page),
+                        alignment=ft.alignment.center,
+                        expand=True,
+                    )
+                ]
             )
-        ]
-    )
-
         else:
-            view = LoginView(page)  
+            return LoginView(page)
 
+    def navigate(route):
+        if route in protected_routes and not page.session.get("usuario_tipo"):
+            route = "/login"
+        view = get_view(route, page)
+        page.views.clear()
         page.views.append(view)
         page.update()
 
-    def view_pop(e: ft.ViewPopEvent):
-        if len(page.views) > 1:
-            page.views.pop()
-            top_view = page.views[-1]
-            page.go(top_view.route)
-        else:
-            page.go("/login")
+    # Override page.go to use navigate
+    page.go = navigate
 
-    page.on_route_change = route_change
-    page.on_view_pop = view_pop
+    # Disable route change and view pop to prevent URL changes
+    page.on_route_change = None
+    page.on_view_pop = None
 
-    page.go("/login")
+    # Start with login
+    navigate("/login")
 
 
-ft.app(target=main, view=ft.WEB_BROWSER)
+ft.app(target=main, view=ft.WEB_BROWSER, route_url_strategy="hash")
