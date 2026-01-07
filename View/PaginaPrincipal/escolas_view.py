@@ -24,7 +24,7 @@ def criar_card_escola(escola, page):
                 # Ícone da escola
                 ft.Container(
                     content=ft.Icon(ft.Icons.SCHOOL_ROUNDED, color="#FFFFFF", size=18),
-                    bgcolor=cor_primaria,
+                    bgcolor="#10B981",
                     width=36,
                     height=36,
                     border_radius=18,
@@ -53,7 +53,7 @@ def criar_card_escola(escola, page):
                 # Ícone de navegação
                 ft.Icon(
                     ft.Icons.ARROW_FORWARD_IOS_ROUNDED,
-                    color=cor_primaria,
+                    color="#10B981",
                     size=12,
                 ),
             ],
@@ -61,6 +61,12 @@ def criar_card_escola(escola, page):
         ),
         bgcolor=cor_card,
         tooltip=escola.get("NomeEscola", ""),
+           
+       on_click=lambda e, esc=escola: (
+          page.session.set("escola_detalhes_id", esc["idEscola"]),
+          page.go("/maisDetalhesEscolas")
+         ),
+        
         padding=10,
         border_radius=10,
         border=ft.border.all(1, cor_borda),
@@ -255,13 +261,13 @@ def criar_escolas_view(escolas, page):
                             content=ft.Icon(ft.Icons.SCHOOL_ROUNDED, size=24, color=ft.Colors.WHITE),
                             width=48,
                             height=48,
-                            bgcolor=cor_primaria,
+                            bgcolor="#10B981",
                             border_radius=14,
                             alignment=ft.alignment.center,
                             shadow=ft.BoxShadow(
                                 spread_radius=0,
                                 blur_radius=10,
-                                color=ft.Colors.with_opacity(0.4, cor_primaria),
+                                color=ft.Colors.with_opacity(0.4, "#10B981"),
                                 offset=ft.Offset(0, 3),
                             ),
                         ),
@@ -289,7 +295,7 @@ def criar_escolas_view(escolas, page):
                                         str(len(escolas)),
                                         size=20,
                                         weight=ft.FontWeight.W_700,
-                                        color=cor_primaria,
+                                        color="#10B981",
                                     ),
                                     ft.Text(
                                         "Total",
@@ -300,10 +306,10 @@ def criar_escolas_view(escolas, page):
                                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                                 spacing=0,
                             ),
-                            bgcolor=ft.Colors.with_opacity(0.12, cor_primaria),
+                            bgcolor=ft.Colors.with_opacity(0.12, "#10B981"),
                             padding=ft.padding.symmetric(horizontal=16, vertical=8),
                             border_radius=10,
-                            border=ft.border.all(1, ft.Colors.with_opacity(0.2, cor_primaria)),
+                            border=ft.border.all(1, ft.Colors.with_opacity(0.2, "#10B981")),
                         ),
                     ],
                     alignment=ft.MainAxisAlignment.START,
@@ -321,7 +327,7 @@ def criar_escolas_view(escolas, page):
                                     ft.Icon(
                                         ft.Icons.SEARCH_ROUNDED,
                                         size=16,
-                                        color=cor_primaria,
+                                        color="#10B981",
                                     ),
                                     ft.Text(
                                         "Pesquisa",
@@ -344,7 +350,7 @@ def criar_escolas_view(escolas, page):
                                 filled=True,
                                 bgcolor=cor_fundo,
                                 border_color=cor_borda,
-                                focused_border_color=cor_primaria,
+                                focused_border_color="#10B981",
                                 hint_style=ft.TextStyle(color=cor_texto_medio, size=12),
                                 color=cor_texto_claro,
                                 text_size=12,
@@ -400,7 +406,7 @@ def criar_escolas_view(escolas, page):
         content_padding=ft.padding.all(8),
         border_radius=10,
         border_color=cor_borda,
-        focused_border_color=cor_primaria,
+        focused_border_color="#10B981",
         color=cor_texto_claro,
         bgcolor=cor_fundo,
         on_submit=on_enter_pagina,
@@ -416,7 +422,7 @@ def criar_escolas_view(escolas, page):
             shape=ft.RoundedRectangleBorder(radius=10),
             elevation=0,
             padding=ft.padding.symmetric(horizontal=20, vertical=12),
-            overlay_color=ft.Colors.with_opacity(0.1, cor_primaria),
+            overlay_color=ft.Colors.with_opacity(0.1, "#10B981"),
         ),
         icon=ft.Icons.ARROW_BACK_ROUNDED,
     )
@@ -425,7 +431,7 @@ def criar_escolas_view(escolas, page):
         "Seguinte",
         on_click=prox_page,
         style=ft.ButtonStyle(
-            bgcolor=cor_primaria,
+            bgcolor="#10B981",
             color=ft.Colors.WHITE,
             shape=ft.RoundedRectangleBorder(radius=10),
             elevation=2,
@@ -453,7 +459,7 @@ def criar_escolas_view(escolas, page):
                             ft.IconButton(
                                 icon=ft.Icons.ARROW_FORWARD_ROUNDED,
                                 icon_color=ft.Colors.WHITE,
-                                bgcolor=cor_primaria,
+                                bgcolor="#10B981",
                                 on_click=ir_para_pagina,
                                 tooltip="Ir para página",
                                 icon_size=18,
@@ -463,7 +469,7 @@ def criar_escolas_view(escolas, page):
                         vertical_alignment=ft.CrossAxisAlignment.CENTER,
                         spacing=12,
                     ),
-                    bgcolor=ft.Colors.with_opacity(0.08, cor_primaria),
+                    bgcolor=ft.Colors.with_opacity(0.08, "#10B981"),
                     padding=ft.padding.symmetric(horizontal=20, vertical=8),
                     border_radius=12,
                 ),

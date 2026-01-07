@@ -14,6 +14,7 @@ from View.TelaPrincipalAdmin import PaginaPrincipalAdmin
 from View.PaginaPrincipal.maisDetalhesRegisto import MaisDetalhesRegistos
 from View.PaginaPrincipal.maisDetalhesAlunos import DetalhesAluno
 from View.PaginaPrincipal.TecnicoPerfil import PerfilTecnico
+from View.PaginaPrincipal.maisDetalhesEscolas import DetalhesEscola
 
 def main(page: ft.Page):
     page.title = "GAIE - Psicologia"
@@ -23,7 +24,7 @@ def main(page: ft.Page):
     protected_routes = [
         "/pagina-principal", "/criar-tecnico", "/CriarAluno", "/criar-escola", "/criar-registo",
         "/EditarAluno", "/EditarEscola", "/EditarRegisto", "/registos", "/Config", "/TelaPrincipalAdmin",
-        "/maisDetalhesRegisto", "/maisDetalhesAlunos", "/TecnicoPerfil"
+        "/maisDetalhesRegisto", "/maisDetalhesAlunos", "/TecnicoPerfil", "/DetalhesEscola"
     ]
 
     def get_view(route, page):
@@ -55,6 +56,8 @@ def main(page: ft.Page):
             return MaisDetalhesRegistos(page)
         elif route =="/maisDetalhesAlunos":
             return DetalhesAluno(page)
+        elif route =="/maisDetalhesEscolas":
+            return DetalhesEscola(page)
         elif route == "/TecnicoPerfil":
             tecnico = page.session.get("tecnico")
             return ft.View(
