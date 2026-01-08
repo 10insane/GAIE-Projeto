@@ -18,6 +18,13 @@ def DetalhesEscola(page: ft.Page):
     # 👉 BUSCAR TOTAL DE ALUNOS
     total_alunos = contarAlunosPorEscola(escola_id)
 
+    def voltar(e):
+        usuario_tipo = page.session.get("usuario_tipo")
+        if usuario_tipo == "admin":
+            page.go("/TelaPrincipalAdmin")
+        else:
+            page.go("/pagina-principal")
+
     # ===== CORES =====
     cor_fundo = "#0F172A"
     cor_card = "#1E293B"
@@ -57,7 +64,7 @@ def DetalhesEscola(page: ft.Page):
                     icon=ft.Icons.ARROW_BACK,
                     icon_color=cor_primaria,
                     tooltip="Voltar",
-                    on_click=lambda e: page.go("/pagina-principal"),
+                    on_click=voltar,
                 ),
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -125,7 +132,7 @@ def DetalhesEscola(page: ft.Page):
         spacing=12,
         run_spacing=12,
     )
-
+    
     # ===== BOTÃO =====
     btn_voltar = ft.ElevatedButton(
         text="Voltar",
@@ -136,7 +143,7 @@ def DetalhesEscola(page: ft.Page):
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=10),
         ),
-        on_click=lambda e: page.go("/pagina-principal"),
+        on_click=voltar,
     )
 
     # ===== CARD PRINCIPAL =====

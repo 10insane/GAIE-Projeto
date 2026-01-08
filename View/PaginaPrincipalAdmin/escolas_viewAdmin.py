@@ -15,7 +15,7 @@ CARD_SIMPLES = True
 # CARDS
 # ======================
 
-def card_escola_simples(e, abrir_detalhe):
+def card_escola_simples(e, page):
     """Card moderno e leve para escolas"""
     return ft.Container(
         content=ft.Row(
@@ -63,7 +63,10 @@ def card_escola_simples(e, abrir_detalhe):
         bgcolor=cor_card,
         padding=16,
         border_radius=12,
-        on_click=lambda ev: abrir_detalhe(e),
+        on_click=lambda e, esc=e: (
+          page.session.set("escola_detalhes_id", e["idEscola"]),
+          page.go("/maisDetalhesEscolas")
+         ),
         shadow=ft.BoxShadow(
             blur_radius=14,
             color=ft.Colors.with_opacity(0.10, ft.Colors.BLACK),

@@ -15,7 +15,7 @@ CARD_SIMPLES = True
 # CARDS
 # ======================
 
-def card_aluno_simples(a, abrir_detalhe):
+def card_aluno_simples(a,  page):
     """Card moderno e leve com hover"""
     return ft.Container(
         content=ft.Row(
@@ -88,9 +88,12 @@ def card_aluno_simples(a, abrir_detalhe):
             alignment=ft.MainAxisAlignment.START,
         ),
         padding=16,
+         on_click=lambda e : (
+            page.session.set("aluno_detalhes_id", a["nProcessoAluno"]),
+            page.go("/maisDetalhesAlunos")
+        ),
         border_radius=12,
         bgcolor=cor_card,
-        on_click=lambda e: abrir_detalhe(a),
         shadow=ft.BoxShadow(
             blur_radius=14,
             color=ft.Colors.with_opacity(0.12, ft.Colors.BLACK),
@@ -197,19 +200,6 @@ def criar_alunos_view(alunos, page):
     estado = {"pagina": 0, "total": len(alunos), "filtro": ""}
     lista = ft.ListView(expand=True, spacing=12, padding=10)
 
-    def abrir_detalhe(a):
-        page.dialog = ft.AlertDialog(
-            modal=True,
-            content=card_aluno_completo(a),
-            actions=[ft.TextButton("Fechar", on_click=lambda ev: fechar_dialog())],
-            shape=ft.RoundedRectangleBorder(radius=16),
-        )
-        page.dialog.open = True
-        page.update()
-
-    def fechar_dialog():
-        page.dialog.open = False
-        page.update()
 
     def carregar_pagina():
         lista.controls.clear()
@@ -226,7 +216,7 @@ def criar_alunos_view(alunos, page):
         pagina = filtrados[inicio:fim]
 
         for a in pagina:
-            lista.controls.append(card_aluno_simples(a, abrir_detalhe) if CARD_SIMPLES else card_aluno_completo(a))
+            lista.controls.append(card_aluno_simples(a, page) if CARD_SIMPLES else card_aluno_completo(a))
 
         total_paginas = max(1, (estado["total"] + PAGE_SIZE - 1) // PAGE_SIZE)
         indicador_pagina_text.value = f"Página {estado['pagina'] + 1} de {total_paginas}"

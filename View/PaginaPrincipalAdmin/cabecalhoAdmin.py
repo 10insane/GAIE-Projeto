@@ -26,7 +26,7 @@ def logout(page: ft.Page):
 
 
 def criar_cabecalho(page):
-    Admin_nome = page.session.get("Admin_nome") or "Admin"
+    Admin_nome = page.session.get("Admin_nome") or "admin"
 
     return ft.Container(
         padding=ft.padding.symmetric(horizontal=28, vertical=16),
