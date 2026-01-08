@@ -45,9 +45,9 @@ def criar_card_grande(titulo, valor, icone, subtitulo, cor_accent):
                     ],
                     spacing=14,
                 ),
-                
+
                 ft.Container(height=16),
-                
+
                 # Valor grande
                 ft.Row(
                     [
@@ -68,7 +68,7 @@ def criar_card_grande(titulo, valor, icone, subtitulo, cor_accent):
                     ],
                     alignment=ft.MainAxisAlignment.START,
                 ),
-                
+
                 # Barra de progresso decorativa
                 ft.Container(
                     content=ft.Container(
@@ -87,7 +87,7 @@ def criar_card_grande(titulo, valor, icone, subtitulo, cor_accent):
             begin=ft.alignment.top_left,
             end=ft.alignment.bottom_right,
         ),
-        padding=24,
+        padding=28,
         border_radius=18,
         border=ft.border.all(1, cor_borda),
         shadow=ft.BoxShadow(
@@ -131,7 +131,6 @@ def criar_card_estado(titulo, valor, icone, cor_destaque):
                     weight=ft.FontWeight.W_500,
                     color=cor_texto_medio,
                 ),
-                # Mini barra de progresso
                 ft.Container(
                     content=ft.ProgressBar(
                         value=min(valor / 50, 1.0) if valor > 0 else 0,
@@ -149,7 +148,7 @@ def criar_card_estado(titulo, valor, icone, cor_destaque):
             begin=ft.alignment.top_left,
             end=ft.alignment.bottom_right,
         ),
-        padding=18,
+        padding=22,
         border_radius=16,
         border=ft.border.all(1, cor_borda),
         shadow=ft.BoxShadow(
@@ -162,7 +161,7 @@ def criar_card_estado(titulo, valor, icone, cor_destaque):
 
 
 def criar_dashboard_view(alunos, escolas, registos):
-    return ft.Column(
+    conteudo = ft.Column(
         [
             # Cabeçalho estilizado
             ft.Container(
@@ -201,7 +200,7 @@ def criar_dashboard_view(alunos, escolas, registos):
                 padding=ft.padding.only(bottom=24),
             ),
 
-            # Cards principais com cores diferentes
+            # Cards principais
             ft.Row(
                 [
                     criar_card_grande(
@@ -227,11 +226,12 @@ def criar_dashboard_view(alunos, escolas, registos):
                     ),
                 ],
                 spacing=18,
+                expand=True,
             ),
 
-            ft.Container(height=32),
+            ft.Container(height=24),
 
-            # Separador estilizado
+            # Separador
             ft.Container(
                 content=ft.Row(
                     [
@@ -261,9 +261,9 @@ def criar_dashboard_view(alunos, escolas, registos):
                 padding=ft.padding.symmetric(vertical=8),
             ),
 
-            ft.Container(height=20),
+            ft.Container(height=16),
 
-            # Grid de estados com cores específicas
+            # Grid de estados
             ft.Column(
                 [
                     ft.Row(
@@ -288,6 +288,7 @@ def criar_dashboard_view(alunos, escolas, registos):
                             ),
                         ],
                         spacing=14,
+                        expand=True,
                     ),
                     ft.Row(
                         [
@@ -311,13 +312,23 @@ def criar_dashboard_view(alunos, escolas, registos):
                             ),
                         ],
                         spacing=14,
+                        expand=True,
                     ),
                 ],
                 spacing=14,
+                expand=True,
             ),
 
             ft.Container(height=24),
         ],
         expand=True,
         scroll=ft.ScrollMode.AUTO,
+    )
+
+    return ft.Container(
+        content=conteudo,
+        padding=20,
+        alignment=ft.alignment.center,
+        expand=True,
+        width=1200,   # largura fixa "máxima" em vez de max_width
     )

@@ -1,39 +1,46 @@
-# Views/PaginaPrincipal/registos_view.py
- 
 import flet as ft
 from .estilos import *
 from .util_buttons import estilo_botao_acao
 
-
 PAGE_SIZE = 50
- 
- 
+
+
 def criar_card_registo(registo, page):
     """Card de registo compacto e moderno"""
+    nome_aluno = registo.get("NomeAluno", "").strip() or "Aluno sem nome"
+    n_pia = registo.get("nPIA", "N/A")
+    titulo_registo = f"Processo de {nome_aluno} (PIA {n_pia})"
+
     return ft.Container(
         content=ft.Row(
             [
                 # Ícone do registo
                 ft.Container(
-                    content=ft.Icon(ft.Icons.ASSIGNMENT_ROUNDED, color="#FFFFFF", size=18),
+                    content=ft.Icon(
+                        ft.Icons.ASSIGNMENT_ROUNDED,
+                        color="#FFFFFF",
+                        size=18,
+                    ),
                     bgcolor=cor_secundaria,
                     width=36,
                     height=36,
                     border_radius=18,
                     alignment=ft.alignment.center,
                 ),
- 
+
                 # Informações do registo
                 ft.Column(
                     [
-                        # Número do registo
+                        # Título do registo
                         ft.Text(
-                            f"Registo #{registo.get('nPIA', 'N/A')}",
+                            titulo_registo,
                             size=13,
                             weight=ft.FontWeight.W_600,
                             color=cor_texto_claro,
+                            max_lines=1,
+                            overflow=ft.TextOverflow.ELLIPSIS,
                         ),
-                       
+
                         # Linha 1: Aluno e Estado
                         ft.Row(
                             [
@@ -41,67 +48,100 @@ def criar_card_registo(registo, page):
                                 ft.Container(
                                     content=ft.Row(
                                         [
-                                            ft.Icon(ft.Icons.PERSON, size=11, color=cor_primaria),
+                                            ft.Icon(
+                                                ft.Icons.PERSON,
+                                                size=11,
+                                                color=cor_primaria,
+                                            ),
                                             ft.Text(
-                                                registo.get('NomeAluno', 'N/A'),
+                                                nome_aluno,
                                                 size=10,
                                                 color=cor_texto_medio,
                                                 weight=ft.FontWeight.W_500,
+                                                max_lines=1,
+                                                overflow=ft.TextOverflow.ELLIPSIS,
                                             ),
                                         ],
                                         spacing=4,
                                     ),
-                                    bgcolor=ft.Colors.with_opacity(0.12, cor_primaria),
-                                    padding=ft.padding.symmetric(horizontal=6, vertical=2),
+                                    bgcolor=ft.Colors.with_opacity(
+                                        0.12, cor_primaria
+                                    ),
+                                    padding=ft.padding.symmetric(
+                                        horizontal=6, vertical=2
+                                    ),
                                     border_radius=6,
                                 ),
- 
+
                                 # Estado
                                 ft.Container(
                                     content=ft.Row(
                                         [
-                                            ft.Icon(ft.Icons.FLAG, size=11, color=cor_secundaria),
+                                            ft.Icon(
+                                                ft.Icons.FLAG,
+                                                size=11,
+                                                color=cor_secundaria,
+                                            ),
                                             ft.Text(
-                                                registo.get('Estado', 'N/A'),
+                                                registo.get("Estado", "Sem estado"),
                                                 size=10,
                                                 color=cor_texto_medio,
                                                 weight=ft.FontWeight.W_500,
+                                                max_lines=1,
+                                                overflow=ft.TextOverflow.ELLIPSIS,
                                             ),
                                         ],
                                         spacing=4,
                                     ),
-                                    bgcolor=ft.Colors.with_opacity(0.12, cor_secundaria),
-                                    padding=ft.padding.symmetric(horizontal=6, vertical=2),
+                                    bgcolor=ft.Colors.with_opacity(
+                                        0.12, cor_secundaria
+                                    ),
+                                    padding=ft.padding.symmetric(
+                                        horizontal=6, vertical=2
+                                    ),
                                     border_radius=6,
                                 ),
                             ],
                             spacing=6,
+                            alignment=ft.MainAxisAlignment.START,
+                            vertical_alignment=ft.CrossAxisAlignment.CENTER,
                         ),
-                       
+
                         # Linha 2: Data e Técnico
                         ft.Row(
                             [
-                                ft.Icon(ft.Icons.CALENDAR_TODAY, size=10, color=cor_texto_medio),
+                                ft.Icon(
+                                    ft.Icons.CALENDAR_TODAY,
+                                    size=10,
+                                    color=cor_texto_medio,
+                                ),
                                 ft.Text(
-                                    registo.get('DataEntradaSPO', 'N/A'),
+                                    registo.get("DataEntradaSPO", "Data indisponível"),
                                     size=10,
                                     color=cor_texto_medio,
                                 ),
                                 ft.Text("•", size=10, color=cor_texto_medio),
-                                ft.Icon(ft.Icons.PERSON_OUTLINE, size=10, color=cor_texto_medio),
-                                ft.Text(
-                                    registo.get('NomeTecnico', 'N/A'),
+                                ft.Icon(
+                                    ft.Icons.PERSON_OUTLINE,
                                     size=10,
                                     color=cor_texto_medio,
                                 ),
+                                ft.Text(
+                                    registo.get("NomeTecnico", "Sem técnico"),
+                                    size=10,
+                                    color=cor_texto_medio,
+                                    max_lines=1,
+                                    overflow=ft.TextOverflow.ELLIPSIS,
+                                ),
                             ],
                             spacing=4,
+                            alignment=ft.MainAxisAlignment.START,
                         ),
                     ],
                     spacing=4,
                     expand=True,
                 ),
- 
+
                 # Botão de ação
                 ft.IconButton(
                     icon=ft.Icons.VISIBILITY,
@@ -110,14 +150,14 @@ def criar_card_registo(registo, page):
                     tooltip="Ver detalhes",
                     on_click=lambda e, a=registo: (
                         page.session.set("registo_detalhes_id", a["nPIA"]),
-                        page.go("/maisDetalhesRegisto")
-                    )
+                        page.go("/maisDetalhesRegisto"),
+                    ),
                 ),
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
             spacing=10,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
         ),
- 
         bgcolor=cor_card,
         padding=10,
         border_radius=10,
@@ -131,8 +171,8 @@ def criar_card_registo(registo, page):
         animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
         ink=True,
     )
- 
- 
+
+
 def criar_registos_view(registos, page):
     """View principal da lista de registos - OTIMIZADO com paginação"""
 
@@ -141,7 +181,6 @@ def criar_registos_view(registos, page):
         return ft.Container(
             content=ft.Column(
                 [
-                    # Ícone grande
                     ft.Container(
                         content=ft.Icon(
                             ft.Icons.ASSIGNMENT_OUTLINED,
@@ -152,10 +191,7 @@ def criar_registos_view(registos, page):
                         padding=30,
                         border_radius=100,
                     ),
-                   
                     ft.Container(height=8),
-                   
-                    # Texto principal
                     ft.Text(
                         "Nenhum registo criado",
                         size=22,
@@ -163,22 +199,17 @@ def criar_registos_view(registos, page):
                         color=cor_texto_claro,
                         text_align=ft.TextAlign.CENTER,
                     ),
-                   
-                    # Subtexto
                     ft.Text(
                         "Comece por adicionar o primeiro registo",
                         size=14,
                         color=cor_secundaria,
                         text_align=ft.TextAlign.CENTER,
                     ),
-                   
                     ft.Container(height=20),
-                   
-                    # Botão
                     estilo_botao_acao(
                         "Adicionar Primeiro Registo",
                         ft.Icons.ADD_CIRCLE_ROUNDED,
-                        lambda e: page.go("/criar-registo")
+                        lambda e: page.go("/criar-registo"),
                     ),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
@@ -194,19 +225,23 @@ def criar_registos_view(registos, page):
     estado = {
         "pagina": 0,
         "total": len(registos),
-        "filtro_numero": "",
-        "filtro_aluno": "",
+        "filtro_aluno_ou_numero": "",
         "filtro_estado": "",
     }
 
-    lista = ft.ListView(expand=True, spacing=6, padding=ft.padding.symmetric(horizontal=4, vertical=6))
+    lista = ft.ListView(
+        expand=True,
+        spacing=6,
+        padding=ft.padding.symmetric(horizontal=4, vertical=6),
+    )
 
     def carregar_pagina():
         """Carrega apenas a página atual com filtros"""
         lista.controls.clear()
 
-        filtro_numero = estado["filtro_numero"].strip().lower()
-        filtro_aluno = estado["filtro_aluno"].strip().lower()
+        filtro_aluno_ou_numero = (
+            estado["filtro_aluno_ou_numero"].strip().lower()
+        )
         filtro_estado = estado["filtro_estado"].strip().lower()
 
         registos_filtrados = []
@@ -214,14 +249,14 @@ def criar_registos_view(registos, page):
         for r in registos:
             passa_filtro = True
 
-            if filtro_numero:
-                npia = str(r.get("nPIA", "")).lower()
-                if filtro_numero not in npia:
-                    passa_filtro = False
-
-            if filtro_aluno and passa_filtro:
-                aluno = r.get("NomeAluno", "").lower()
-                if filtro_aluno not in aluno:
+            if filtro_aluno_ou_numero:
+                nome = str(r.get("NomeAluno", "")).lower()
+                # ajusta "NAluno" para o nome correto no teu dicionário
+                numero_aluno = str(r.get("NAluno", "")).lower()
+                if (
+                    filtro_aluno_ou_numero not in nome
+                    and filtro_aluno_ou_numero not in numero_aluno
+                ):
                     passa_filtro = False
 
             if filtro_estado and passa_filtro:
@@ -245,9 +280,13 @@ def criar_registos_view(registos, page):
         if total_paginas == 0:
             total_paginas = 1
 
-        indicador_pagina_text.value = f"Página {estado['pagina'] + 1} de {total_paginas}"
+        indicador_pagina_text.value = (
+            f"Página {estado['pagina'] + 1} de {total_paginas}"
+        )
         campo_pagina.value = str(estado["pagina"] + 1)
-        info_resultados.value = f"{len(pagina)} de {estado['total']} registos"
+        info_resultados.value = (
+            f"{len(pagina)} de {estado['total']} registos"
+        )
         page.update()
 
     def prox_page(e):
@@ -261,13 +300,8 @@ def criar_registos_view(registos, page):
             estado["pagina"] -= 1
             carregar_pagina()
 
-    def on_search_numero(e):
-        estado["filtro_numero"] = e.control.value
-        estado["pagina"] = 0
-        carregar_pagina()
-
-    def on_search_aluno(e):
-        estado["filtro_aluno"] = e.control.value
+    def on_search_aluno_ou_numero(e):
+        estado["filtro_aluno_ou_numero"] = e.control.value
         estado["pagina"] = 0
         carregar_pagina()
 
@@ -277,11 +311,9 @@ def criar_registos_view(registos, page):
         carregar_pagina()
 
     def limpar_filtros(e):
-        campo_numero.value = ""
-        campo_aluno.value = ""
+        campo_aluno_ou_numero.value = ""
         campo_estado.value = ""
-        estado["filtro_numero"] = ""
-        estado["filtro_aluno"] = ""
+        estado["filtro_aluno_ou_numero"] = ""
         estado["filtro_estado"] = ""
         estado["pagina"] = 0
         carregar_pagina()
@@ -315,24 +347,9 @@ def criar_registos_view(registos, page):
         weight=ft.FontWeight.W_500,
     )
 
-    campo_numero = ft.TextField(
-        hint_text="Nº Registo",
-        on_change=on_search_numero,
-        border_radius=8,
-        filled=True,
-        bgcolor=cor_fundo,
-        border_color=cor_borda,
-        focused_border_color=cor_secundaria,
-        hint_style=ft.TextStyle(color=cor_texto_medio, size=12),
-        color=cor_texto_claro,
-        text_size=12,
-        content_padding=ft.padding.symmetric(horizontal=12, vertical=10),
-        width=120,
-    )
-
-    campo_aluno = ft.TextField(
-        hint_text="Nome do aluno",
-        on_change=on_search_aluno,
+    campo_aluno_ou_numero = ft.TextField(
+        hint_text="Aluno ou nº aluno",
+        on_change=on_search_aluno_ou_numero,
         border_radius=8,
         filled=True,
         bgcolor=cor_fundo,
@@ -343,7 +360,7 @@ def criar_registos_view(registos, page):
         text_size=12,
         content_padding=ft.padding.symmetric(horizontal=12, vertical=10),
         expand=True,
-        prefix_icon=ft.Icons.PERSON_SEARCH,
+        prefix_icon=ft.Icons.SEARCH,
     )
 
     campo_estado = ft.TextField(
@@ -358,7 +375,7 @@ def criar_registos_view(registos, page):
         color=cor_texto_claro,
         text_size=12,
         content_padding=ft.padding.symmetric(horizontal=12, vertical=10),
-        width=120,
+        width=140,
     )
 
     header = ft.Container(
@@ -381,7 +398,9 @@ def criar_registos_view(registos, page):
                             shadow=ft.BoxShadow(
                                 spread_radius=0,
                                 blur_radius=10,
-                                color=ft.Colors.with_opacity(0.4, cor_secundaria),
+                                color=ft.Colors.with_opacity(
+                                    0.4, cor_secundaria
+                                ),
                                 offset=ft.Offset(0, 3),
                             ),
                         ),
@@ -421,23 +440,27 @@ def criar_registos_view(registos, page):
                                 spacing=0,
                             ),
                             bgcolor=ft.Colors.with_opacity(0.12, cor_secundaria),
-                            padding=ft.padding.symmetric(horizontal=16, vertical=8),
+                            padding=ft.padding.symmetric(
+                                horizontal=16, vertical=8
+                            ),
                             border_radius=10,
-                            border=ft.border.all(1, ft.Colors.with_opacity(0.2, cor_secundaria)),
+                            border=ft.border.all(
+                                1,
+                                ft.Colors.with_opacity(0.2, cor_secundaria),
+                            ),
                         ),
                         ft.Container(width=12),
                         estilo_botao_acao(
                             "Adicionar",
                             ft.Icons.ADD_CIRCLE_ROUNDED,
-                            lambda e: page.go("/criar-registo")
+                            lambda e: page.go("/criar-registo"),
                         ),
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=12,
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
                 ),
-                
                 ft.Container(height=12),
-
                 # Card de filtros
                 ft.Container(
                     content=ft.Column(
@@ -459,14 +482,12 @@ def criar_registos_view(registos, page):
                                     info_resultados,
                                 ],
                                 alignment=ft.MainAxisAlignment.START,
+                                vertical_alignment=ft.CrossAxisAlignment.CENTER,
                             ),
-                            
                             ft.Container(height=10),
-                            
                             ft.Row(
                                 [
-                                    campo_numero,
-                                    campo_aluno,
+                                    campo_aluno_ou_numero,
                                     campo_estado,
                                     ft.ElevatedButton(
                                         "Limpar",
@@ -475,15 +496,23 @@ def criar_registos_view(registos, page):
                                         style=ft.ButtonStyle(
                                             bgcolor=cor_fundo,
                                             color=cor_texto_claro,
-                                            shape=ft.RoundedRectangleBorder(radius=8),
+                                            shape=ft.RoundedRectangleBorder(
+                                                radius=8
+                                            ),
                                             elevation=0,
-                                            padding=ft.padding.symmetric(horizontal=12, vertical=10),
-                                            overlay_color=ft.Colors.with_opacity(0.1, cor_secundaria),
+                                            padding=ft.padding.symmetric(
+                                                horizontal=12, vertical=10
+                                            ),
+                                            overlay_color=ft.Colors.with_opacity(
+                                                0.1, cor_secundaria
+                                            ),
                                         ),
                                         height=38,
                                     ),
                                 ],
                                 spacing=10,
+                                alignment=ft.MainAxisAlignment.START,
+                                vertical_alignment=ft.CrossAxisAlignment.CENTER,
                             ),
                         ],
                         spacing=0,
@@ -551,8 +580,12 @@ def criar_registos_view(registos, page):
                         color=cor_texto_claro,
                         shape=ft.RoundedRectangleBorder(radius=10),
                         elevation=0,
-                        padding=ft.padding.symmetric(horizontal=20, vertical=12),
-                        overlay_color=ft.Colors.with_opacity(0.1, cor_secundaria),
+                        padding=ft.padding.symmetric(
+                            horizontal=20, vertical=12
+                        ),
+                        overlay_color=ft.Colors.with_opacity(
+                            0.1, cor_secundaria
+                        ),
                     ),
                     icon=ft.Icons.ARROW_BACK_ROUNDED,
                 ),
@@ -562,10 +595,14 @@ def criar_registos_view(registos, page):
                         [
                             indicador_pagina_text,
                             ft.Container(
-                                content=ft.Container(width=1, height=24, bgcolor=cor_borda),
+                                content=ft.Container(
+                                    width=1, height=24, bgcolor=cor_borda
+                                ),
                                 margin=ft.margin.symmetric(horizontal=16),
                             ),
-                            ft.Text("Ir para:", size=13, color=cor_texto_medio),
+                            ft.Text(
+                                "Ir para:", size=13, color=cor_texto_medio
+                            ),
                             campo_pagina,
                             ft.IconButton(
                                 icon=ft.Icons.ARROW_FORWARD_ROUNDED,
@@ -581,7 +618,9 @@ def criar_registos_view(registos, page):
                         spacing=12,
                     ),
                     bgcolor=ft.Colors.with_opacity(0.08, cor_secundaria),
-                    padding=ft.padding.symmetric(horizontal=20, vertical=8),
+                    padding=ft.padding.symmetric(
+                        horizontal=20, vertical=8
+                    ),
                     border_radius=12,
                 ),
                 ft.Container(expand=True),
@@ -593,8 +632,12 @@ def criar_registos_view(registos, page):
                         color=ft.Colors.WHITE,
                         shape=ft.RoundedRectangleBorder(radius=10),
                         elevation=2,
-                        padding=ft.padding.symmetric(horizontal=20, vertical=12),
-                        overlay_color=ft.Colors.with_opacity(0.2, ft.Colors.WHITE),
+                        padding=ft.padding.symmetric(
+                            horizontal=20, vertical=12
+                        ),
+                        overlay_color=ft.Colors.with_opacity(
+                            0.2, ft.Colors.WHITE
+                        ),
                     ),
                     icon=ft.Icons.ARROW_FORWARD_ROUNDED,
                 ),
