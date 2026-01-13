@@ -105,7 +105,7 @@ def RegistosAdminPage(page: ft.Page):
                         ],
                         spacing=20,
                     ),
-                    ft.Text(f"Data: {registo.get('DataArquivo', 'N/A')}", size=13, color=p["cor_texto_medio"]),
+                    ft.Text(f"Data: {registo.get('DataEntradaSPO', 'N/A')}", size=13, color=p["cor_texto_medio"]),
                     ft.Text(f"Observações: {registo.get('Observacoes', 'Nenhuma')}", size=13, color=p["cor_texto_medio"]),
                 ],
                 spacing=5,

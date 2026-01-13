@@ -81,11 +81,14 @@ def main(page: ft.Page):
         page.views.append(view)
         page.update()
 
+    # Override page.go to use navigate
     page.go = navigate
 
+    # Disable route change and view pop to prevent URL changes
     page.on_route_change = None
     page.on_view_pop = None
 
+    # Start with login
     navigate("/login")
 
 
