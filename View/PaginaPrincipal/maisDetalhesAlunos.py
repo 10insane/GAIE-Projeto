@@ -14,7 +14,13 @@ def DetalhesAluno(page: ft.Page):
     if not aluno:
         return ft.View(controls=[ft.Text(f"Aluno {aluno_id} não encontrado.")])
 
-    # ===== CORES =====
+    def voltar(e):
+        usuario_tipo = page.session.get("usuario_tipo")
+        if usuario_tipo == "admin":
+            page.go("/TelaPrincipalAdmin")
+        else:
+            page.go("/pagina-principal")
+
     cor_fundo = "#0F172A"
     cor_card = "#1E293B"
     cor_texto_claro = "#F1F5F9"
@@ -23,7 +29,6 @@ def DetalhesAluno(page: ft.Page):
     cor_primaria = "#3B82F6"
     cor_voltar = "#F50B0B"
 
-    # ===== HEADER =====
     cabecalho = ft.Container(
         content=ft.Row(
             [
@@ -64,7 +69,6 @@ def DetalhesAluno(page: ft.Page):
         border=ft.border.all(1, cor_borda),
     )
 
-    # ===== FUNÇÃO INFO =====
     def info_item(icon, label, value):
         return ft.Container(
             content=ft.Row(
@@ -73,7 +77,12 @@ def DetalhesAluno(page: ft.Page):
                     ft.Column(
                         [
                             ft.Text(label, size=12, color=cor_texto_medio),
-                            ft.Text(value, size=15, color=cor_texto_claro, weight=ft.FontWeight.W_500),
+                            ft.Text(
+                                value,
+                                size=15,
+                                color=cor_texto_claro,
+                                weight=ft.FontWeight.W_500,
+                            ),
                         ],
                         spacing=2,
                     ),
@@ -85,7 +94,6 @@ def DetalhesAluno(page: ft.Page):
             bgcolor="#141414",
         )
 
-    # ===== TOPO DO CARD =====
     topo_aluno = ft.Column(
         [
             ft.Text(
@@ -103,7 +111,6 @@ def DetalhesAluno(page: ft.Page):
         spacing=4,
     )
 
-    # ===== GRID DE INFORMAÇÕES =====
     infos = ft.ResponsiveRow(
         [
             info_item(ft.Icons.CALENDAR_TODAY, "Ano", f"{aluno.get('Ano', 'N/A')}º"),
@@ -114,14 +121,6 @@ def DetalhesAluno(page: ft.Page):
         spacing=12,
         run_spacing=12,
     )
-
-    # ===== BOTÃO =====
-    def voltar(e):
-        usuario_tipo = page.session.get("usuario_tipo")
-        if usuario_tipo == "admin":
-            page.go("/TelaPrincipalAdmin")
-        else:
-            page.go("/pagina-principal")
 
     btn_voltar = ft.ElevatedButton(
         text="Voltar",
@@ -135,7 +134,6 @@ def DetalhesAluno(page: ft.Page):
         on_click=voltar,
     )
 
-    # ===== CARD PRINCIPAL =====
     card = ft.Container(
         content=ft.Column(
             [
@@ -162,7 +160,6 @@ def DetalhesAluno(page: ft.Page):
         ),
     )
 
-    # ===== VIEW FINAL =====
     return ft.View(
         bgcolor=cor_fundo,
         padding=20,

@@ -4,7 +4,6 @@ from Models.EscolasModel import buscarEscolaPorId, contarAlunosPorEscola
 
 def DetalhesEscola(page: ft.Page):
 
-    # Pega o ID da escola da sessão
     escola_id = page.session.get("escola_detalhes_id")
 
     if not escola_id:
@@ -15,7 +14,6 @@ def DetalhesEscola(page: ft.Page):
     if not escola:
         return ft.View(controls=[ft.Text(f"Escola {escola_id} não encontrada.")])
 
-    # 👉 BUSCAR TOTAL DE ALUNOS
     total_alunos = contarAlunosPorEscola(escola_id)
 
     def voltar(e):
@@ -25,7 +23,6 @@ def DetalhesEscola(page: ft.Page):
         else:
             page.go("/pagina-principal")
 
-    # ===== CORES =====
     cor_fundo = "#0F172A"
     cor_card = "#1E293B"
     cor_texto_claro = "#F1F5F9"
@@ -132,8 +129,8 @@ def DetalhesEscola(page: ft.Page):
         spacing=12,
         run_spacing=12,
     )
-    
-    # ===== BOTÃO =====
+
+    # ===== BOTÃO VOLTAR =====
     btn_voltar = ft.ElevatedButton(
         text="Voltar",
         icon=ft.Icons.ARROW_BACK,
