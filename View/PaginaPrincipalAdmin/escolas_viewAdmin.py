@@ -3,10 +3,6 @@ from .estilosAdmin import *
 from .util_buttons import estilo_botao_acao
 import re
 
-# ======================
-# CONFIGURAÇÃO
-# ======================
-
 PAGE_SIZE = 50
 CARD_SIMPLES = True
 
@@ -15,12 +11,11 @@ CARD_SIMPLES = True
 # CARDS
 # ======================
 
-def card_escola_simples(e, page):
+def card_escola_simples(e, page: ft.Page):
     """Card moderno e leve para escolas"""
     return ft.Container(
         content=ft.Row(
             [
-                # Avatar escola
                 ft.Container(
                     content=ft.Icon(ft.Icons.SCHOOL, color=ft.Colors.WHITE, size=24),
                     width=50,
@@ -34,7 +29,6 @@ def card_escola_simples(e, page):
                         offset=ft.Offset(0, 4),
                     ),
                 ),
-                # Nome da escola
                 ft.Column(
                     [
                         ft.Text(
@@ -63,10 +57,11 @@ def card_escola_simples(e, page):
         bgcolor=cor_card,
         padding=16,
         border_radius=12,
-        on_click=lambda e, esc=e: (
-          page.session.set("escola_detalhes_id", e["idEscola"]),
-          page.go("/maisDetalhesEscolas")
-         ),
+        # ao clicar no card guarda o id da escola e navega para os detalhes
+        on_click=lambda ev, esc=e: (
+            page.session.set("escola_detalhes_id", esc["idEscola"]),
+            page.go("/maisDetalhesEscolas")
+        ),
         shadow=ft.BoxShadow(
             blur_radius=14,
             color=ft.Colors.with_opacity(0.10, ft.Colors.BLACK),
@@ -76,8 +71,8 @@ def card_escola_simples(e, page):
     )
 
 
-def card_escola_completo(e):
-    """Detalhes completos da escola em card expandido"""
+def card_escola_completo(e, page: ft.Page):
+    """Detalhes completos da escola em card completo (sem dialog)"""
     return ft.Container(
         content=ft.Column(
             [
@@ -110,9 +105,10 @@ def card_escola_completo(e):
                         estilo_botao_acao(
                             "Editar Escola",
                             ft.Icons.EDIT_ROUNDED,
+                            # aqui usas SEMPRE o `page` passado por parâmetro
                             lambda ev, d=e: (
-                                ft.page.session.set("escola_editar_id", d.get("idEscola")),
-                                ft.page.go("/EditarEscola"),
+                                page.session.set("escola_editar_id", d.get("idEscola")),
+                                page.go("/EditarEscola"),
                             ),
                         ),
                     ],
@@ -133,23 +129,9 @@ def card_escola_completo(e):
 # VIEW PRINCIPAL
 # ======================
 
-def criar_escolas_view(escolas, page):
+def criar_escolas_view(escolas, page: ft.Page):
     estado = {"pagina": 0, "total": len(escolas), "filtro": ""}
     lista = ft.ListView(expand=True, spacing=12, padding=10)
-
-    def abrir_detalhe(e):
-        page.dialog = ft.AlertDialog(
-            modal=True,
-            content=card_escola_completo(e),
-            actions=[ft.TextButton("Fechar", on_click=lambda ev: fechar_dialog())],
-            shape=ft.RoundedRectangleBorder(radius=16),
-        )
-        page.dialog.open = True
-        page.update()
-
-    def fechar_dialog():
-        page.dialog.open = False
-        page.update()
 
     def carregar_pagina():
         lista.controls.clear()
@@ -165,8 +147,11 @@ def criar_escolas_view(escolas, page):
         inicio, fim = estado["pagina"] * PAGE_SIZE, (estado["pagina"] + 1) * PAGE_SIZE
         pagina = filtradas[inicio:fim]
 
-        for e in pagina:
-            lista.controls.append(card_escola_simples(e, abrir_detalhe) if CARD_SIMPLES else card_escola_completo(e))
+        for esc in pagina:
+            if CARD_SIMPLES:
+                lista.controls.append(card_escola_simples(esc, page))
+            else:
+                lista.controls.append(card_escola_completo(esc, page))
 
         total_paginas = max(1, (estado["total"] + PAGE_SIZE - 1) // PAGE_SIZE)
         indicador_pagina_text.value = f"Página {estado['pagina'] + 1} de {total_paginas}"
@@ -229,8 +214,17 @@ def criar_escolas_view(escolas, page):
                         ),
                         ft.Column(
                             [
-                                ft.Text("Lista de Escolas", size=26, weight=ft.FontWeight.BOLD, color=cor_texto_claro),
-                                ft.Text("Gestão simples das escolas", size=12, color=cor_texto_medio),
+                                ft.Text(
+                                    "Lista de Escolas",
+                                    size=26,
+                                    weight=ft.FontWeight.BOLD,
+                                    color=cor_texto_claro,
+                                ),
+                                ft.Text(
+                                    "Gestão simples das escolas",
+                                    size=12,
+                                    color=cor_texto_medio,
+                                ),
                             ],
                             spacing=2,
                         ),
@@ -272,13 +266,28 @@ def criar_escolas_view(escolas, page):
     )
 
     # FOOTER
-    indicador_pagina_text = ft.Text("Página 1 de 1", size=14, weight=ft.FontWeight.W_600, color=cor_texto_medio)
-    campo_pagina = ft.TextField(value="1", width=60, text_align=ft.TextAlign.CENTER, on_submit=on_enter_pagina)
+    indicador_pagina_text = ft.Text(
+        "Página 1 de 1",
+        size=14,
+        weight=ft.FontWeight.W_600,
+        color=cor_texto_medio,
+    )
+
+    campo_pagina = ft.TextField(
+        value="1",
+        width=60,
+        text_align=ft.TextAlign.CENTER,
+        on_submit=on_enter_pagina,
+    )
 
     footer = ft.Container(
         content=ft.Row(
             [
-                ft.ElevatedButton("← Anterior", on_click=prev_page, style=ft.ButtonStyle(bgcolor=cor_borda)),
+                ft.ElevatedButton(
+                    "← Anterior",
+                    on_click=prev_page,
+                    style=ft.ButtonStyle(bgcolor=cor_borda),
+                ),
                 ft.Container(expand=True),
                 ft.Row(
                     [
@@ -296,7 +305,11 @@ def criar_escolas_view(escolas, page):
                     spacing=8,
                 ),
                 ft.Container(expand=True),
-                ft.ElevatedButton("Seguinte →", on_click=prox_page, style=ft.ButtonStyle(bgcolor="#10B981")),
+                ft.ElevatedButton(
+                    "Seguinte →",
+                    on_click=prox_page,
+                    style=ft.ButtonStyle(bgcolor="#10B981"),
+                ),
             ],
             alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
         ),
@@ -307,7 +320,6 @@ def criar_escolas_view(escolas, page):
 
     carregar_pagina()
 
-    # LAYOUT FINAL
     return ft.Container(
         content=ft.Column(
             [header, ft.Container(height=15), lista, ft.Container(height=15), footer],
