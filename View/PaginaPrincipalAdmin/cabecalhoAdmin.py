@@ -94,21 +94,11 @@ def criar_cabecalho(page):
                                         content=ft.Row(
                                             [
                                                 ft.Icon(ft.Icons.PERSON_ROUNDED, size=20, color=ft.Colors.WHITE),
-                                                ft.Text("Meu Perfil", size=14, color=ft.Colors.WHITE),
+                                                ft.Text("Perfil", size=14, color=ft.Colors.WHITE),
                                             ],
                                             spacing=12,
                                         ),
                                         on_click=lambda e: page.go("/perfil"),
-                                    ),
-                                    ft.PopupMenuItem(
-                                        content=ft.Row(
-                                            [
-                                                ft.Icon(ft.Icons.SETTINGS_ROUNDED, size=20, color=ft.Colors.WHITE),
-                                                ft.Text("Configurações", size=14, color=ft.Colors.WHITE),
-                                            ],
-                                            spacing=12,
-                                        ),
-                                        on_click=lambda e: page.go("/Config"),
                                     ),
 
                                     ft.PopupMenuItem(),  # divisor

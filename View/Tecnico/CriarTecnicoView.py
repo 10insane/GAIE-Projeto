@@ -148,7 +148,7 @@ def CreateTecnico(page: ft.Page):
             spacing=10,
             alignment=ft.MainAxisAlignment.CENTER,
         ),
-        on_click=lambda e: page.go("/Config"),
+        on_click=lambda e: page.go("/TelaPrincipalAdmin"),
         width=240,
         height=52,
         style=ft.ButtonStyle(
