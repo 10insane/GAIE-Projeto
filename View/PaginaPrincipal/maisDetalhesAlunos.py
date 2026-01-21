@@ -15,11 +15,7 @@ def DetalhesAluno(page: ft.Page):
         return ft.View(controls=[ft.Text(f"Aluno {aluno_id} não encontrado.")])
 
     def voltar(e):
-        usuario_tipo = page.session.get("usuario_tipo")
-        if usuario_tipo == "admin":
-            page.go("/TelaPrincipalAdmin")
-        else:
-            page.go("/pagina-principal")
+        page.go("/TelaPrincipalAdmin")
 
     cor_fundo = "#0F172A"
     cor_card = "#1E293B"

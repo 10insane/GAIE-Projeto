@@ -279,7 +279,7 @@ def criar_botoes(campos, data_registo, page, problematicas):
 
     btn_cancelar = ft.OutlinedButton(
         content=ft.Row([ft.Icon(ft.Icons.CLOSE, size=20), ft.Text("Cancelar", size=16)], tight=True, spacing=10),
-        on_click=lambda e: page.go("/pagina-principal"),
+        on_click=lambda e: page.go("/maisDetalhesRegisto"),
         style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=10), padding=ft.padding.symmetric(horizontal=28, vertical=16), side=ft.BorderSide(2, CORES["borda"]), color=CORES["texto_claro"]),
         height=50,
     )
@@ -370,7 +370,7 @@ def criar_formulario(campos, btn_salvar, btn_cancelar, page):
         content=ft.Column([
             # Header
             ft.Container(content=ft.Row([
-                ft.IconButton(icon=ft.Icons.ARROW_BACK, icon_color=CORES["primaria"], icon_size=24, on_click=lambda e: page.go("/pagina-principal"), tooltip="Voltar", bgcolor=CORES["fundo"], style=ft.ButtonStyle(shape=ft.CircleBorder())),
+                ft.IconButton(icon=ft.Icons.ARROW_BACK, icon_color=CORES["primaria"], icon_size=24, on_click=lambda e: page.go("/maisDetalhesRegisto"), tooltip="Voltar", bgcolor=CORES["fundo"], style=ft.ButtonStyle(shape=ft.CircleBorder())),
                 ft.Column([ft.Text("Criar Novo Registo", size=26, weight=ft.FontWeight.BOLD, color=CORES["texto_claro"]), ft.Text("Preencha todos os campos obrigatórios para registar um novo processo", size=14, color=CORES["texto_medio"])], spacing=4)
             ]), padding=ft.padding.only(bottom=20)),
 
@@ -764,7 +764,7 @@ def criar_formulario(campos, btn_salvar, btn_cancelar, page):
             tight=True,
             spacing=10,
         ),
-        on_click=lambda e: page.go("/pagina-principal"),
+        on_click=lambda e: page.go("/maisDetalhesRegisto"),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=10),
             padding=ft.padding.symmetric(horizontal=28, vertical=16),
@@ -836,7 +836,7 @@ def criar_formulario(campos, btn_salvar, btn_cancelar, page):
                             icon=ft.Icons.ARROW_BACK,
                             icon_color=cor_primaria,
                             icon_size=24,
-                            on_click=lambda e: page.go("/pagina-principal"),
+                            on_click=lambda e: page.go("/maisDetalhesRegisto"),
                             tooltip="Voltar",
                             bgcolor=cor_fundo,
                             style=ft.ButtonStyle(shape=ft.CircleBorder()),

@@ -33,8 +33,19 @@ def CriarEscola(page: ft.Page):
                 mensagem.color = "#16A34A"
                 page.update()
  
-                # Opcional: voltar à tela principal depois de criar
-                page.go("/TelaPrincipalAdmin")
+                # Guardar o ID da escola criada na sessão
+                # Buscar o ID da escola recém-criada
+                cursor.execute("SELECT idEscola FROM Escolas WHERE NomeEscola = %s ORDER BY idEscola DESC LIMIT 1", (nome,))
+                result = cursor.fetchone()
+                if result:
+                    page.session.set("escola_detalhes_id", result[0])
+                
+                # Redirecionar para a página de detalhes da escola criada
+                usuario_tipo = page.session.get("usuario_tipo")
+                if usuario_tipo == "admin":
+                    page.go("/TelaPrincipalAdmin")
+                else:
+                    page.go("/maisDetalhesEscolas")
             finally:
                 cursor.close()
                 conn.close()
@@ -54,7 +65,10 @@ def CriarEscola(page: ft.Page):
             ft.Container(height=20),
             ft.Row([
                 ft.ElevatedButton("Guardar", bgcolor=cor_primaria, color="white", on_click=guardar_escola),
-                ft.OutlinedButton("Cancelar", on_click=lambda e: page.go("/TelaPrincipalAdmin")),
+                ft.OutlinedButton("Cancelar", on_click=lambda e: (
+                    page.session.set("escola_detalhes_id", None),
+                    page.go("/TelaPrincipalAdmin" if page.session.get("usuario_tipo") == "admin" else "/pagina-principal")
+                )),
             ], spacing=15),
         ], spacing=10),
         bgcolor=cor_card,

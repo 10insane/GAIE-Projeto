@@ -101,7 +101,7 @@ def criar_card_registo(registo, page):
                     icon_size=18,
                     on_click=lambda e, a=registo: (
                         page.session.set("registo_editar_id", a["nPIA"]),
-                        page.go("/EditarRegisto")
+                        page.go("/editar-registo-admin")
                     )
                 )
             ],
@@ -141,7 +141,7 @@ def criar_registos_view(registos, page):
                     ft.Text("Nenhum registo criado", size=22, weight=ft.FontWeight.BOLD, color=cor_texto_claro, text_align=ft.TextAlign.CENTER),
                     ft.Text("Comece por adicionar o primeiro registo", size=14, color=cor_secundaria, text_align=ft.TextAlign.CENTER),
                     ft.Container(height=20),
-                    estilo_botao_acao("Adicionar Primeiro Registo", ft.Icons.ADD_CIRCLE_ROUNDED, lambda e: page.go("/criar-registo")),
+                    estilo_botao_acao("Adicionar Primeiro Registo", ft.Icons.ADD_CIRCLE_ROUNDED, lambda e: page.go("/criar-registo-admin")),
                 ],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=0
@@ -308,7 +308,7 @@ def criar_registos_view(registos, page):
                             border_radius=10
                         ),
                         ft.Container(width=12),
-                        estilo_botao_acao("Adicionar", ft.Icons.ADD_CIRCLE_ROUNDED, lambda e: page.go("/criar-registo"))
+                        estilo_botao_acao("Adicionar", ft.Icons.ADD_CIRCLE_ROUNDED, lambda e: page.go("/criar-registo-admin"))
                     ],
                     alignment=ft.MainAxisAlignment.START,
                     spacing=12,

@@ -15,6 +15,8 @@ from View.PaginaPrincipal.maisDetalhesRegisto import MaisDetalhesRegistos
 from View.PaginaPrincipal.maisDetalhesAlunos import DetalhesAluno
 from View.PaginaPrincipal.TecnicoPerfil import PerfilTecnico
 from View.PaginaPrincipal.maisDetalhesEscolas import DetalhesEscola
+from View.PaginaPrincipalAdmin.criar_registo_admin import PaginaCriarRegistoAdmin
+from View.PaginaPrincipalAdmin.editar_registo_admin import PaginaEditarRegistoAdmin
 
 def main(page: ft.Page):
     page.title = "GAIE - Psicologia"
@@ -24,7 +26,8 @@ def main(page: ft.Page):
     protected_routes = [
         "/pagina-principal", "/criar-tecnico", "/CriarAluno", "/criar-escola", "/criar-registo",
         "/EditarAluno", "/EditarEscola", "/EditarRegisto", "/registos", "/Config", "/TelaPrincipalAdmin",
-        "/maisDetalhesRegisto", "/maisDetalhesAlunos", "/TecnicoPerfil", "/DetalhesEscola"
+        "/maisDetalhesRegisto", "/maisDetalhesAlunos", "/TecnicoPerfil", "/DetalhesEscola",
+        "/criar-registo-admin", "/editar-registo-admin"
     ]
 
     def get_view(route, page):
@@ -70,6 +73,10 @@ def main(page: ft.Page):
                     )
                 ]
             )
+        elif route == "/criar-registo-admin":
+            return PaginaCriarRegistoAdmin(page)
+        elif route == "/editar-registo-admin":
+            return PaginaEditarRegistoAdmin(page)
         else:
             return LoginView(page)
 

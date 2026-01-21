@@ -113,7 +113,12 @@ def PaginaEditarAluno(page: ft.Page):
                 mostrar_feedback("Aluno atualizado com sucesso!", "#10B981")
                 import time
                 time.sleep(1)
-                page.go("/TelaPrincipalAdmin")
+                # Verificar se é admin ou técnico
+                usuario_tipo = page.session.get("usuario_tipo")
+                if usuario_tipo == "admin":
+                    page.go("/TelaPrincipalAdmin")
+                else:
+                    page.go("/maisDetalhesAlunos")
             else:
                 mostrar_feedback("Nenhuma alteração foi realizada.", "#EF4444")
         except Exception as ex:
@@ -139,7 +144,7 @@ def PaginaEditarAluno(page: ft.Page):
             shape=ft.RoundedRectangleBorder(radius=10),
             side=ft.border.all(1, cor_borda)
         ),
-        on_click=lambda e: page.go("/TelaPrincipalAdmin")
+        on_click=lambda e: page.go("/maisDetalhesAlunos")
     )
 
     # ------------------------

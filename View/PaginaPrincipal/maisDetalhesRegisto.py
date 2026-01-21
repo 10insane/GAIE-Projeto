@@ -22,6 +22,14 @@ def MaisDetalhesRegistos(page: ft.Page):
             controls=[ft.Text(f"Registo {registo_id} não encontrado.")],
         )
 
+    # ===== Função auxiliar para voltar =====
+    def voltar(e):
+        usuario_tipo = page.session.get("usuario_tipo")
+        if usuario_tipo == "admin":
+            page.go("/TelaPrincipalAdmin")
+        else:
+            page.go("/pagina-principal")
+
     # ===== Cores =====
     cor_fundo = "#0F172A"
     cor_card = "#1E293B"

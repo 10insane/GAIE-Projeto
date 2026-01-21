@@ -103,7 +103,7 @@ def CreateTecnico(page: ft.Page):
             )
             page.snack_bar.open = True
             page.update()
-            page.go("/Config")
+            page.go("/TelaPrincipalAdmin")
         else:
             page.snack_bar = ft.SnackBar(
                 content=ft.Row(

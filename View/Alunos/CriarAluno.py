@@ -170,10 +170,19 @@ def PaginaCriarAluno(page: ft.Page):
                 mensagem_feedback.visible = True
                 page.update()
                 
+                # Guardar o ID do aluno criado na sessão
+                page.session.set("aluno_detalhes_id", txt_numero_processo.value.strip())
+                
                 # Redirecionar após 1.5 segundos
                 import time
-                time.sleep(1.5),
-                page.go("/TelaPrincipalAdmin"),
+                time.sleep(1.5)
+                
+                # Verificar se é admin ou técnico
+                usuario_tipo = page.session.get("usuario_tipo")
+                if usuario_tipo == "admin":
+                    page.go("/TelaPrincipalAdmin")
+                else:
+                    page.go("/maisDetalhesAlunos")
             else:
                 raise Exception("Erro ao criar aluno")
                 
@@ -221,7 +230,10 @@ def PaginaCriarAluno(page: ft.Page):
             ],
             spacing=8,
         ),
-        on_click=lambda e: page.go("/TelaPrincipalAdmin"),
+        on_click=lambda e: (
+            page.session.set("aluno_detalhes_id", None),
+            page.go("/TelaPrincipalAdmin")
+        ),
         style=ft.ButtonStyle(
             shape=ft.RoundedRectangleBorder(radius=12),
             padding=ft.padding.symmetric(horizontal=28, vertical=18),
@@ -240,7 +252,10 @@ def PaginaCriarAluno(page: ft.Page):
                             icon=ft.Icons.ARROW_BACK,
                             icon_color=cor_primaria,
                             icon_size=28,
-                            on_click=lambda e: page.go("/TelaPrincipalAdmin"),
+                            on_click=lambda e: (
+                                page.session.set("aluno_detalhes_id", None),
+                                page.go("/TelaPrincipalAdmin")
+                            ),
                             tooltip="Voltar",
                         ),
                         ft.Column(
