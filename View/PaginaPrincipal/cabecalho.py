@@ -36,19 +36,20 @@ def criar_cabecalho(page: ft.Page):
         ),
         content=ft.Row(
             [
+                # Left: GAIE icon + texts
                 ft.Row(
                     [
                         ft.Container(
-    content=ft.Image(
-        src="icone-Gaie.png",   # nome do ficheiro dentro da pasta assets
-        width=70,
-        height=60,
-        fit=ft.ImageFit.CONTAIN,
-    ),
-  bgcolor=ft.Colors.with_opacity(0.18, ft.Colors.WHITE),
-  padding=8,  # Adiciona padding interno
-  border_radius=15,
-),
+                            content=ft.Image(
+                                src="icone-Gaie.png",   # nome do ficheiro dentro da pasta assets
+                                width=70,
+                                height=60,
+                                fit=ft.ImageFit.CONTAIN,
+                            ),
+                            bgcolor=ft.Colors.with_opacity(0.18, ft.Colors.WHITE),
+                            padding=8,  # Adiciona padding interno
+                            border_radius=15,
+                        ),
                         ft.Column(
                             [
                                 ft.Text("GAIE", size=22, weight=ft.FontWeight.BOLD, color=ft.Colors.WHITE),
@@ -63,7 +64,18 @@ def criar_cabecalho(page: ft.Page):
                     ],
                     spacing=12,
                 ),
-                ft.Container(expand=True),
+                # Center: AEPBS logo (expandido e centralizado)
+                ft.Container(
+                    expand=True,
+                    alignment=ft.alignment.center,
+                    content=ft.Image(
+                        src="aepbs.png",   # nome do ficheiro dentro da pasta assets
+                        width=120,
+                        height=70,
+                        fit=ft.ImageFit.CONTAIN,
+                    ),
+                ),
+                # Right: tecnico info and menu
                 ft.Container(
                     content=ft.Row(
                         [
